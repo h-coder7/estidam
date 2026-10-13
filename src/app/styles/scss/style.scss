@@ -1,0 +1,293 @@
+// -------------------------------------------
+//             IMPORTSCSS FILES
+// -------------------------------------------
+@use "./helper";
+@use "./globals";
+
+:root {
+    --blue: #295CC7;
+}
+
+.cr-blue {
+    color: var(--blue);
+}
+
+.bg-blue {
+    background-color: var(--blue);
+    color: #fff;
+}
+
+.txt-gradient {
+    color: transparent;
+
+    background-image: linear-gradient(
+        135deg,
+        #14508A 0%,
+        #1691D0 54%,
+        #057590 100%
+    );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+}
+
+.bg-gradient {
+    background-image: linear-gradient(135deg, #14508A 0%, #1691D0 54%, #057590 100%);
+}
+
+.section-padding {
+    padding: 100px 0;
+}
+
+.sec-lines {
+    position: absolute;
+    width: 90%;
+    height: 100%;
+    top: 0;
+    left: 5%;
+    pointer-events: none;
+    display: flex;
+    justify-content: space-between;
+    span {
+        position: relative;
+        width: 1px;
+        height: 100%;
+        background-color: #9993;
+    }
+    &.lines-light {
+        span {
+            background-color: #fff2;
+        }
+    }
+}
+
+/* --------------- butn --------------- */
+.butn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    width: fit-content;
+    padding: 8px 8px 8px 20px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    background-color: transparent;
+    color: #111827;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transform: translateY(0);
+    box-shadow: 0 0 0 rgba(18, 38, 63, 0);
+    transition:
+        background-color 0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+
+    .butn-icon {
+        display: block;
+        width: 35px;
+        height: 35px;
+        flex-shrink: 0;
+        background: url("/images/icons/arrow-bl.svg") center / contain no-repeat;
+        transition: transform 0.25s ease, background-image 0.25s ease;
+    }
+
+    &:hover {
+        text-decoration: none;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(18, 38, 63, 0.25);
+
+        .butn-icon {
+            transform: translateX(3px);
+        }
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: 0 3px 8px rgba(18, 38, 63, 0.2);
+    }
+
+    &.butn-blue {
+        background-color: var(--blue);
+        border-color: var(--blue);
+        color: #fff;
+
+        .butn-icon {
+            background-image: url("/images/icons/arrow-wh.svg");
+        }
+
+        &:hover {
+            background-color: #12263f;
+            border-color: #fff4;
+            color: #fff !important;
+        }
+    }
+
+    &.butn-light {
+        background-color: #fff;
+        border-color: #fff;
+        color: #111827;
+
+        &:hover {
+            background-color: var(--blue);
+            border-color: var(--blue);
+            color: #fff;
+            box-shadow: 0 10px 24px rgba(41, 92, 199, 0.4);
+
+            .butn-icon {
+                background-image: url("/images/icons/arrow-wh.svg");
+            }
+        }
+    }
+
+    &.butn-outline {
+        background-color: #f5f7fa;
+        border-color: #d1d5db;
+        color: #111827;
+
+        &:hover {
+            background-color: #12263f;
+            border-color: #12263f;
+            color: #fff;
+        }
+    }
+
+    &.butn-ghost {
+        gap: 12px;
+        background-color: transparent;
+        color: #fff;
+        font-weight: 400;
+
+        &:hover {
+            transform: none;
+            box-shadow: none;
+            color: #fff !important;
+            border-color: #fff4;
+
+            .butn-icon {
+                background-image: url("/images/icons/arrow-wh.svg");
+                transform: translateX(4px);
+            }
+        }
+    }
+}
+
+html[dir="rtl"] {
+    .butn .butn-icon {
+        transform: scaleX(-1);
+    }
+
+    .butn:hover .butn-icon {
+        transform: scaleX(-1) translateX(-3px);
+    }
+
+    .butn.butn-ghost:hover .butn-icon {
+        transform: scaleX(-1) translateX(-4px);
+    }
+}
+
+/* --------------- butn --------------- */
+.badge {
+    position: relative;
+    padding: .5rem 1rem;
+    border-radius: 50px;
+    display: block;
+    width: fit-content;
+    
+    i ,
+    .icon  {
+        margin-inline-end: 7px;
+    }
+}
+
+/* --------------- page_loader --------------- */
+.page_loader {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .loader_wrapper {
+        text-align: center;
+    }
+
+    .loader_animation {
+        width: 180px;
+        height: 180px;
+        position: relative;
+        margin: 0 auto;
+    }
+
+    .loader_logo {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 5;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        .icon {
+            width: 50px;
+            object-fit: contain;
+        }
+    }
+
+    .ring {
+        position: absolute;
+        border-radius: 50%;
+        border: 3px solid transparent;
+    }
+
+    .ring1 {
+        width: 180px;
+        height: 180px;
+        top: 0;
+        left: 0;
+        border-top-color: #1691D0;
+        animation: loaderRotate 1.2s linear infinite;
+    }
+
+    .ring2 {
+        width: 145px;
+        height: 145px;
+        top: 17.5px;
+        left: 17.5px;
+        border-right-color: #CEDCF8;
+        animation: loaderRotateReverse 1.8s linear infinite;
+    }
+
+    .ring3 {
+        width: 110px;
+        height: 110px;
+        top: 35px;
+        left: 35px;
+        border-bottom-color: #0b215c;
+        animation: loaderRotate 2.5s linear infinite;
+    }
+
+    .loader_text {
+        margin-top: 30px;
+        color: #7b8497;
+        animation: loaderPulse 1.5s ease-in-out infinite;
+    }
+}
+
+
+@media screen and (max-width: 991px) {
+ 
+    .order_md_1 {
+        order: -1;
+    }
+
+}
+

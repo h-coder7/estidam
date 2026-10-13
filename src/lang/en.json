@@ -1,0 +1,43 @@
+{
+  "navbar": {
+    "home": "Home",
+    "studio": "Studio",
+    "cases": "Cases",
+    "news": "News",
+    "contact": "Contact"
+  },
+  "hero": {
+    "eyebrow": "Technology / AI / Operations",
+    "title": "Smarter, more efficient operations for",
+    "titleAccent": "hajj companies",
+    "description": "We understand the operational realities of the Hajj sector, improve processes, connect systems and data, and apply AI to build solutions that increase efficiency, improve service quality, and support better decisions.",
+    "primaryCta": "Start with a Data & KPI Assessment",
+    "secondaryCta": "Explore our approach"
+  },
+  "whyEstidam": {
+    "badge": "Why Estidam",
+    "titleStrong": "Sector Understanding.",
+    "titleMuted": "Better Operations. Practical Intelligence. Measurable Impact.",
+    "description": "We combine Hajj-sector understanding, operational transformation, and strong technology and delivery capabilities to build solutions that start with real business needs and continue through operation and improvement.",
+    "cta": "Explore Our Approach",
+    "card1Title": "We Understand",
+    "card1TitleRest": "the Sector",
+    "card1Text": "Solutions designed around the realities of Hajj companies and seasonal operations.",
+    "card2Title": "We Start with",
+    "card2TitleRest": "Operations",
+    "card2Text": "Define the challenge and desired outcome first, then select the right technology.",
+    "card3Title": "We Apply AI",
+    "card3TitleRest": "Practically",
+    "card3Text": "Embed AI into processes, data and decision support.",
+    "card4Title": "We Measure and",
+    "card4TitleRest": "Improve",
+    "card4Text": "Track performance, learn from delivery, and continuously improve outcomes."
+  },
+  "footer": {
+    "contact": "Contact",
+    "platform": "Platform",
+    "whyEstidam": "Why Estidam",
+    "backToTop": "Back to Top",
+    "copyright": "Estidam. All Rights Reserved"
+  }
+}

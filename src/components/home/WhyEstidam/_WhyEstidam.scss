@@ -1,0 +1,192 @@
+.why_estidam {
+    position: relative;
+
+    .why_head {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 48px 64px;
+        align-items: start;
+        padding-bottom: 56px;
+        margin-bottom: 0;
+        border-bottom: 1px solid rgba(17, 24, 39, 0.08);
+    }
+
+    .why_badge {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 1.25rem;
+        padding: 8px 14px;
+        border-radius: 8px;
+        background-color: #dbeafe;
+        color: #1d4ed8;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .why_title {
+        margin: 0;
+        max-width: 560px;
+        font-size: clamp(2rem, 3.4vw, 3rem);
+        font-weight: 500;
+        line-height: 1.2;
+    }
+
+    .why_title_strong {
+        color: #111827;
+        font-weight: 600;
+    }
+
+    .why_title_muted {
+        color: #9ca3af;
+        font-weight: 500;
+    }
+
+    .why_description {
+        margin: 0 0 1.5rem;
+        color: #6b7280;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 1.7;
+    }
+
+    .why_grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .why_card {
+        min-height: 420px;
+        padding: 36px 28px 32px;
+        border-inline-end: 1px solid rgba(17, 24, 39, 0.08);
+
+        &:last-child {
+            border-inline-end: 0;
+        }
+
+        &.is_featured {
+            background-color: #fff;
+            background-image: radial-gradient(
+                rgba(17, 24, 39, 0.08) 0.7px,
+                transparent 0.7px
+            );
+            background-size: 6px 6px;
+        }
+    }
+
+    .why_card_inner {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 348px;
+    }
+
+    .why_card_title {
+        margin: 0 0 auto;
+        font-size: 28px;
+        font-weight: 600;
+        line-height: 1.25;
+        color: #111827;
+
+        span {
+            display: block;
+        }
+    }
+
+    .why_card_title_muted {
+        color: #9ca3af;
+        font-weight: 500;
+    }
+
+    .why_card_body {
+        margin-top: 48px;
+    }
+
+    .why_card_icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 52px;
+        height: 52px;
+        margin-bottom: 18px;
+        border-radius: 14px;
+        background-color: #eef2ff;
+        color: #1f2937;
+        font-size: 20px;
+    }
+
+    .why_card_text {
+        margin: 0;
+        color: #6b7280;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.65;
+        max-width: 240px;
+    }
+}
+
+@media screen and (max-width: 1199px) {
+    .why_estidam {
+        .why_card {
+            min-height: 380px;
+            padding: 28px 20px;
+        }
+
+        .why_card_title {
+            font-size: 24px;
+        }
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .why_estidam {
+        padding: 70px 0;
+
+        .why_head {
+            grid-template-columns: 1fr;
+            gap: 28px;
+            padding-bottom: 40px;
+        }
+
+        .why_grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .why_card {
+            min-height: 340px;
+            border-inline-end: 0;
+            border-bottom: 1px solid rgba(17, 24, 39, 0.08);
+
+            &:nth-child(odd) {
+                border-inline-end: 1px solid rgba(17, 24, 39, 0.08);
+            }
+
+            &:nth-last-child(-n + 2) {
+                border-bottom: 0;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .why_estidam {
+        .why_grid {
+            grid-template-columns: 1fr;
+        }
+
+        .why_card {
+            min-height: auto;
+            border-inline-end: 0 !important;
+            border-bottom: 1px solid rgba(17, 24, 39, 0.08);
+
+            &:last-child {
+                border-bottom: 0;
+            }
+        }
+
+        .why_card_body {
+            margin-top: 28px;
+        }
+    }
+}
