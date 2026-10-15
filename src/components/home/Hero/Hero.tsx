@@ -9,38 +9,40 @@ const Hero = async () => {
     return (
         <section className="hero_section">
             <div className="container">
-                <div className="row align-items-center">
-                    <div className="col-lg-6">
-                        <div className="txt_content">
-                            <Reveal animation="fade-up" trigger="load">
-                                <p className="hero_eyebrow">{t("eyebrow")}</p>
-                            </Reveal>
-
-                            <Reveal animation="fade-up" trigger="load">
-                                <h1 className="hero_title">
-                                    {t("title")}{" "}
-                                    <span className="hero_title_accent">{t("titleAccent")}</span>
-                                </h1>
-                            </Reveal>
-
-                            <Reveal animation="fade-up" trigger="load">
-                                <p className="hero_description">{t("description")}</p>
-                            </Reveal>
-
-                            <div className="hero_actions">
+                <div className="content px-lg-4">
+                    <div className="row align-items-center">
+                        <div className="col-lg-6">
+                            <div className="txt_content">
                                 <Reveal animation="fade-up" trigger="load">
-                                    <a href="#" className="butn butn-blue">
-                                        <span>{t("primaryCta")}</span>
-                                        <span className="butn-icon" aria-hidden="true"></span>
-                                    </a>
+                                    <p className="hero_eyebrow">{t("eyebrow")}</p>
                                 </Reveal>
 
                                 <Reveal animation="fade-up" trigger="load">
-                                    <a href="#why-estidam" className="butn butn-ghost">
-                                        <span>{t("secondaryCta")}</span>
-                                        <span className="butn-icon" aria-hidden="true"></span>
-                                    </a>
+                                    <h1 className="hero_title">
+                                        {t("title")}{" "}
+                                        <span className="hero_title_accent">{t("titleAccent")}</span>
+                                    </h1>
                                 </Reveal>
+
+                                <Reveal animation="fade-up" trigger="load">
+                                    <p className="hero_description">{t("description")}</p>
+                                </Reveal>
+
+                                <div className="hero_actions">
+                                    <Reveal animation="fade-up" trigger="load">
+                                        <a href="#" className="butn butn-blue">
+                                            <span>{t("primaryCta")}</span>
+                                            <span className="butn-icon" aria-hidden="true"></span>
+                                        </a>
+                                    </Reveal>
+
+                                    <Reveal animation="fade-up" trigger="load">
+                                        <a href="#why-estidam" className="butn butn-ghost">
+                                            <span>{t("secondaryCta")}</span>
+                                            <span className="butn-icon" aria-hidden="true"></span>
+                                        </a>
+                                    </Reveal>
+                                </div>
                             </div>
                         </div>
                     </div>
