@@ -26,6 +26,22 @@ const ProductsCascade = () => {
     const sizeRef = useRef({ cw: 720, ch: 346, perspective: 1600 });
 
     const N = CONFIG.cards.length;
+    const trackVh = Math.max(280, N * CONFIG.scroll.perCardVh);
+
+    const getScrollMetrics = (section: HTMLElement) => {
+        const earlyStart =
+            window.innerHeight * ((CONFIG.scroll.earlyStartVh ?? 0) / 100);
+        const travel = Math.max(
+            1,
+            section.offsetHeight - window.innerHeight + earlyStart
+        );
+        const scrolled = clamp(
+            earlyStart - section.getBoundingClientRect().top,
+            0,
+            travel
+        );
+        return { travel, scrolled, earlyStart };
+    };
 
     const measure = () => {
         const { card } = CONFIG;
@@ -76,7 +92,7 @@ const ProductsCascade = () => {
             opacity = clamp(1 - (p - G.backFade) * 0.5, 0, 1);
             z = 1000 - Math.round(p * 10);
         } else {
-            // Scroll exit only: 3D fold + drop
+            // Scroll exit: fold + drop, fade out behind the next card
             const q = -p;
             const leave = clamp(q, 0, 1);
             tilt = G.frontFold * leave;
@@ -88,17 +104,19 @@ const ProductsCascade = () => {
             opacity =
                 1 -
                 clamp((q - G.fadeStart) / (G.fadeEnd - G.fadeStart), 0, 1);
-            z = 2000 + Math.round(q * 10);
+            z = 200 - Math.round(q * 20);
         }
 
         el.style.opacity = `${opacity}`;
+        el.style.visibility = opacity < 0.03 ? "hidden" : "visible";
+        el.style.pointerEvents = opacity < 0.05 ? "none" : "auto";
         el.style.zIndex = `${z}`;
         el.style.setProperty("--sheen", sheen.toFixed(3));
         el.style.transform = `
-            translateY(${ty.toFixed(1)}px)
+            translateY(${ty.toFixed(5)}px)
             translateZ(${tz.toFixed(1)}px)
-            rotateX(${tilt.toFixed(2)}deg)
-            scale(${scale.toFixed(3)})
+            rotateX(${tilt.toFixed(1)}deg)
+            scale(${scale.toFixed(1)})
         `;
     };
 
@@ -118,11 +136,13 @@ const ProductsCascade = () => {
     const scrollToCard = (index: number, smooth = true) => {
         const section = sectionRef.current;
         if (!section) return;
-        const travel = Math.max(1, section.offsetHeight - window.innerHeight);
+        const { travel, earlyStart } = getScrollMetrics(section);
+        const scrolled = (index / Math.max(1, N - 1)) * travel;
         const top =
             section.getBoundingClientRect().top +
-            window.scrollY +
-            (index / Math.max(1, N - 1)) * travel;
+            window.scrollY -
+            earlyStart +
+            scrolled;
 
         if (lenis) {
             lenis.scrollTo(top, { immediate: !smooth });
@@ -143,12 +163,7 @@ const ProductsCascade = () => {
 
         const tick = () => {
             if (!dragging.current) {
-                const travel = Math.max(1, section.offsetHeight - window.innerHeight);
-                const scrolled = clamp(
-                    -section.getBoundingClientRect().top,
-                    0,
-                    travel
-                );
+                const { travel, scrolled } = getScrollMetrics(section);
                 const target = (scrolled / travel) * (N - 1);
                 const easing = reduceMotion ? 1 : CONFIG.ease;
                 progress.current += (target - progress.current) * easing;
@@ -204,9 +219,13 @@ const ProductsCascade = () => {
         if (!section || !rail) return;
         const rect = rail.getBoundingClientRect();
         const ratio = clamp((clientY - rect.top) / rect.height, 0, 1);
-        const travel = Math.max(1, section.offsetHeight - window.innerHeight);
+        const { travel, earlyStart } = getScrollMetrics(section);
+        const scrolled = ratio * travel;
         const top =
-            section.getBoundingClientRect().top + window.scrollY + ratio * travel;
+            section.getBoundingClientRect().top +
+            window.scrollY -
+            earlyStart +
+            scrolled;
         if (lenis) {
             lenis.scrollTo(top, { immediate: true });
         } else {
@@ -239,6 +258,7 @@ const ProductsCascade = () => {
         <div
             className="products_cascade"
             ref={sectionRef}
+            style={{ height: `${trackVh}vh` }}
             aria-roledescription="carousel"
             aria-label={t("badge")}
         >
@@ -256,8 +276,6 @@ const ProductsCascade = () => {
                             >
                                 <ProductCardFace
                                     card={card}
-                                    index={index}
-                                    total={N}
                                     t={t as unknown as (key: string) => string}
                                 />
                             </article>
@@ -302,12 +320,10 @@ const ProductsCascade = () => {
 
 type FaceProps = {
     card: ProductCascadeCard;
-    index: number;
-    total: number;
     t: (key: string) => string;
 };
 
-const ProductCardFace = ({ card, index, total, t }: FaceProps) => {
+const ProductCardFace = ({ card, t }: FaceProps) => {
     return (
         <div className="products_card_inner">
             <div className="products_card_media">
@@ -351,10 +367,6 @@ const ProductCardFace = ({ card, index, total, t }: FaceProps) => {
                         <p className="products_card_meta_text">{t(card.usersKey)}</p>
                     </div>
                 </div>
-
-                <span className="products_card_index" aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
-                </span>
             </div>
 
             <span className="products_card_sheen" aria-hidden="true"></span>

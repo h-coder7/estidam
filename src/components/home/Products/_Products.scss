@@ -1,6 +1,6 @@
 .products {
     position: relative;
-    background-color: #f4f5f7;
+    // background-color: #f4f5f7;
 
     .section-head {
         padding-bottom: 24px;
@@ -10,13 +10,13 @@
 .products_cascade {
     position: relative;
     width: 100%;
+    padding-top: 50px;
 }
 
 .products_cascade_sticky {
     position: sticky;
-    top: 0;
-    height: 500px;
-    // min-height: 640px;
+    top: 25vh;
+    height: 75vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -33,14 +33,14 @@
 }
 
 .products_deck {
-    position: absolute;
-    left: 50%;
-    top: 48%;
-    width: var(--pc-cw, 720px);
-    height: var(--pc-ch, 346px);
-    transform: translate(-50%, -50%);
+    position: relative;
+    // left: 50%;
+    // top: 48%;
+    // width: var(--pc-cw, 720px);
+    // height: var(--pc-ch, 346px);
+    // transform: translate(-50%, -50%);
     transform-style: preserve-3d;
-    width: 90%;
+    width: 95%;
 }
 
 .products_card {
@@ -57,7 +57,7 @@
     display: grid;
     grid-template-columns: 1.05fr 1fr;
     width: 100%;
-    height: 410px;
+    height: 425px;
     overflow: hidden;
     border-radius: 28px;
     background: #fff;
@@ -74,7 +74,7 @@
 .products_card_img {
     display: block;
     width: 100%;
-    height: 100%;
+    height: 400px;
     object-fit: cover;
     border-radius: 20px;
     background: #e8eef8;
@@ -84,7 +84,6 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     min-width: 0;
     padding: 30px;
 }
@@ -94,6 +93,7 @@
     padding: 30px;
     border: 1px solid rgba(17, 24, 39, 0.08);
     border-radius: 15px;
+    margin-bottom: 30px;
 }
 
 .products_card_status {
@@ -154,7 +154,7 @@
 
 .products_card_logo {
     flex-shrink: 0;
-    width: 72px;
+    width: 100px;
     height: auto;
 
     img {
@@ -186,17 +186,6 @@
     color: #374151;
     font-size: 14px;
     line-height: 1.55;
-    max-width: 340px;
-}
-
-.products_card_index {
-    position: absolute;
-    right: 22px;
-    bottom: 16px;
-    color: #c0c6d2;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
 }
 
 .products_card_sheen {
@@ -215,7 +204,7 @@
 
 .products_rail {
     position: absolute;
-    top: 50%;
+    top: 43%;
     inset-inline-end: 28px;
     transform: translateY(-50%);
     z-index: 5;
@@ -282,7 +271,8 @@
 
 @media screen and (max-width: 991px) {
     .products_cascade_sticky {
-        min-height: 100svh;
+        top: 20vh;
+        height: 80vh;
         padding: 24px 56px 24px 16px;
         align-items: flex-end;
     }
@@ -356,10 +346,6 @@
     }
 
     .products_card_logo {
-        display: none;
-    }
-
-    .products_card_index {
         display: none;
     }
 

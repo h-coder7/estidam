@@ -1,23 +1,10 @@
 import { getLocale, getTranslations } from "next-intl/server";
 
-import { getFooterSection, type FooterSocialKey } from "@/lib/api/home";
+import { getFooterSection } from "@/lib/api/home";
 import { Link } from "@/i18n/routing";
 import Reveal from "@/components/animations/Reveal";
-import BackToTop from "./BackToTop";
 
 import "./_Footer.scss";
-
-const socialIcons: Record<FooterSocialKey, { icon: string; label: string }> = {
-    facebook: { icon: "fa-brands fa-facebook-f", label: "Facebook" },
-    instagram: { icon: "fa-brands fa-instagram", label: "Instagram" },
-    x: { icon: "fa-brands fa-x-twitter", label: "X" },
-    whatsapp: { icon: "fa-brands fa-whatsapp", label: "WhatsApp" },
-    linkedin: { icon: "fa-brands fa-linkedin-in", label: "LinkedIn" },
-};
-
-const platformLinks = [
-    { href: "/#why-estidam", labelKey: "whyEstidam" as const },
-];
 
 const Footer = async () => {
     const locale = await getLocale();
@@ -25,165 +12,170 @@ const Footer = async () => {
     const footer = await getFooterSection(locale);
 
     const currentYear = new Date().getFullYear();
-    const hasContact = Boolean(footer.email || footer.phone || footer.address);
+    const address = footer.address || t("address");
+    const email = footer.email || t("email");
+    const phone = footer.phone || t("phone");
 
     return (
         <footer className="footer">
-
             <div className="container">
-
-                {/* Top Content */}
-                <div className="footer_top">
-                    <div className="row justify-content-between">
-
-                        {/* Brand */}
-                        <div className="col-lg-5 col-md-12">
-                            <div className="footer_brand">
-
-                                <Reveal
-                                    animation="fade-up"
-                                    trigger="load"
-                                >
-                                    <Link
-                                        href="/"
-                                        className="footer_logo"
-                                    >
-                                        <img
-                                            src="/images/logo.png"
-                                            alt="Estidam"
-                                        />
-                                    </Link>
-                                </Reveal>
-
-                                {footer.description ? (
-                                    <Reveal
-                                        animation="fade-up"
-                                        trigger="load"
-                                    >
-                                        <p className="footer_description fsz-18 mb-0 col-lg-10">
-                                            {footer.description}
-                                        </p>
+                <div className="content px-lg-4">
+                    <div className="footer_top">
+                        <div className="row gx-0">
+                            <div className="col-lg-3 col-md-6">
+                                <div className="footer_col footer_brand">
+                                    <Reveal animation="fade-up" trigger="load">
+                                        <Link href="/" className="footer_logo">
+                                            <img
+                                                src="/images/logo-wh.svg"
+                                                alt="Estidam"
+                                            />
+                                        </Link>
                                     </Reveal>
-                                ) : null}
-
+                                </div>
                             </div>
-                        </div>
 
+                            <div className="col-lg-3 col-md-6">
+                                <div className="footer_col">
+                                    <Reveal animation="fade-up" trigger="load">
+                                        <h3 className="footer_col_title">{t("resource")}</h3>
+                                    </Reveal>
 
-                        {/* Contact */}
-                        <div className="col-lg-3 col-md-6">
-                            <div className="footer_column">
-
-                                <Reveal
-                                    animation="fade-up"
-                                    trigger="load"
-                                >
-                                    <h3 className="fsz-22 fw-500">
-                                        {t("contact")}
-                                    </h3>
-                                </Reveal>
-
-                                {hasContact ? (
-                                    <ul>
-                                        {footer.email ? (
-                                            <li>
-                                                <a href={`mailto:${footer.email}`}>
-                                                    {footer.email}
-                                                </a>
-                                            </li>
-                                        ) : null}
-
-                                        {footer.phone ? (
-                                            <li>
-                                                <a href={`tel:${footer.phone.replace(/\s/g, "")}`}>
-                                                    {footer.phone}
-                                                </a>
-                                            </li>
-                                        ) : null}
-
-                                        {footer.address ? (
-                                            <li>
-                                                <span>
-                                                    {footer.address}
-                                                </span>
-                                            </li>
-                                        ) : null}
-                                    </ul>
-                                ) : null}
-
-                            </div>
-                        </div>
-
-
-                        {/* Platform — home sections only */}
-                        <div className="col-lg-3 col-md-6">
-                            <div className="footer_column">
-
-                                <Reveal
-                                    animation="fade-up"
-                                    trigger="load"
-                                >
-                                    <h3 className="fsz-18 fw-500">
-                                        {t("platform")}
-                                    </h3>
-                                </Reveal>
-
-                                <ul>
-                                    {platformLinks.map((item) => (
-                                        <li key={item.href}>
-                                            <Link href={item.href}>
-                                                {t(item.labelKey)}
-                                            </Link>
+                                    <ul className="footer_links">
+                                        <li>
+                                            <Link href="/#solutions">{t("works")}</Link>
                                         </li>
-                                    ))}
-                                </ul>
+                                        <li>
+                                            <Link href="/#how-we-deliver">{t("studio")}</Link>
+                                        </li>
+                                        <li>
+                                            <Link href="/">{t("home")}</Link>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
 
+                            <div className="col-lg-3 col-md-6">
+                                <div className="footer_col">
+                                    <Reveal animation="fade-up" trigger="load">
+                                        <h3 className="footer_col_title">{t("topLinks")}</h3>
+                                    </Reveal>
+
+                                    <ul className="footer_links">
+                                        <li>
+                                            <Link href="/#why-estidam">{t("aboutUs")}</Link>
+                                        </li>
+                                        <li>
+                                            <Link href="/#growth-ecosystem">{t("careers")}</Link>
+                                        </li>
+                                        <li>
+                                            <Link href="/#get-in-touch">{t("partners")}</Link>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div className="col-lg-3 col-md-6">
+                                <div className="footer_col footer_contact">
+                                    <Reveal animation="fade-up" trigger="load">
+                                        <div className="footer_contact_block">
+                                            <h3 className="footer_col_title">{t("location")}</h3>
+                                            <p className="footer_contact_text mb-0">{address}</p>
+                                        </div>
+                                    </Reveal>
+
+                                    <Reveal animation="fade-up" trigger="load">
+                                        <div className="footer_contact_block">
+                                            <h3 className="footer_col_title">{t("inquiry")}</h3>
+                                            <a
+                                                href={`mailto:${email}`}
+                                                className="footer_contact_text"
+                                            >
+                                                {email}
+                                            </a>
+                                            <a
+                                                href={`tel:${phone.replace(/\s/g, "")}`}
+                                                className="footer_contact_text"
+                                            >
+                                                {phone}
+                                            </a>
+                                        </div>
+                                    </Reveal>
+                                </div>
                             </div>
                         </div>
-
-                    </div>
-                </div>
-
-
-                {/* Bottom */}
-                <div className="footer_bottom">
-
-                    {/* Copyright */}
-                    <div className="copyright fsz-15">
-                        © {currentYear} {t("copyright")}
                     </div>
 
-
-                    {footer.socials.length > 0 ? (
-                        <div className="social_links">
-                            {footer.socials.map((social) => {
-                                const item = socialIcons[social.key];
-
-                                return (
+                    <div className="footer_bottom">
+                        <div className="row gx-0 align-items-center justify-content-between">
+                            <div className="col-lg-8">
+                                <div className="footer_socials">
                                     <a
-                                        key={social.key}
-                                        href={social.url}
+                                        href="#"
+                                        className="footer_social_link"
                                         target="_blank"
                                         rel="noreferrer"
-                                        aria-label={item.label}
                                     >
-                                        <i className={item.icon}></i>
+                                        <span>{t("facebook")}</span>
+                                        <i
+                                            className="fat fa-arrow-up-right fsz-16 ms-2"
+                                            aria-hidden="true"
+                                        ></i>
                                     </a>
-                                );
-                            })}
+
+                                    <a
+                                        href="#"
+                                        className="footer_social_link"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <span>{t("twitter")}</span>
+                                        <i
+                                            className="fat fa-arrow-up-right fsz-16 ms-2"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </a>
+
+                                    <a
+                                        href="#"
+                                        className="footer_social_link"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <span>{t("instagram")}</span>
+                                        <i
+                                            className="fat fa-arrow-up-right fsz-16 ms-2"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </a>
+
+                                    <a
+                                        href="#"
+                                        className="footer_social_link"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <span>{t("dribbble")}</span>
+                                        <i
+                                            className="fat fa-arrow-up-right fsz-16 ms-2"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div className="col-lg-3">
+                                <p className="footer_copyright mb-0">
+                                    © {currentYear} {t("copyrightPrefix")}{" "}
+                                    <Link href="/" className="footer_copyright_brand">
+                                        {t("copyrightBrand")}
+                                    </Link>
+                                </p>
+                            </div>
                         </div>
-                    ) : null}
-
-
-                    {/* Back To Top */}
-                    <BackToTop
-                        label={t("backToTop")}
-                    />
-
+                    </div>
                 </div>
-
             </div>
-
         </footer>
     );
 };

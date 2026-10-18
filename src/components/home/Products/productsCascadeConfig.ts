@@ -1,8 +1,10 @@
 export const PRODUCTS_CASCADE_CONFIG = {
     accent: "#295CC7",
-    ease: 0.14,
+    ease: 0.40,
     scroll: {
-        perCardVh: 55,
+        perCardVh: 63,
+        // Start the cascade before the section sticks to the top (vh of viewport)
+        earlyStartVh: 10,
     },
     card: {
         vw: 0.62,
@@ -19,11 +21,11 @@ export const PRODUCTS_CASCADE_CONFIG = {
         backRise: 0,
         backDepth: 0.35,
         backShrink: 0,
-        frontDrop: 1.05,
+        frontDrop: 1.2,
         frontFold: 88,
         frontFwd: 0.22,
-        fadeStart: 0.7,
-        fadeEnd: 1.45,
+        fadeStart: 0.05,
+        fadeEnd: 0.7,
         backFade: 12,
     },
     cards: [

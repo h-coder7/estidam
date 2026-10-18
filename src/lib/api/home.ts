@@ -29,7 +29,7 @@ export async function getFooterSection(locale: string): Promise<FooterSectionDat
     return {
         description: footer?.description || "",
         email: footer?.email || "",
-        phone: "",
+        phone: footer?.phone || "",
         address: footer?.location || "",
         socials: [],
     };

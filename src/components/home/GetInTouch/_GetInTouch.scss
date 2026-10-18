@@ -1,0 +1,221 @@
+.get_in_touch {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--dark, #0b1a33);
+    background-image: url("/images/operations-bg.jpg");
+    background-size: cover;
+    background-position: top;
+    background-repeat: no-repeat;
+    color: #fff;
+
+    .section-head {
+        padding-top: 100px;
+        padding-bottom: 48px;
+    }
+
+    .section-head-badge {
+        background-color: rgba(255, 255, 255, 0.06);
+        color: #c7d2e5;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .section-head-title-strong {
+        color: #fff;
+    }
+
+    .section-head-title-muted {
+        color: #7f8da8;
+    }
+
+    .section-head-description {
+        color: #9aa8c2;
+    }
+
+    .get_in_touch_body {
+        position: relative;
+        z-index: 1;
+        padding: 70px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        background-size: 100% 100%;
+        background-image: url("/images/lines-bg.png");
+        z-index: 1;
+        .content {
+            background-color: #12263F;
+            border-top: 1px solid #fff1;
+            border-bottom: 1px solid #fff1;
+            &::before {
+                position: absolute;
+                content: "";
+                left: 50%;
+                top: 0;
+                transform: translateX(-50%);
+                width: 800px;
+                height: 300px;
+                background-color: #12263F;
+                filter: blur(50px);
+                z-index: -1;
+            }
+        }
+    }
+
+    .touch_card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        min-height: 370px;
+        padding: 36px 28px 28px;
+        border-inline-end: 1px solid rgba(255, 255, 255, 0.08);
+        transition: background-color 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        z-index: 1;
+
+        &::before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            content: '';
+            z-index: -1;
+            background-image: url("/images/touch-card-bg.png");
+            background-size: cover;
+            background-position: top;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        &:hover {
+            background-color: #ffffff05;
+
+            &::before {
+                opacity: 1;
+            }
+
+            .touch_card_cta {
+                width: 100%;
+                padding: 8px 8px 8px 20px;
+                gap: 18px;
+                border-color: rgba(255, 255, 255, 0.14);
+            }
+
+            .touch_card_cta_label {
+                max-width: 220px;
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .butn-icon {
+                transform: translateX(0);
+            }
+        }
+    }
+
+    .row > [class*="col"]:last-child .touch_card {
+        border-inline-end: 0;
+    }
+
+    .touch_card_title {
+        margin: 0 0 20px;
+        font-size: 25px;
+        font-weight: 600;
+        line-height: 1.25;
+    }
+
+    .touch_card_title_strong {
+        display: block;
+        color: #fff;
+    }
+
+    .touch_card_title_muted {
+        display: block;
+        color: #7f8da8;
+        font-weight: 500;
+    }
+
+    .touch_card_text {
+        margin: 0 0 28px;
+        color: rgba(196, 208, 224, 0.78);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.7;
+        max-width: 260px;
+    }
+
+    .touch_card_cta {
+        margin-top: auto;
+        justify-content: space-between;
+        width: 51px;
+        max-width: 100%;
+        padding: 8px;
+        gap: 0;
+        border-color: transparent;
+        background-color: transparent;
+        overflow: hidden;
+        transition:
+            width 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+            padding 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+            gap 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+            background-color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+            border-color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+            transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+
+        &:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .butn-icon {
+            transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+    }
+
+    .touch_card_cta_label {
+        display: block;
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        transform: translateX(-10px);
+        transition:
+            max-width 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+            opacity 0.35s ease 0.08s,
+            transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+}
+
+html[dir="rtl"] {
+    .get_in_touch {
+        .touch_card_cta_label {
+            transform: translateX(10px);
+        }
+
+        .touch_card:hover .touch_card_cta_label {
+            transform: translateX(0);
+        }
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .get_in_touch {
+        .section-head {
+            padding-top: 80px;
+            padding-bottom: 36px;
+        }
+
+        .get_in_touch_body {
+            padding-bottom: 80px;
+        }
+
+        .touch_card {
+            min-height: auto;
+            border-inline-end: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 28px 22px;
+        }
+
+        .row > [class*="col"]:last-child .touch_card {
+            border-bottom: 0;
+        }
+    }
+}
