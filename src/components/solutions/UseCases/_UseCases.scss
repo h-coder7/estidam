@@ -1,0 +1,177 @@
+.solutions_use_cases {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--dark, #0b1a33);
+    background-image: url("/images/operations-bg.jpg");
+    background-size: cover;
+    background-position: top;
+    background-repeat: no-repeat;
+    color: #fff;
+
+    .use_cases_head {
+        padding: 100px 0 40px;
+        border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .use_cases_num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 30px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #c7d2e5;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    .use_cases_title {
+        margin: 0;
+        color: #fff;
+        font-size: clamp(1.8rem, 3vw, 2.5rem);
+        font-weight: 600;
+        line-height: 1.25;
+    }
+
+    .use_cases_body {
+        position: relative;
+        z-index: 1;
+        border-bottom: 1px solid #fff1;
+    }
+
+    .use_case_col {
+        position: relative;
+        height: 100%;
+        padding: 48px 36px 20px;
+        border-inline-end: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 1;
+
+        &.is_featured::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url("/images/case-card-pat.png");
+            background-repeat: no-repeat;
+            background-position: center top;
+            background-size: contain;
+            z-index: -1;
+            pointer-events: none;
+        }
+    }
+
+    .row > [class*="col"]:last-child .use_case_col {
+        border-inline-end: 0;
+    }
+
+    .use_case_title {
+        margin: 0 0 36px;
+        color: #fff;
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    .use_case_steps {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+    }
+
+    .use_case_step {
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        padding-bottom: 50px;
+
+        &:not(:last-child)::before {
+            content: "";
+            position: absolute;
+            inset-inline-start: 17px;
+            top: 40px;
+            width: 1px;
+            height: calc(100% + 28px - 40px);
+            background-color: #fff1;
+        }
+    }
+
+    .use_case_step_icon {
+        position: relative;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        font-size: 14px;
+        border: 1px solid #fff1;
+
+        &.is_challenge {
+            color: #f87171;
+        }
+
+        &.is_solution {
+            color: #60a5fa;
+        }
+
+        &.is_outcome {
+            color: #34d399;
+        }
+    }
+
+    .use_case_step_content {
+        padding-top: 2px;
+    }
+
+    .use_case_step_label {
+        display: block;
+        margin-bottom: 8px;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .use_case_step_text {
+        max-width: 280px;
+        color: rgba(196, 208, 224, 0.82);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.65;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .solutions_use_cases {
+        .use_cases_head {
+            padding: 70px 0 32px;
+        }
+
+        .use_cases_body {
+            padding-bottom: 70px;
+        }
+
+        .use_case_col {
+            padding: 36px 20px;
+            border-inline-end: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .row > [class*="col"]:last-child .use_case_col {
+            border-bottom: 0;
+        }
+
+        .use_case_title {
+            font-size: 20px;
+            margin-bottom: 28px;
+        }
+    }
+}

@@ -1,0 +1,134 @@
+.solutions_outcomes_indicators {
+    position: relative;
+
+    .outcomes_indicators_head {
+    }
+
+    .outcomes_indicators_num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 30px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        background-color: #2e70e011;
+        color: var(--blue);
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    .outcomes_indicators_title {
+        margin: 0;
+        font-size: clamp(1.8rem, 3vw, 2.5rem);
+        font-weight: 600;
+        line-height: 1.25;
+    }
+
+    .outcomes_indicators_title_strong {
+        display: block;
+        color: #111827;
+    }
+
+    .outcomes_indicators_title_muted {
+        display: block;
+        color: #9ca3af;
+        font-weight: 500;
+    }
+
+    .outcomes_indicators_body {
+        padding: 80px 0;
+        border-right: 1px solid #9993;
+        border-left: 1px solid #9993;
+        .row > div > div {
+            height: 100%;
+        }
+    }
+
+    .outcome_card {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding: 20px;
+        border-radius: 24px;
+        background-color: #fff;
+        box-shadow: 5px 5px 30px #00000007;
+        transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+    }
+
+    .outcome_card_icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        margin-bottom: 22px;
+        border-radius: 50%;
+        border: 1px solid rgba(17, 24, 39, 0.12);
+        color: #6b7280;
+        font-size: 16px;
+        line-height: 1;
+        background-color: transparent;
+    }
+
+    .outcome_card_title {
+        margin: 0 0 15px;
+        color: #1f2937;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.45;
+        min-height: 3em;
+    }
+
+    .outcome_card_chart {
+        margin-top: auto;
+        margin-bottom: 16px;
+
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    .outcome_card_trend {
+        display: block;
+        color: #9ca3af;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        line-height: 1.2;
+    }
+}
+
+@media screen and (max-width: 1199px) {
+    .solutions_outcomes_indicators {
+        .outcome_card_title {
+            min-height: 0;
+        }
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .solutions_outcomes_indicators {
+        padding: 80px 0;
+
+        .outcomes_indicators_head {
+            margin-bottom: 32px;
+        }
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .solutions_outcomes_indicators {
+        padding: 70px 0;
+
+        .outcome_card {
+            padding: 24px 20px 20px;
+            border-radius: 20px;
+        }
+    }
+}

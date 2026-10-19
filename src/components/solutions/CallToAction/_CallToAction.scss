@@ -1,0 +1,103 @@
+.solutions_call_to_action {
+    position: relative;
+    overflow: hidden;
+    padding: 200px 0 100px;
+    background-color: #12263f;
+    // background-image: url("/images/call-action-pattern.png");
+    background-image: url("/images/operations-bg.jpg");
+    background-size: cover;
+    color: #fff;
+    text-align: center;
+    z-index: 2;
+
+    .lines {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: -1;
+    }
+
+    .call_to_action_inner {
+        position: relative;
+        z-index: 1;
+        max-width: 720px;
+        margin: 0 auto;
+    }
+
+    .call_to_action_badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 22px;
+        padding: 8px 14px;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(226, 232, 240, 0.9);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .call_to_action_title {
+        margin: 0 0 18px;
+        color: #fff;
+        font-size: clamp(1.9rem, 3.4vw, 2.75rem);
+        font-weight: 600;
+        line-height: 1.25;
+    }
+
+    .call_to_action_description {
+        max-width: 640px;
+        margin: 0 auto 36px;
+        color: rgba(226, 232, 240, 0.78);
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 1.7;
+    }
+
+    .call_to_action_actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+    }
+
+    .butn-ghost {
+        border-color: rgba(255, 255, 255, 0.85);
+
+        &:hover {
+            border-color: #fff;
+        }
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .solutions_call_to_action {
+        padding: 90px 0;
+
+        .call_to_action_description {
+            margin-bottom: 28px;
+        }
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .solutions_call_to_action {
+        padding: 70px 0;
+
+        .call_to_action_actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .butn {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+}

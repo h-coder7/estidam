@@ -1,0 +1,116 @@
+.solutions_systems_integrations {
+    position: relative;
+    overflow: hidden;
+    padding: 110px 0 100px;
+    background-color: #12263F;
+    color: #fff;
+
+    .systems_integrations_inner {
+        max-width: 780px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .systems_integrations_num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 30px;
+        margin-bottom: 22px;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #c7d2e5;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    .systems_integrations_title {
+        margin: 0 0 18px;
+        font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+        font-weight: 600;
+        line-height: 1.25;
+    }
+
+    .systems_integrations_title_strong {
+        color: #fff;
+    }
+
+    .systems_integrations_title_muted {
+        color: #7f8da8;
+        font-weight: 500;
+    }
+
+    .systems_integrations_description {
+        max-width: 620px;
+        margin: 0 auto 42px;
+        color: rgba(226, 232, 240, 0.72);
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 1.7;
+    }
+
+    .systems_integrations_tags {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px 14px;
+    }
+
+    .systems_integrations_tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 18px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background-color: rgba(255, 255, 255, 0.04);
+        color: rgba(196, 208, 224, 0.78);
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.2;
+        white-space: nowrap;
+        cursor: default;
+        transition:
+            border-color 0.3s ease,
+            color 0.3s ease,
+            background-color 0.3s ease;
+
+        i {
+            font-size: 14px;
+            line-height: 1;
+            color: inherit;
+            transition: color 0.3s ease;
+        }
+
+        &:hover {
+            border-color: #fff;
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #fff;
+        }
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .solutions_systems_integrations {
+        padding: 80px 0 70px;
+
+        .systems_integrations_description {
+            margin-bottom: 32px;
+        }
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .solutions_systems_integrations {
+        padding: 70px 0 60px;
+
+        .systems_integrations_tag {
+            padding: 10px 14px;
+            font-size: 13px;
+            gap: 8px;
+        }
+    }
+}

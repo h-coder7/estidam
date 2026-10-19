@@ -7,7 +7,7 @@ const SolutionsHero = async () => {
     const t = await getTranslations("solutionsPage.hero");
 
     return (
-        <section className="solutions_hero">
+        <section className="solutions_hero mb-5 border-bottom">
             <div className="container">
                 <div className="content px-lg-4">
                     <div className="row align-items-center justify-content-between">
@@ -38,14 +38,24 @@ const SolutionsHero = async () => {
                                     <Reveal animation="fade-up" trigger="load">
                                         <a href="#" className="butn butn-blue">
                                             <span>{t("primaryCta")}</span>
-                                            <span className="butn-icon" aria-hidden="true"></span>
+                                            <img
+                                                src="/images/icons/arrow-wh.svg"
+                                                alt=""
+                                                className="butn-icon"
+                                                aria-hidden="true"
+                                            />
                                         </a>
                                     </Reveal>
 
                                     <Reveal animation="fade-up" trigger="load">
                                         <a href="#use-cases" className="butn solutions_hero_link">
                                             <span>{t("secondaryCta")}</span>
-                                            <span className="butn-icon" aria-hidden="true"></span>
+                                            <img
+                                                src="/images/icons/arrow-bl.svg"
+                                                alt=""
+                                                className="butn-icon"
+                                                aria-hidden="true"
+                                            />
                                         </a>
                                     </Reveal>
                                 </div>

@@ -64,7 +64,12 @@ const GetInTouch = async () => {
 
                                         <a href="#" className="butn butn-ghost touch_card_cta">
                                             <span className="touch_card_cta_label">{t("card1Cta")}</span>
-                                            <span className="butn-icon" aria-hidden="true"></span>
+                                            <img
+                                                src="/images/icons/arrow-bl.svg"
+                                                alt=""
+                                                className="butn-icon"
+                                                aria-hidden="true"
+                                            />
                                         </a>
                                     </article>
                                 </Reveal>
@@ -86,7 +91,12 @@ const GetInTouch = async () => {
 
                                         <a href="#" className="butn butn-ghost touch_card_cta">
                                             <span className="touch_card_cta_label">{t("card2Cta")}</span>
-                                            <span className="butn-icon" aria-hidden="true"></span>
+                                            <img
+                                                src="/images/icons/arrow-bl.svg"
+                                                alt=""
+                                                className="butn-icon"
+                                                aria-hidden="true"
+                                            />
                                         </a>
                                     </article>
                                 </Reveal>
@@ -108,7 +118,12 @@ const GetInTouch = async () => {
 
                                         <a href="#" className="butn butn-ghost touch_card_cta">
                                             <span className="touch_card_cta_label">{t("card3Cta")}</span>
-                                            <span className="butn-icon" aria-hidden="true"></span>
+                                            <img
+                                                src="/images/icons/arrow-bl.svg"
+                                                alt=""
+                                                className="butn-icon"
+                                                aria-hidden="true"
+                                            />
                                         </a>
                                     </article>
                                 </Reveal>
@@ -130,7 +145,12 @@ const GetInTouch = async () => {
 
                                         <a href="#" className="butn butn-ghost touch_card_cta">
                                             <span className="touch_card_cta_label">{t("card4Cta")}</span>
-                                            <span className="butn-icon" aria-hidden="true"></span>
+                                            <img
+                                                src="/images/icons/arrow-bl.svg"
+                                                alt=""
+                                                className="butn-icon"
+                                                aria-hidden="true"
+                                            />
                                         </a>
                                     </article>
                                 </Reveal>

@@ -78,7 +78,12 @@ const HajjJourney = () => {
                                     <Reveal animation="fade-up" trigger="load">
                                         <a href="#" className="butn butn-outline">
                                             <span>{t("cta")}</span>
-                                            <span className="butn-icon" aria-hidden="true"></span>
+                                            <img
+                                                src="/images/icons/arrow-bl.svg"
+                                                alt=""
+                                                className="butn-icon"
+                                                aria-hidden="true"
+                                            />
                                         </a>
                                     </Reveal>
                                 </div>

@@ -1,0 +1,197 @@
+.solutions_how_helps {
+    position: relative;
+    // padding-bottom: 100px;
+    color: #111827;
+    overflow: hidden;
+
+    .how_helps_head {
+        padding: 80px 0 40px;
+    }
+
+    .how_helps_num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 30px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        background-color: #2e70e011;
+        color: var(--blue);
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    .how_helps_title {
+        margin: 0;
+        font-size: clamp(1.8rem, 3vw, 2.5rem);
+        font-weight: 600;
+        line-height: 1.25;
+    }
+
+    .how_helps_title_strong {
+        color: #111827;
+    }
+
+    .how_helps_title_muted {
+        color: #9ca3af;
+        font-weight: 500;
+    }
+
+    .how_helps_description {
+        color: #6b7280;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.7;
+    }
+
+    .how_helps_body {
+        position: relative;
+        padding: 40px 0 0;
+        border-right: 1px solid #9993;
+        border-left: 1px solid #9993;
+        padding-bottom: 100px;
+    }
+
+    .how_helps_col {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .help_card {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 18px 20px;
+        border: 1px solid rgba(17, 24, 39, 0.08);
+        border-radius: 16px;
+        background-color: #fff;
+        box-shadow: 0 2px 10px rgba(18, 38, 63, 0.04);
+        transition:
+            background-color 0.35s ease,
+            transform 0.35s ease,
+            box-shadow 0.35s ease;
+        z-index: 1;
+
+        &::before {
+            position: absolute;
+            content: "";
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+            background-image: url("/images/gr-card-bg.png");
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(18, 38, 63, 0.1);
+
+            &::before {
+                opacity: 1;
+            }
+
+            .help_card_icon {
+                transform: scale(1.06);
+            }
+        }
+    }
+
+    .help_card_icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+        background-color: #12263f;
+        transition: transform 0.35s ease;
+
+        img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+    }
+
+    .help_card_content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .help_card_title {
+        margin: 0 0 4px;
+        color: #111827;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.35;
+    }
+
+    .help_card_text {
+        color: #9ca3af;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.5;
+    }
+
+    .help_card_badge {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background-color: #f3f4f6;
+        color: #6b7280;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1;
+        white-space: nowrap;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .solutions_how_helps {
+        padding-bottom: 70px;
+
+        .how_helps_head {
+            padding: 60px 0 28px;
+        }
+
+        .how_helps_description {
+            margin-top: 16px;
+            text-align: start !important;
+        }
+
+        .how_helps_body {
+            padding-top: 28px;
+        }
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .solutions_how_helps {
+        .help_card {
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .help_card_badge {
+            margin-inline-start: auto;
+        }
+
+        .help_card_title {
+            font-size: 14px;
+        }
+    }
+}

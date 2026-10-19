@@ -32,14 +32,24 @@ const Hero = async () => {
                                     <Reveal animation="fade-up" trigger="load">
                                         <a href="#" className="butn butn-blue">
                                             <span>{t("primaryCta")}</span>
-                                            <span className="butn-icon" aria-hidden="true"></span>
+                                            <img
+                                                src="/images/icons/arrow-wh.svg"
+                                                alt=""
+                                                className="butn-icon"
+                                                aria-hidden="true"
+                                            />
                                         </a>
                                     </Reveal>
 
                                     <Reveal animation="fade-up" trigger="load">
                                         <a href="#why-estidam" className="butn butn-ghost">
                                             <span>{t("secondaryCta")}</span>
-                                            <span className="butn-icon" aria-hidden="true"></span>
+                                            <img
+                                                src="/images/icons/arrow-bl.svg"
+                                                alt=""
+                                                className="butn-icon"
+                                                aria-hidden="true"
+                                            />
                                         </a>
                                     </Reveal>
                                 </div>

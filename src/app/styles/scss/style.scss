@@ -51,6 +51,10 @@ body {
     color: #1C1D1F;
 }
 
+.bg-light-gray {
+    background-color: #f7f8fa;
+}
+
 html[dir="rtl"] body {
     font-family: var(--font-inter), Inter, "Segoe UI", Tahoma, sans-serif;
 }
@@ -457,8 +461,8 @@ input[type="number"] {
         width: 35px;
         height: 35px;
         flex-shrink: 0;
-        background: url("/images/icons/arrow-bl.svg") center / contain no-repeat;
-        transition: transform 0.25s ease, background-image 0.25s ease;
+        object-fit: contain;
+        transition: transform 0.25s ease;
     }
 
     &:hover {
@@ -481,10 +485,6 @@ input[type="number"] {
         border-color: var(--blue);
         color: #fff;
 
-        .butn-icon {
-            background-image: url("/images/icons/arrow-wh.svg");
-        }
-
         &:hover {
             background-color: #12263f;
             border-color: #fff4;
@@ -502,10 +502,6 @@ input[type="number"] {
             border-color: var(--blue);
             color: #fff;
             box-shadow: 0 10px 24px rgba(41, 92, 199, 0.4);
-
-            .butn-icon {
-                background-image: url("/images/icons/arrow-wh.svg");
-            }
         }
     }
 
@@ -534,7 +530,6 @@ input[type="number"] {
             border-color: #fff4;
 
             .butn-icon {
-                background-image: url("/images/icons/arrow-wh.svg");
                 transform: translateX(4px);
             }
         }
@@ -1007,12 +1002,25 @@ html[dir="rtl"] {
     position: relative;
     z-index: 10;
 
-    .inner-pattern {
+    // .inner-pattern {
+    //     position: absolute;
+    //     left: calc((100% - 1298px) / 2);
+    //     top: 0;
+    //     height: 100%;
+    //     width: calc(100% - ((100% - 1298px)));
+    //     z-index: -1;
+    // }
+
+    .line-pat {
         position: absolute;
         left: calc((100% - 1298px) / 2);
         top: 0;
         height: 100%;
+        width: calc(100% - ((100% - 1298px)));
         z-index: -1;
+        background-image: url("/images/inner-pattern.png");
+        background-size: contain;
+        background-repeat: repeat;
     }
 
 }
