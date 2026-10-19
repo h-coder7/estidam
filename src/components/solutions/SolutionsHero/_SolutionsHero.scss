@@ -1,0 +1,128 @@
+.solutions_hero {
+    position: relative;
+    padding-top: 140px;
+    padding-bottom: 80px;
+    background-color: #f7f8fa;
+    overflow: hidden;
+    z-index: 2;
+
+    .solutions_hero_dots {
+        position: absolute;
+        inset-inline-end: 0;
+        top: 0;
+        height: 100%;
+        width: auto;
+        max-width: 70%;
+        z-index: 0;
+        object-fit: cover;
+        pointer-events: none;
+    }
+
+    .container {
+        position: relative;
+        z-index: 2;
+    }
+
+    .solutions_hero_content {
+        position: relative;
+        z-index: 3;
+        padding-bottom: 20px;
+    }
+
+    .solutions_hero_num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 30px;
+        margin-bottom: 28px;
+        border-radius: 10px;
+        background-color: #2E70E011;
+        color: var(--blue);
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    .solutions_hero_title {
+        margin: 0 0 1.5rem;
+        font-size: clamp(2rem, 3vw, 3.1rem);
+        font-weight: 600;
+        line-height: 1.2;
+    }
+
+    .solutions_hero_title_strong {
+        color: #111827;
+    }
+
+    .solutions_hero_title_muted {
+        color: #9ca3af;
+        font-weight: 500;
+    }
+
+    .solutions_hero_description {
+        margin: 0 0 2.25rem;
+        color: #6b7280;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.7;
+    }
+
+    .solutions_hero_actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem 1.5rem;
+    }
+
+    .solutions_hero_visual {
+        position: relative;
+        z-index: 2;
+    }
+
+    .solutions_hero_img {
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+}
+
+html[dir="rtl"] {
+    .solutions_hero {
+        .solutions_hero_link:hover .butn-icon {
+            transform: scaleX(-1) translateX(-3px);
+        }
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .solutions_hero {
+        padding-top: 110px;
+        padding-bottom: 60px;
+
+        .solutions_hero_content {
+            max-width: 100%;
+            margin-bottom: 2.5rem;
+        }
+
+        .solutions_hero_dots {
+            max-width: 100%;
+            opacity: 0.55;
+        }
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .solutions_hero {
+        .solutions_hero_actions {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .butn-blue {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+}

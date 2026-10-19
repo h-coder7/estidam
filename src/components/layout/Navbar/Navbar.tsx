@@ -6,7 +6,11 @@ import { Link, usePathname, useRouter } from "@/i18n/routing";
 
 import "./_Navbar.scss";
 
-export default function Navbar() {
+type NavbarProps = {
+    className?: string;
+};
+
+export default function Navbar({ className = "" }: NavbarProps) {
     const t = useTranslations("navbar");
     const locale = useLocale();
     const pathname = usePathname();
@@ -26,12 +30,24 @@ export default function Navbar() {
     };
 
     return (
-        <nav className={`navbar navbar-expand-lg homeNav${scrolled ? " scrolled" : ""}`}>
+        <nav
+            className={`navbar navbar-expand-lg homeNav${scrolled ? " scrolled" : ""}${className ? ` ${className}` : ""}`}
+        >
             <div className="container">
 
-                <Link className="navbar-brand" href="/">
+                <Link className="navbar-brand logo-wh" href="/">
                     <img
                         src="/images/logo.svg"
+                        alt="Estidam"
+                        className="logo"
+                        width={160}
+                        height={48}
+                    />
+                </Link>
+
+                <Link className="navbar-brand logo-dr" href="/">
+                    <img
+                        src="/images/logo-estidam.png"
                         alt="Estidam"
                         className="logo"
                         width={160}

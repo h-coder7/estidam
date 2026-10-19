@@ -14,6 +14,17 @@
     "primaryCta": "Start with a Data & KPI Assessment",
     "secondaryCta": "Explore our approach"
   },
+  "solutionsPage": {
+    "hero": {
+      "number": "01",
+      "titleStrong": "Improve how work gets done before investing",
+      "titleMuted": "in technology",
+      "description": "We assess current operations, identify bottlenecks and opportunities, and build a practical roadmap to improve performance and prioritize initiatives before and during technology implementation.",
+      "primaryCta": "Discuss Your Challenge",
+      "secondaryCta": "Explore Use Cases",
+      "imageAlt": "Operational flow solution overview"
+    }
+  },
   "whyEstidam": {
     "badge": "Why Estidam",
     "titleStrong": "Sector Understanding.",

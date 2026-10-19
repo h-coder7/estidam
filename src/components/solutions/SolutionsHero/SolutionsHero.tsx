@@ -1,0 +1,80 @@
+import { getTranslations } from "next-intl/server";
+import Reveal from "@/components/animations/Reveal";
+
+import "./_SolutionsHero.scss";
+
+const SolutionsHero = async () => {
+    const t = await getTranslations("solutionsPage.hero");
+
+    return (
+        <section className="solutions_hero">
+            <div className="container">
+                <div className="content px-lg-4">
+                    <div className="row align-items-center justify-content-between">
+                        <div className="col-lg-6">
+                            <div className="solutions_hero_content">
+                                <Reveal animation="fade-up" trigger="load">
+                                    <span className="solutions_hero_num">{t("number")}</span>
+                                </Reveal>
+
+                                <Reveal animation="fade-up" trigger="load">
+                                    <h1 className="solutions_hero_title">
+                                        <span className="solutions_hero_title_strong">
+                                            {t("titleStrong")}
+                                        </span>{" "}
+                                        <span className="solutions_hero_title_muted">
+                                            {t("titleMuted")}
+                                        </span>
+                                    </h1>
+                                </Reveal>
+
+                                <Reveal animation="fade-up" trigger="load">
+                                    <p className="solutions_hero_description">
+                                        {t("description")}
+                                    </p>
+                                </Reveal>
+
+                                <div className="solutions_hero_actions">
+                                    <Reveal animation="fade-up" trigger="load">
+                                        <a href="#" className="butn butn-blue">
+                                            <span>{t("primaryCta")}</span>
+                                            <span className="butn-icon" aria-hidden="true"></span>
+                                        </a>
+                                    </Reveal>
+
+                                    <Reveal animation="fade-up" trigger="load">
+                                        <a href="#use-cases" className="butn solutions_hero_link">
+                                            <span>{t("secondaryCta")}</span>
+                                            <span className="butn-icon" aria-hidden="true"></span>
+                                        </a>
+                                    </Reveal>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="col-lg-5">
+                            <Reveal animation="fade-up" trigger="load">
+                                <div className="solutions_hero_visual">
+                                    <img
+                                        src="/images/solution-hero.png"
+                                        alt={t("imageAlt")}
+                                        className="solutions_hero_img"
+                                    />
+                                </div>
+                            </Reveal>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <img
+                src="/images/solution-hero-dots.png"
+                alt=""
+                className="solutions_hero_dots"
+                aria-hidden="true"
+            />
+        </section>
+    );
+};
+
+export default SolutionsHero;
