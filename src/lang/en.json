@@ -14,6 +14,34 @@
     "primaryCta": "Start with a Data & KPI Assessment",
     "secondaryCta": "Explore our approach"
   },
+  "aiReadinessPage": {
+    "hero": {
+      "badge": "Free Practical Assessment",
+      "titleStrong": "Free practical assessment is your organization truly ready to benefit",
+      "titleMuted": "from AI?",
+      "description": "Before investing in AI tools or projects, discover where the real value lies and what you need to prepare first.",
+      "primaryCta": "Start Assessment",
+      "feature1": "Around 3 minutes",
+      "feature2": "Result across 6 dimensions",
+      "feature3": "No technical knowledge required",
+      "metric1": "Data Infrastructure",
+      "metric2": "Talent & Culture",
+      "metric3": "Governance & Ethics",
+      "metric4": "Use Cases & Value",
+      "metric5": "Technology Stack",
+      "imageAlt": "AI readiness visual"
+    },
+    "whatYouReceive": {
+      "badge": "What you will receive",
+      "titleStrong": "Know where you stand and what",
+      "titleMuted": "to do next",
+      "card1": "Initial readiness score",
+      "card2": "Six-dimension analysis",
+      "card3": "Strengths & readiness gaps",
+      "card4": "Relevant AI opportunities",
+      "card5": "Recommended next step"
+    }
+  },
   "solutionsPage": {
     "hero": {
       "number": "01",
