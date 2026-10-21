@@ -15,26 +15,26 @@ const WhatYouReceive = async () => {
     ] as const;
 
     return (
-        <section className="readiness_what_you_receive" id="what-you-receive">
+        <section className="readiness_what_you_receive border-bottom" id="what-you-receive">
             <div className="container">
-                <div className="what_you_receive_head">
+                <div className="what_you_receive_head px-lg-4">
                     <Reveal animation="fade-up" trigger="load">
                         <span className="what_you_receive_badge">{t("badge")}</span>
                     </Reveal>
 
                     <Reveal animation="fade-up" trigger="load">
-                        <h2 className="what_you_receive_title">
+                        <h2 className="what_you_receive_title fsz-40 fw-600 lh-2">
                             <span className="what_you_receive_title_strong">
                                 {t("titleStrong")}
                             </span>
-                            <span className="what_you_receive_title_muted">
+                            <span className="what_you_receive_title_muted cr-blue fw-500">
                                 {t("titleMuted")}
                             </span>
                         </h2>
                     </Reveal>
                 </div>
 
-                <div className="what_you_receive_body">
+                <div className="what_you_receive_body px-lg-4">
                     <div className="row gx-0 gy-3 align-items-end">
                         {cards.map((card) => (
                             <div key={card.key} className="col-xl col-md-4 col-sm-6">
@@ -49,6 +49,12 @@ const WhatYouReceive = async () => {
                     </div>
                 </div>
             </div>
+
+            <div className="sec-lines">
+                <span></span>
+                <span></span>
+            </div>
+
         </section>
     );
 };

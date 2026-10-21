@@ -27,20 +27,11 @@
 
     .what_you_receive_title {
         margin: 0;
-        font-size: clamp(1.9rem, 3.2vw, 2.7rem);
-        font-weight: 600;
-        line-height: 1.25;
     }
 
-    .what_you_receive_title_strong {
-        display: block;
-        color: #111827;
-    }
-
+    .what_you_receive_title_strong,
     .what_you_receive_title_muted {
         display: block;
-        color: #9ca3af;
-        font-weight: 500;
     }
 
     .what_you_receive_body {
@@ -59,7 +50,6 @@
         padding: 30px 20px;
         background-color: #fff;
         border: 1px solid rgba(17, 24, 39, 0.04);
-        box-shadow: 0 10px 30px rgba(18, 38, 63, 0.05);
     }
 
     .receive_card_num {

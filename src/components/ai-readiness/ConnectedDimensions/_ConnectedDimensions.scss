@@ -1,0 +1,182 @@
+.readiness_dimensions {
+    position: relative;
+    padding-top: 80px;
+    padding-bottom: 0;
+    background-color: #f7f8fa;
+    color: #111827;
+
+    .dimensions_head {
+        padding-bottom: 40px;
+    }
+
+    .dimensions_badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        padding: 8px 14px;
+        border-radius: 10px;
+        background-color: #2e70e011;
+        color: var(--blue);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .dimensions_title_strong,
+    .dimensions_title_muted {
+        display: block;
+    }
+
+    .dimensions_title_strong {
+        color: #111827;
+    }
+
+    .dimensions_description {
+        color: #6b7280;
+    }
+
+    .dimensions_grid {
+        .row > div > div {
+            height: 100%;
+        }
+    }
+
+    .dimension_card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding: 36px 32px 28px;
+        border: 1px solid #9993;
+        background-color: transparent;
+        transition: background-color 0.35s ease;
+        z-index: 1;
+
+        &::before {
+            position: absolute;
+            content: "";
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("/images/gr-card-bg.png");
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        &:hover {
+            background-color: #fff;
+
+            &::before {
+                opacity: 1;
+            }
+
+            .dimension_card_icon {
+                background-color: transparent;
+                transform: scale(1.06);
+            }
+
+            .dimension_card_arrow {
+                border-color: var(--blue);
+                color: var(--blue);
+            }
+        }
+    }
+
+    .dimension_card_top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 36px;
+    }
+
+    .dimension_card_icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border: 1px solid #e3ecf8;
+        border-radius: 12px;
+        background-color: #f3f7fd;
+        color: #6b7280;
+        font-size: 18px;
+        transition:
+            background-color 0.35s ease,
+            transform 0.35s ease;
+    }
+
+    .dimension_card_arrow {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border: 1px solid rgba(17, 24, 39, 0.12);
+        border-radius: 50%;
+        color: #6b7280;
+        font-size: 13px;
+        text-decoration: none;
+        transition:
+            border-color 0.3s ease,
+            color 0.3s ease,
+            background-color 0.3s ease;
+
+        &:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+            background-color: rgba(46, 112, 224, 0.06);
+        }
+    }
+
+    .dimension_card_title {
+        margin: 0 0 auto;
+        color: #111827;
+        line-height: 1.35;
+        padding-bottom: 28px;
+    }
+
+    .dimension_card_footer {
+        padding-top: 18px;
+        border-top: 1px solid rgba(17, 24, 39, 0.1);
+        color: #6b7280;
+    }
+}
+
+html[dir="rtl"] {
+    .readiness_dimensions {
+        .dimension_card_arrow {
+            transform: scaleX(-1);
+        }
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .readiness_dimensions {
+        padding-top: 60px;
+
+        .dimensions_head {
+            padding-bottom: 28px;
+        }
+
+        .dimensions_description {
+            margin-top: 16px;
+        }
+
+        .dimension_card {
+            padding: 28px 20px;
+        }
+
+        .dimension_card_title {
+            padding-bottom: 20px;
+        }
+    }
+}

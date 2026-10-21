@@ -17,11 +17,11 @@ const Challenges = async () => {
                     <div className="row gx-0 justify-content-between align-items-end">
                         <div className="col-lg-6">
                             <Reveal animation="fade-up" trigger="load">
-                                <h2 className="challenges_title">
+                                <h2 className="challenges_title fsz-40 fw-600 lh-2">
                                     <span className="challenges_title_strong">
                                         {t("titleStrong")}
                                     </span>{" "}
-                                    <span className="challenges_title_muted">
+                                    <span className="challenges_title_muted cr-blue fw-500">
                                         {t("titleMuted")}
                                     </span>
                                 </h2>

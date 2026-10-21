@@ -58,11 +58,11 @@ const ReadinessHero = async () => {
                                 </Reveal>
 
                                 <Reveal animation="fade-up" trigger="load">
-                                    <h1 className="hero_readiness_title">
+                                    <h1 className="hero_readiness_title fsz-50 fw-600 lh-2">
                                         <span className="hero_readiness_title_strong">
                                             {t("titleStrong")}
                                         </span>{" "}
-                                        <span className="hero_readiness_title_muted">
+                                        <span className="hero_readiness_title_muted cr-blue fw-500">
                                             {t("titleMuted")}
                                         </span>
                                     </h1>

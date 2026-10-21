@@ -1,0 +1,180 @@
+.about_studio {
+    position: relative;
+    background-color: var(--light-gray);
+
+    .section-head {
+        padding-bottom: 16px;
+    }
+
+    .about_studio_title_muted {
+        color: #777;
+        font-weight: 500;
+    }
+
+    .about_studio_description {
+        margin-inline-start: auto;
+        color: #777;
+        line-height: 1.7;
+    }
+
+    .about_studio_kicker {
+        display: block;
+        margin-bottom: 28px;
+        color: rgba(255, 255, 255, 0.62);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+
+        &.is_muted {
+            margin-bottom: 22px;
+            color: #9aa3af;
+        }
+    }
+
+    .about_studio_steps_card {
+        padding: 28px 26px 32px;
+        border-radius: 22px;
+        background: linear-gradient(-120deg, #1b4d8c 0%, #143868 42%, #0d2344 100%);
+        color: #fff;
+    }
+
+    .about_studio_steps {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 16px;
+            bottom: 22px;
+            inset-inline-start: 15px;
+            width: 1px;
+            background-color: rgba(255, 255, 255, 0.22);
+        }
+
+        li {
+            display: flex;
+            gap: 16px;
+            position: relative;
+
+            &:not(:last-child) {
+                padding-bottom: 28px;
+            }
+        }
+    }
+
+    .about_studio_step_num {
+        position: relative;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 32px;
+        width: 32px;
+        height: 32px;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        border-radius: 50%;
+        background-color: #143668;
+        color: #fff;
+    }
+
+    .about_studio_step_title {
+        color: #fff;
+    }
+
+    .about_studio_step_text {
+        color: rgba(255, 255, 255, 0.62);
+    }
+
+    .about_studio_team,
+    .about_studio_work {
+        padding: 26px 28px;
+        border: 1px solid #e7ebf2;
+        border-radius: 18px;
+        background-color: #fff;
+    }
+
+    .about_studio_team_title {
+        color: #111827;
+    }
+
+    .about_studio_team_text {
+        color: #9aa3af;
+    }
+
+    .about_studio_venn {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+
+        span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 96px;
+            height: 96px;
+            margin-inline-start: -22px;
+            padding: 8px;
+            border-radius: 50%;
+            background-color: rgba(214, 226, 248, 0.72);
+            color: #4d6eae;
+            line-height: 1.25;
+            text-align: center;
+
+            &:first-child {
+                margin-inline-start: 0;
+            }
+
+            &.is_tech {
+                background-color: rgba(214, 218, 224, 0.85);
+                color: #6b7280;
+            }
+        }
+    }
+
+    .about_studio_topics {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        span {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 14px;
+            border: 1px solid #e6ebf2;
+            border-radius: 999px;
+            background-color: #fff;
+            color: #374151;
+        }
+    }
+
+    .about_studio_cta {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 28px;
+        padding: 28px 26px;
+        border-radius: 18px;
+        background-color: var(--light-gray);
+    }
+
+    .about_studio_cta_title {
+        max-width: 220px;
+        color: #111827;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .about_studio {
+        .about_studio_description {
+            max-width: 100%;
+            margin-top: 16px;
+            margin-inline-start: 0;
+        }
+
+        .about_studio_venn {
+            justify-content: flex-start;
+        }
+    }
+}

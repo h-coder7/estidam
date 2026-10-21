@@ -16,7 +16,7 @@ const CallToAction = async () => {
                     </Reveal>
 
                     <Reveal animation="fade-up" trigger="load">
-                        <h2 className="call_to_action_title">{t("title")}</h2>
+                        <h2 className="call_to_action_title fsz-40 fw-600 lh-2">{t("title")}</h2>
                     </Reveal>
 
                     <Reveal animation="fade-up" trigger="load">

@@ -23,11 +23,11 @@ const OutcomesIndicators = async () => {
                     </Reveal>
 
                     <Reveal animation="fade-up" trigger="load">
-                        <h2 className="outcomes_indicators_title">
+                        <h2 className="outcomes_indicators_title fsz-40 fw-600 lh-2">
                             <span className="outcomes_indicators_title_strong">
                                 {t("titleStrong")}
                             </span>
-                            <span className="outcomes_indicators_title_muted">
+                            <span className="outcomes_indicators_title_muted cr-blue fw-500">
                                 {t("titleMuted")}
                             </span>
                         </h2>

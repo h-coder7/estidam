@@ -14,6 +14,150 @@
     "primaryCta": "Start with a Data & KPI Assessment",
     "secondaryCta": "Explore our approach"
   },
+  "aboutPage": {
+    "hero": {
+      "badge": "Who we are",
+      "titleBefore": "An operations partner that knows the",
+      "titleAccent": "Hajj",
+      "titleAfter": "sector from the inside",
+      "description": "Estidam is a Saudi company working with Hajj companies and related entities to improve operations, connect systems and data, and apply AI where it creates measurable impact.",
+      "cardLabel": "Season readiness",
+      "cardScore": "82%",
+      "metric1": "Systems",
+      "metric1Value": "92%",
+      "metric2": "Data",
+      "metric2Value": "76%",
+      "metric3": "Operations",
+      "metric3Value": "85%",
+      "metric4": "People",
+      "metric4Value": "70%",
+      "statusLabel": "Incident status",
+      "statusValue": "Resolved",
+      "ledBy": "Led by",
+      "ledByValue": "Sector understanding + technical delivery",
+      "imageAlt": "Season readiness overview"
+    },
+    "stats": {
+      "stat1Value": "8+",
+      "stat1Strong": "Operating",
+      "stat1Muted": "seasons",
+      "stat2Value": "+40",
+      "stat2Strong": "Sector",
+      "stat2Muted": "clients",
+      "stat3Value": "3",
+      "stat3Strong": "Digital",
+      "stat3Muted": "products",
+      "highlightTitle": "Saudi company, Makkah based",
+      "highlightNote": "Built inside the sector"
+    },
+    "approach": {
+      "badge": "Our approach",
+      "titleStrong": "Sector understanding. Better operations.",
+      "titleMuted": "Practical intelligence. Measurable impact.",
+      "description": "We combine Hajj-sector understanding, operational transformation, and strong technology and delivery capabilities to build solutions that start from real business needs and continue through operation and improvement.",
+      "item1Title": "We understand the sector",
+      "item1Text": "Solutions designed around the realities of Hajj companies and seasonal operations.",
+      "item1Points": [
+        "Seasonal peaks and fixed timelines",
+        "Many parties working in sync",
+        "Service quality under pressure"
+      ],
+      "item2Title": "We start with operations",
+      "item2Text": "We begin with how the work actually happens, then shape the operating model before adding tools.",
+      "item2Points": [
+        "Current workflows and handoffs",
+        "Bottlenecks during peak seasons",
+        "Processes teams can sustain"
+      ],
+      "item3Title": "We apply AI practically",
+      "item3Text": "AI is used where it removes manual work and supports decisions, without adding complexity.",
+      "item3Points": [
+        "High-value operational use cases",
+        "Human review on critical decisions",
+        "Tools that fit existing systems"
+      ],
+      "item4Title": "We measure and improve",
+      "item4Text": "Every season produces evidence. We track results and improve the operation before the next cycle.",
+      "item4Points": [
+        "KPIs tied to service quality",
+        "Review after each season",
+        "Changes ready for the next peak"
+      ]
+    },
+    "journey": {
+      "index": "03",
+      "badge": "Hajj operations journey",
+      "titleBefore": "Supporting operations",
+      "titleMutedStart": "before,",
+      "titleMutedRest": "during and after",
+      "titleAfter": "the Hajj season",
+      "hint": "Pick a stage of the season to see how we support it.",
+      "timelineStart": "Start",
+      "timelineMid": "Hajj season",
+      "timelineEnd": "Next season",
+      "phase1Label": "Before the season",
+      "phase1Title": "Prepare & Plan",
+      "phase1Text": "Operational and system readiness ahead of the season, built on a clear plan.",
+      "phase1Points": [
+        "Operational and system readiness",
+        "Data preparation",
+        "Workforce and resource planning",
+        "System integrations",
+        "Workflow definition"
+      ],
+      "phase2Label": "During the season",
+      "phase2Title": "Operate & Respond",
+      "phase2Text": "Real-time operational control during peak activity, with fast response and coordinated decisions.",
+      "phase2Points": [
+        "Live operations monitoring",
+        "Incident response workflows",
+        "Field coordination",
+        "Service quality tracking",
+        "Decision support dashboards"
+      ],
+      "phase3Label": "After the season",
+      "phase3Title": "Analyze & Improve",
+      "phase3Text": "Post-season learning that turns performance data into clearer plans for the next cycle.",
+      "phase3Points": [
+        "Performance reviews",
+        "KPI and outcome analysis",
+        "Process improvement",
+        "Lessons learned capture",
+        "Next-season planning"
+      ]
+    },
+    "studio": {
+      "badge": "Estidam solutions studio",
+      "titleStrong": "A studio that designs the solution",
+      "titleMuted": "before writing code",
+      "description": "We combine Hajj-sector understanding, operational transformation, and strong technology and delivery capabilities to build solutions that start from real business needs and continue through operation and improvement.",
+      "stepsLabel": "How we work with you",
+      "step1Title": "Discovery workshops",
+      "step1Text": "With your operations teams",
+      "step2Title": "Process maps and KPIs",
+      "step2Text": "What good looks like, in numbers",
+      "step3Title": "Testable prototypes",
+      "step3Text": "See it before it is built",
+      "step4Title": "A pilot and measurement plan",
+      "step4Text": "Prove it, then scale it",
+      "teamTitle": "One small multidisciplinary team",
+      "teamText": "Four disciplines in the same room from day one.",
+      "discipline1": "Operations",
+      "discipline2": "Data",
+      "discipline3": "UX",
+      "discipline4": "Technology",
+      "workLabel": "What we work on",
+      "topic1": "Business & Process Transformation",
+      "topic2": "Data & Decision Intelligence",
+      "topic3": "AI for Operations",
+      "topic4": "Operational Platforms",
+      "topic5": "Integration & Automation",
+      "topic6": "Pilgrim Experience",
+      "topic7": "Managed Operations",
+      "ctaTitle": "Have a challenge worth solving?",
+      "cta": "Discuss Your Challenge"
+    }
+  },
   "aiReadinessPage": {
     "hero": {
       "badge": "Free Practical Assessment",
@@ -40,6 +184,35 @@
       "card3": "Strengths & readiness gaps",
       "card4": "Relevant AI opportunities",
       "card5": "Recommended next step"
+    },
+    "connectedDimensions": {
+      "badge": "Six connected dimensions",
+      "titleStrong": "A complete view of your",
+      "titleMuted": "organization's readiness",
+      "description": "We assess the ability to create real value—not simply access to tools.",
+      "card1Title": "Operations",
+      "card1Text": "Process clarity, manual work and automation potential.",
+      "card2Title": "Data",
+      "card2Text": "Availability, quality, organization and usability.",
+      "card3Title": "Systems & Integration",
+      "card3Text": "Connectivity and data exchange.",
+      "card4Title": "AI Adoption",
+      "card4Text": "Current experiments and operational relevance.",
+      "card5Title": "Governance & Readiness",
+      "card5Text": "Leadership, ownership, privacy and risk.",
+      "card6Title": "Value & Priority",
+      "card6Text": "Business challenges and high-value use cases."
+    },
+    "howItWorks": {
+      "badge": "How it works",
+      "titleStrong": "From short questions to a clear",
+      "titleMuted": "next step",
+      "cardText": "See what's holding you back across infrastructure, governance, and skills.",
+      "card1Title": "Answer short questions",
+      "card2Title": "Answer short questions",
+      "card3Title": "Answer short questions",
+      "card4Title": "Answer short questions",
+      "card5Title": "Answer short questions"
     }
   },
   "solutionsPage": {

@@ -1,0 +1,88 @@
+.about_hero {
+    position: relative;
+    padding-top: 140px;
+    padding-bottom: 80px;
+    background-color: #f7f8fa;
+    overflow: hidden;
+    z-index: 2;
+
+    .about_hero_dots {
+        position: absolute;
+        inset-inline-end: 0;
+        top: 0;
+        height: 100%;
+        width: auto;
+        max-width: 70%;
+        z-index: 0;
+        object-fit: cover;
+        pointer-events: none;
+    }
+
+    .container {
+        position: relative;
+        z-index: 2;
+    }
+
+    .about_hero_content {
+        position: relative;
+        z-index: 3;
+        max-width: 560px;
+        padding-bottom: 20px;
+    }
+
+    .about_hero_badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 28px;
+        padding: 8px 14px;
+        border-radius: 10px;
+        background-color: #2e70e011;
+        color: var(--blue);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .about_hero_title {
+        margin: 0 0 1.5rem;
+        max-width: 520px;
+    }
+
+    .about_hero_title_strong {
+        color: #111827;
+    }
+
+    .about_hero_description {
+        max-width: 460px;
+        color: #6b7280;
+    }
+
+    .about_hero_img {
+        position: relative;
+        z-index: 2;
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .about_hero {
+        padding-top: 110px;
+        padding-bottom: 60px;
+
+        .about_hero_content {
+            max-width: 100%;
+            margin-bottom: 2.5rem;
+        }
+
+        .about_hero_dots {
+            max-width: 100%;
+            opacity: 0.45;
+        }
+    }
+}

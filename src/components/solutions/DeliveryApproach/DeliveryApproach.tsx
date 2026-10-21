@@ -20,11 +20,11 @@ const DeliveryApproach = async () => {
                                 </Reveal>
 
                                 <Reveal animation="fade-up" trigger="load">
-                                    <h2 className="delivery_approach_title">
+                                    <h2 className="delivery_approach_title fsz-40 fw-600 lh-2">
                                         <span className="delivery_approach_title_strong">
                                             {t("titleStrong")}
                                         </span>{" "}
-                                        <span className="delivery_approach_title_muted">
+                                        <span className="delivery_approach_title_muted cr-blue fw-500">
                                             {t("titleMuted")}
                                         </span>
                                     </h2>

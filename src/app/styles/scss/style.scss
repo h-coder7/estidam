@@ -7,6 +7,7 @@
     --blue: #295CC7;
     --dark: #0b1a33;
     --secondary: #1691D0;
+    --light-gray: #f7f8fa;
     --filterPrimary: invert(24%) sepia(83%) saturate(774%) hue-rotate(176deg) brightness(95%) contrast(97%);
     --filterSecondary: invert(0%) sepia(100%) saturate(19%) hue-rotate(19deg) brightness(101%) contrast(106%);
     --filterWhite: invert(99%) sepia(0%) saturate(4787%) hue-rotate(41deg) brightness(127%) contrast(96%);
@@ -52,7 +53,7 @@ body {
 }
 
 .bg-light-gray {
-    background-color: #f7f8fa;
+    background-color: var(--light-gray);
 }
 
 html[dir="rtl"] body {
@@ -166,7 +167,7 @@ button:not(:disabled):not(.disabled):active {
 // Colors
 // =========================================================
 .cr-blue {
-    color: var(--blue);
+    color: var(--blue) !important;
 }
 
 .bg-blue {
@@ -349,19 +350,10 @@ button:not(:disabled):not(.disabled):active {
 
     .section-head-title {
         margin: 0;
-        font-size: 38px;
-        font-weight: 500;
-        line-height: 1.2;
     }
 
     .section-head-title-strong {
         color: #111827;
-        font-weight: 600;
-    }
-
-    .section-head-title-muted {
-        color: #9ca3af;
-        font-weight: 500;
     }
 
     .section-head-description {

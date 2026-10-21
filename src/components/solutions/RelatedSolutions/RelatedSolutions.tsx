@@ -21,11 +21,11 @@ const RelatedSolutions = async () => {
                     </Reveal>
 
                     <Reveal animation="fade-up" trigger="load">
-                        <h2 className="related_solutions_title">
+                        <h2 className="related_solutions_title fsz-40 fw-600 lh-2">
                             <span className="related_solutions_title_strong">
                                 {t("titleStrong")}
                             </span>{" "}
-                            <span className="related_solutions_title_muted">
+                            <span className="related_solutions_title_muted cr-blue fw-500">
                                 {t("titleMuted")}
                             </span>
                         </h2>

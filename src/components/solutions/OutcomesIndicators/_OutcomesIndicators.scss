@@ -21,20 +21,15 @@
 
     .outcomes_indicators_title {
         margin: 0;
-        font-size: clamp(1.8rem, 3vw, 2.5rem);
-        font-weight: 600;
-        line-height: 1.25;
+    }
+
+    .outcomes_indicators_title_strong,
+    .outcomes_indicators_title_muted {
+        display: block;
     }
 
     .outcomes_indicators_title_strong {
-        display: block;
         color: #111827;
-    }
-
-    .outcomes_indicators_title_muted {
-        display: block;
-        color: #9ca3af;
-        font-weight: 500;
     }
 
     .outcomes_indicators_body {

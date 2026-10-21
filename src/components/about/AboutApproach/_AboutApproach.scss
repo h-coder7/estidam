@@ -1,0 +1,200 @@
+.about_approach {
+    position: relative;
+    background-color: var(--light-gray);
+    padding-bottom: 100px;
+
+    .section-head {
+        padding-bottom: 28px;
+    }
+
+    // .about_approach_title_muted {
+    //     color: #777;
+    // }
+
+    .about_approach_description {
+        color: #777;
+        line-height: 1.7;
+        margin-inline-start: auto;
+    }
+
+    .about_approach_nav {
+        overflow: hidden;
+        margin-top: 30px;
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            margin: 0;
+            padding: 20px 22px;
+            border: 0;
+            border-bottom: 1px solid #eef1f5;
+            border-radius: 0;
+            color: #aeb6c2;
+            text-align: start;
+            box-shadow: inset 3px 0 0 transparent;
+
+            &:last-child {
+                border-bottom: 0;
+            }
+
+            &:hover,
+            &:focus {
+                color: #111827;
+            }
+
+            &.active {
+                background: linear-gradient(to right, #3a6ad411, transparent);
+                color: #111827;
+                box-shadow: inset 3px 0 0 var(--blue);
+
+                .about_approach_num,
+                .about_approach_arrow {
+                    color: #5b7fd4;
+                }
+
+                .about_approach_label {
+                    color: #111827;
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+
+    .about_approach_num {
+        flex: 0 0 24px;
+        color: #c3cad3;
+    }
+
+    .about_approach_label {
+        color: #aeb6c2;
+    }
+
+    .about_approach_arrow {
+        margin-inline-start: auto;
+        color: #c5ced6;
+        font-size: 12px;
+    }
+
+    .about_approach_card {
+        position: relative;
+        overflow: hidden;
+        min-height: 430px;
+        padding: 36px 32px 28px;
+        border: 1px solid #e6ebf2;
+        border-radius: 20px;
+    }
+
+    .about_approach_card::after {
+        content: "";
+        position: absolute;
+        inset-inline-end: -30px;
+        bottom: -70px;
+        width: 320px;
+        height: 240px;
+        background: radial-gradient(circle, rgba(186, 208, 245, 0.55), rgba(186, 208, 245, 0) 68%);
+        pointer-events: none;
+    }
+
+    .about_approach_watermark {
+        position: absolute;
+        top: 12px;
+        inset-inline-end: 28px;
+        color: #e4ebf6;
+        font-size: 96px;
+        line-height: 1;
+        pointer-events: none;
+    }
+
+    .about_approach_icon {
+        position: relative;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        margin-bottom: 36px;
+        border: 1px solid #e7eef8;
+        border-radius: 12px;
+        background-color: #f4f7fc;
+        color: #5b7fd4;
+        font-size: 16px;
+    }
+
+    .about_approach_card_title {
+        position: relative;
+        z-index: 1;
+        color: #111827;
+    }
+
+    .about_approach_card_text {
+        position: relative;
+        z-index: 1;
+        max-width: 440px;
+        margin-bottom: 22px;
+        color: #9aa3af;
+        line-height: 1.6;
+    }
+
+    .about_approach_points {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 16px;
+            border: 1px solid #e8edf3;
+            border-radius: 12px;
+            background-color: #fff;
+            color: #3d4654;
+            box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+        }
+    }
+
+    .about_approach_diamond {
+        flex: 0 0 7px;
+        width: 7px;
+        height: 7px;
+        border-radius: 1px;
+        background-color: #3a6ad4;
+        transform: rotate(45deg);
+    }
+}
+
+html[dir="rtl"] .about_approach {
+    .about_approach_nav .nav-link {
+        box-shadow: inset -3px 0 0 transparent;
+
+        &.active {
+            box-shadow: inset -3px 0 0 #3a6ad4;
+        }
+    }
+
+    .about_approach_arrow {
+        transform: scaleX(-1);
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .about_approach {
+        .about_approach_description {
+            max-width: 100%;
+            margin-top: 16px;
+            margin-inline-start: 0;
+        }
+
+        .about_approach_card {
+            min-height: 0;
+        }
+    }
+}

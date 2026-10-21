@@ -27,18 +27,10 @@
 
     .challenges_title {
         margin: 0;
-        font-size: clamp(1.8rem, 3vw, 2.5rem);
-        font-weight: 600;
-        line-height: 1.25;
     }
 
     .challenges_title_strong {
         color: #111827;
-    }
-
-    .challenges_title_muted {
-        color: #9ca3af;
-        font-weight: 500;
     }
 
     .challenges_description {

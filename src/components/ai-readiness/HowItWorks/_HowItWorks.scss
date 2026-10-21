@@ -1,0 +1,208 @@
+.readiness_how_it_works {
+    position: relative;
+    padding: 100px 0 90px;
+    background-color: #f7f8fa;
+    color: #111827;
+
+    .how_it_works_head {
+        max-width: 640px;
+        margin-bottom: 56px;
+    }
+
+    .how_it_works_badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 22px;
+        padding: 8px 14px;
+        border-radius: 10px;
+        background-color: #2e70e011;
+        color: var(--blue);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .how_it_works_title_strong,
+    .how_it_works_title_muted {
+        display: block;
+    }
+
+    .how_it_works_title_strong {
+        color: #111827;
+    }
+
+    .how_steps {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        height: 500px;
+    }
+
+    .how_step {
+        flex: 1 1 0;
+        min-width: 0;
+        transition: flex 0.35s ease;
+    }
+
+    .how_step.is_active,
+    .how_step:hover {
+        flex: 1.55 1 0;
+    }
+
+    .how_steps:hover .how_step.is_active:not(:hover) {
+        flex: 1 1 0;
+    }
+
+    .how_step_card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+        height: 100%;
+        min-height: 320px;
+        padding: 36px 24px 28px;
+        border-radius: 28px;
+        background-color: #fff;
+        border: 1px solid rgba(17, 24, 39, 0.04);
+        box-shadow: 0 10px 30px rgba(18, 38, 63, 0.04);
+        overflow: hidden;
+        transition:
+            min-height 0.35s ease,
+            box-shadow 0.35s ease;
+    }
+
+    .how_step.is_active .how_step_card,
+    .how_step:hover .how_step_card {
+        min-height: 460px;
+        justify-content: flex-start;
+        box-shadow: 0 16px 40px rgba(18, 38, 63, 0.08);
+    }
+
+    .how_steps:hover .how_step.is_active:not(:hover) .how_step_card {
+        min-height: 320px;
+        justify-content: space-between;
+        box-shadow: 0 10px 30px rgba(18, 38, 63, 0.04);
+    }
+
+    .how_step_num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background-color: #12263f;
+        color: #fff;
+        line-height: 1;
+    }
+
+    .how_step_content {
+        position: relative;
+        z-index: 1;
+        margin-top: auto;
+        max-width: 180px;
+    }
+
+    .how_step.is_active .how_step_content,
+    .how_step:hover .how_step_content {
+        margin-top: 36px;
+    }
+
+    .how_steps:hover .how_step.is_active:not(:hover) .how_step_content {
+        margin-top: auto;
+    }
+
+    .how_step_title {
+        color: #1f2937;
+        line-height: 1.35;
+    }
+
+    .how_step_text {
+        display: none;
+        margin-top: 12px !important;
+        color: #9ca3af;
+    }
+
+    .how_step.is_active .how_step_text,
+    .how_step:hover .how_step_text {
+        display: block;
+    }
+
+    .how_steps:hover .how_step.is_active:not(:hover) .how_step_text {
+        display: none;
+    }
+
+    .how_step_visual {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: auto;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s ease;
+    }
+
+    .how_step.is_active .how_step_visual,
+    .how_step:hover .how_step_visual {
+        opacity: 1;
+    }
+
+    .how_steps:hover .how_step.is_active:not(:hover) .how_step_visual {
+        opacity: 0;
+    }
+}
+
+@media screen and (max-width: 1199px) {
+    .readiness_how_it_works {
+        padding: 80px 0 70px;
+
+        .how_it_works_head {
+            margin-bottom: 40px;
+        }
+
+        .how_steps {
+            flex-wrap: wrap;
+        }
+
+        .how_step,
+        .how_step.is_active,
+        .how_step:hover,
+        .how_steps:hover .how_step.is_active:not(:hover) {
+            flex: 1 1 calc(50% - 18px);
+        }
+
+        .how_step_card,
+        .how_steps:hover .how_step.is_active:not(:hover) .how_step_card {
+            min-height: 260px;
+        }
+
+        .how_step.is_active .how_step_card,
+        .how_step:hover .how_step_card {
+            min-height: 360px;
+        }
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .readiness_how_it_works {
+        padding: 70px 0 60px;
+
+        .how_step,
+        .how_step.is_active,
+        .how_step:hover,
+        .how_steps:hover .how_step.is_active:not(:hover) {
+            flex: 1 1 100%;
+        }
+
+        .how_step_card {
+            border-radius: 22px;
+            padding: 28px 20px 24px;
+        }
+    }
+}

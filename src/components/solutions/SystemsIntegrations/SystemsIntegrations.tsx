@@ -26,11 +26,11 @@ const SystemsIntegrations = async () => {
                     </Reveal>
 
                     <Reveal animation="fade-up" trigger="load">
-                        <h2 className="systems_integrations_title">
+                        <h2 className="systems_integrations_title fsz-40 fw-600 lh-2">
                             <span className="systems_integrations_title_strong">
                                 {t("titleStrong")}
                             </span>{" "}
-                            <span className="systems_integrations_title_muted">
+                            <span className="systems_integrations_title_muted cr-blue fw-500">
                                 {t("titleMuted")}
                             </span>
                         </h2>

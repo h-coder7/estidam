@@ -19,12 +19,12 @@ const Solutions = async () => {
                             <div className="col-lg-6">
                                 <div className="section-head-left mt-3">
                                     <Reveal animation="fade-up" trigger="load">
-                                        <h2 className="section-head-title">
+                                        <h2 className="section-head-title fsz-40 fw-600 lh-2">
                                             <span className="section-head-title-strong">
                                                 {t("titleStrong")}
                                             </span>{" "}
                                             <br />
-                                            <span className="section-head-title-muted">
+                                            <span className="section-head-title-muted cr-blue fw-500">
                                                 {t("titleMuted")}
                                             </span>
                                         </h2>
@@ -56,7 +56,7 @@ const Solutions = async () => {
                                         <span className="solutions_title_strong">
                                             {t("itemTitleStrong")}
                                         </span>{" "}
-                                        <span className="solutions_title_muted">
+                                        <span className="solutions_title_muted cr-blue fw-500">
                                             {t("itemTitleMuted")}
                                         </span>
                                     </h3>
@@ -87,6 +87,7 @@ const Solutions = async () => {
                 <span></span>
                 <span></span>
             </div>
+            
         </section>
     );
 };

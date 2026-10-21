@@ -18,11 +18,11 @@ const SolutionsHero = async () => {
                                 </Reveal>
 
                                 <Reveal animation="fade-up" trigger="load">
-                                    <h1 className="solutions_hero_title">
+                                    <h1 className="solutions_hero_title fsz-40 fw-600 lh-2">
                                         <span className="solutions_hero_title_strong">
                                             {t("titleStrong")}
                                         </span>{" "}
-                                        <span className="solutions_hero_title_muted">
+                                        <span className="solutions_hero_title_muted cr-blue fw-500">
                                             {t("titleMuted")}
                                         </span>
                                     </h1>
