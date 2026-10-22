@@ -11,20 +11,19 @@ const steps = [
 ] as const;
 
 const disciplines = [
-    { key: "discipline1", tech: false },
-    { key: "discipline2", tech: false },
-    { key: "discipline3", tech: false },
-    { key: "discipline4", tech: true },
+    { key: "discipline1", tone: "is_ops" },
+    { key: "discipline2", tone: "is_data" },
+    { key: "discipline3", tone: "is_ux" },
+    { key: "discipline4", tone: "is_tech" },
 ] as const;
 
-const topics = [
-    "topic1",
-    "topic2",
-    "topic3",
-    "topic4",
-    "topic5",
-    "topic6",
-    "topic7",
+const topicRows = [
+    ["topic1"],
+    ["topic2"],
+    ["topic3", "topic4"],
+    ["topic5"],
+    ["topic6"],
+    ["topic7"],
 ] as const;
 
 const AboutStudio = async () => {
@@ -69,21 +68,21 @@ const AboutStudio = async () => {
                             <div className="col-lg-4">
                                 <Reveal className="h-100" animation="fade-up" trigger="load">
                                     <article className="about_studio_steps_card h-100">
-                                        <span className="about_studio_kicker fsz-11 fw-600">
+                                        <span className="about_studio_kicker fsz-13 fw-500">
                                             {t("stepsLabel")}
                                         </span>
 
                                         <ol className="about_studio_steps">
                                             {steps.map((step) => (
                                                 <li key={step.number}>
-                                                    <span className="about_studio_step_num fsz-11 fw-600">
+                                                    <span className="about_studio_step_num fsz-12 fw-500">
                                                         {step.number}
                                                     </span>
-                                                    <div>
-                                                        <h3 className="about_studio_step_title fsz-16 fw-600 mb-1">
+                                                    <div className="about_studio_step_copy">
+                                                        <h3 className="about_studio_step_title fsz-18 mb-0">
                                                             {t(step.title)}
                                                         </h3>
-                                                        <p className="about_studio_step_text fsz-13 fw-400 mb-0">
+                                                        <p className="about_studio_step_text fsz-14 fw-400 mb-0">
                                                             {t(step.text)}
                                                         </p>
                                                     </div>
@@ -108,15 +107,24 @@ const AboutStudio = async () => {
                                                     </p>
                                                 </div>
                                                 <div className="col-lg-6">
-                                                    <div className="about_studio_venn" aria-hidden="true">
-                                                        {disciplines.map((item) => (
-                                                            <span
-                                                                key={item.key}
-                                                                className={`fsz-12 fw-500${item.tech ? " is_tech" : ""}`}
-                                                            >
-                                                                {t(item.key)}
-                                                            </span>
-                                                        ))}
+                                                    <div className="about_studio_venn">
+                                                        <div className="about_studio_venn_fills" aria-hidden="true">
+                                                            {disciplines.map((item) => (
+                                                                <span key={item.key} className={item.tone} />
+                                                            ))}
+                                                        </div>
+                                                        <div className="about_studio_venn_strokes" aria-hidden="true">
+                                                            {disciplines.map((item) => (
+                                                                <span key={item.key} className={item.tone} />
+                                                            ))}
+                                                        </div>
+                                                        <div className="about_studio_venn_labels">
+                                                            {disciplines.map((item) => (
+                                                                <span key={item.key} className="fsz-12 fw-500">
+                                                                    {t(item.key)}
+                                                                </span>
+                                                            ))}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -127,14 +135,18 @@ const AboutStudio = async () => {
                                         <div className="col-lg-7">
                                             <Reveal className="h-100" animation="fade-up" trigger="load">
                                                 <article className="about_studio_work h-100">
-                                                    <span className="about_studio_kicker is_muted fsz-11 fw-600">
+                                                    <span className="about_studio_kicker is_muted fsz-13 fw-600">
                                                         {t("workLabel")}
                                                     </span>
                                                     <div className="about_studio_topics">
-                                                        {topics.map((topic) => (
-                                                            <span key={topic} className="fsz-13 fw-500">
-                                                                {t(topic)}
-                                                            </span>
+                                                        {topicRows.map((row) => (
+                                                            <div key={row[0]} className="about_studio_topics_row">
+                                                                {row.map((topic) => (
+                                                                    <span key={topic} className="">
+                                                                        {t(topic)}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
                                                         ))}
                                                     </div>
                                                 </article>

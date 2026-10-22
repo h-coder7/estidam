@@ -1,0 +1,293 @@
+.contact_help {
+    position: relative;
+    background-color: var(--light-gray);
+
+    .contact_help_title {
+        margin-bottom: 28px;
+        color: #1e2c3e;
+        font-size: 34px;
+        line-height: 1.2;
+    }
+
+    .contact_help_card {
+        background-color: #fff;
+        border-radius: 24px;
+        box-shadow: 0 18px 48px rgba(22, 40, 72, 0.06);
+    }
+
+    .contact_help_side {
+        height: 100%;
+        padding: 28px 22px 32px 28px;
+        border-inline-end: 1px solid #eef1f5;
+    }
+
+    .contact_help_kicker {
+        margin-bottom: 16px;
+        color: #9aa3b2;
+        letter-spacing: 0.12em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .contact_help_types {
+        gap: 4px;
+    }
+
+    .nav-item {
+        width: 100%;
+    }
+
+    .contact_help_card,
+    .contact_help_side,
+    .contact_help_panel,
+    .contact_help_text,
+    .contact_help_consent,
+    .row {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .nav-pills .nav-link.contact_help_type {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 15px;
+        border: 1.5px solid transparent;
+        border-radius: 15px;
+        background-color: transparent;
+        color: #2a3344;
+        text-align: start;
+        white-space: normal;
+        box-shadow: none;
+        cursor: pointer;
+
+        &:focus,
+        &:focus-visible {
+            box-shadow: none;
+        }
+
+        &.active,
+        &:hover {
+            background-color: #f7f9fc;
+            color: #2a3344;
+        }
+
+        &.active {
+            align-items: flex-start;
+            background-color: var(--light-gray);
+            box-shadow: 0px 0px 0px 1.5px #2F6FE4, 0px 10px 24px -14px rgba(47, 111, 228, 0.533);
+            padding: 20px 15px;
+
+            .contact_help_type_num {
+                padding-top: 2px;
+                color: #5f86d0;
+            }
+
+            .contact_help_type_label {
+                font-weight: 600;
+                color: #1a2436;
+            }
+
+            .contact_help_type_hint {
+                display: block;
+            }
+        }
+    }
+
+    .contact_help_type_num {
+        flex: 0 0 22px;
+        color: #a0a8b5;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .contact_help_type_copy {
+        min-width: 0;
+    }
+
+    .contact_help_type_label {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.35;
+    }
+
+    .contact_help_type_hint {
+        display: none;
+        margin-top: 3px;
+        color: #9aa3b2;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 1.45;
+    }
+
+    .tab-pane .contact_help_text {
+        margin-bottom: 0;
+    }
+
+    .tab-content {
+        margin-bottom: 28px;
+    }
+
+    .contact_help_panel {
+        padding: 28px 36px 30px;
+    }
+
+    .contact_help_heading {
+        margin-bottom: 8px;
+        color: #1a2436;
+        font-size: 20px;
+        line-height: 1.3;
+    }
+
+    .contact_help_text {
+        max-width: 640px;
+        margin-bottom: 28px;
+        color: #8b95a6;
+        line-height: 1.55;
+        overflow-wrap: break-word;
+    }
+
+    .contact_help_grid {
+        margin-inline: 0;
+
+        > [class*="col"] {
+            padding-inline: 0;
+        }
+    }
+
+    @media screen and (min-width: 768px) {
+        .contact_help_grid > .col-md-6:nth-child(odd) {
+            padding-inline-end: 40px;
+        }
+
+        .contact_help_grid > .col-md-6:nth-child(even) {
+            padding-inline-start: 40px;
+        }
+    }
+
+    .contact_help_field {
+        margin-bottom: 22px;
+    }
+
+    .contact_help_label {
+        display: block;
+        margin-bottom: 0;
+        color: #243044;
+        line-height: 1.3;
+    }
+
+    .contact_help_req {
+        margin-inline-start: 3px;
+    }
+
+    .contact_help_input {
+        display: block;
+        width: 100%;
+        margin: 0;
+        padding: 14px 0 8px;
+        border: 0;
+        border-bottom: 1px solid #e5e8ed;
+        border-radius: 0;
+        background: transparent;
+        color: #1a2436;
+        font-size: 13px;
+        line-height: 1.4;
+        text-align: start;
+        outline: none;
+        resize: none;
+
+        &::placeholder {
+            color: #c5cbd4;
+            opacity: 1;
+        }
+
+        &:focus {
+            border-bottom-color: #3470df;
+        }
+    }
+
+    .contact_help_consent {
+        display: block;
+        width: 100%;
+        margin: 6px 0 22px;
+        color: #8d96a5;
+        line-height: 1.45;
+        cursor: pointer;
+
+        span {
+            display: inline-block;
+            max-width: calc(100% - 28px);
+            vertical-align: top;
+            white-space: normal;
+            overflow-wrap: break-word;
+        }
+
+        input {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            margin-top: 1px;
+            margin-inline-end: 10px;
+            border: 1px solid #cfd5de;
+            border-radius: 3px;
+            background-color: #fff;
+            vertical-align: top;
+            cursor: pointer;
+
+            &:checked {
+                border-color: #3470df;
+                background-color: #3470df;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.2 6.2 4.7 8.6 9.8 3.4' fill='none' stroke='%23fff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 11px;
+            }
+        }
+    }
+
+    .contact_help_actions {
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+    }
+
+    .contact_help_note {
+        color: #b7bec8;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .contact_help {
+        padding-bottom: 36px;
+
+        .contact_help_title {
+            font-size: 28px;
+        }
+
+        .contact_help_side {
+            padding: 24px 20px 8px;
+            border-inline-end: 0;
+            border-bottom: 1px solid #eef1f5;
+        }
+
+        .contact_help_panel {
+            padding: 24px 20px 28px;
+        }
+
+        .container {
+            padding-inline: 20px;
+        }
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .contact_help {
+        .contact_help_actions {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+}

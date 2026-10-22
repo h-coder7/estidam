@@ -1,0 +1,69 @@
+.about_logos {
+    position: relative;
+    padding-bottom: 100px;
+    background-color: var(--light-gray);
+
+    .about_logos_grid > div > div {
+        height: 100%;
+    }
+
+    .about_logos_grid {
+        background-color: #fff;
+        border-top: 1px solid #ededed;
+        border-inline-start: 1px solid #ededed;
+    }
+
+    .about_logo {
+        position: relative;
+        min-height: 150px;
+        border-inline-end: 1px solid #ededed;
+        border-bottom: 1px solid #ededed;
+        background-color: #fff;
+
+        img {
+            width: auto;
+            max-width: 168px;
+            height: auto;
+            max-height: 32px;
+            object-fit: contain;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+    }
+
+    .about_logo_arrow {
+        position: absolute;
+        top: 16px;
+        inset-inline-end: 18px;
+        display: inline-flex;
+        color: #6d7178;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+
+    .about_logo:hover {
+        .about_logo_arrow {
+            opacity: 1;
+        }
+        img {
+            opacity: 1;
+        }
+    }
+}
+
+html[dir="rtl"] .about_logos .about_logo_arrow svg {
+    transform: scaleX(-1);
+}
+
+@media screen and (max-width: 991px) {
+    .about_logos {
+        .about_logo {
+            min-height: 104px;
+
+            img {
+                max-width: 140px;
+                max-height: 26px;
+            }
+        }
+    }
+}

@@ -1,0 +1,115 @@
+.contact_hero {
+    position: relative;
+    overflow: hidden;
+    padding: 180px 0 140px;
+    background-color: #f7f8fa;
+    overflow: hidden;
+    z-index: 2;
+
+    &::before {
+        position: absolute;
+        content: "";
+        left: 50%;
+        top: 100%;
+        transform: translate(-50%, -50%);
+        width: 50vw;
+        height: 50vw;
+        background-color: var(--blue);
+        filter: blur(200px);
+        border-radius: 50%;
+        z-index: -1;
+        opacity: 0.1;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        bottom: 0;
+        height: 180px;
+        background-image: repeating-linear-gradient(
+            90deg,
+            rgba(186, 196, 214, 0.7) 0,
+            rgba(186, 196, 214, 0.7) 1px,
+            transparent 1px,
+            transparent 8px
+        );
+        -webkit-mask-image: linear-gradient(to top, rgb(0 0 0 / 70%) 0%, transparent 100%);
+        mask-image: linear-gradient(to top, rgb(0 0 0 / 70%) 0%, transparent 100%);
+        pointer-events: none;
+    }
+
+    .container {
+        position: relative;
+        z-index: 1;
+    }
+
+    .contact_hero_content {
+        max-width: 860px;
+    }
+
+    .contact_hero_badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 28px;
+        padding: 7px 12px;
+        border-radius: 6px;
+        background-color: #e2e8f6;
+        color: var(--blue);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .contact_hero_title {
+        margin-bottom: 22px;
+    }
+
+    .contact_hero_title_strong {
+        color: #1b1c21;
+    }
+
+    .contact_hero_title_muted {
+        color: var(--blue);
+    }
+
+    .contact_hero_description {
+        margin-bottom: 22px;
+        color: #777;
+        margin-top: 20px;
+    }
+
+    .contact_hero_reply {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #3cbf8c;
+        background: #E7F6EF;
+        border-radius: 99px;
+        font-size: 13px;
+        padding: 2px 15px;
+        margin-top: 15px;
+    }
+
+    .contact_hero_dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: #3cbf8c;
+        flex: 0 0 auto;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .contact_hero {
+        padding: 130px 0 90px;
+
+        .contact_hero_title {
+            font-size: 36px !important;
+        }
+    }
+}

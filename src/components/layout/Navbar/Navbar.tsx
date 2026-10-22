@@ -24,6 +24,8 @@ export default function Navbar({ className = "" }: NavbarProps) {
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
+    const currentPath = pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
+
     const changeLanguage = (nextLocale: "en" | "ar") => {
         if (nextLocale === locale) return;
         router.replace(pathname, { locale: nextLocale });
@@ -70,7 +72,9 @@ export default function Navbar({ className = "" }: NavbarProps) {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
                         <li className="nav-item">
-                            <a className="nav-link active" href="#">{t("home")}</a>
+                            <Link className={`nav-link${currentPath === "/" ? " active" : ""}`} href="/">
+                                {t("home")}
+                            </Link>
                         </li>
                         <li className="nav-item">
                             <a className="nav-link" href="#">{t("studio")}</a>
@@ -82,7 +86,12 @@ export default function Navbar({ className = "" }: NavbarProps) {
                             <a className="nav-link" href="#">{t("news")}</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">{t("contact")}</a>
+                            <Link
+                                className={`nav-link${currentPath === "/contact" ? " active" : ""}`}
+                                href="/contact"
+                            >
+                                {t("contact")}
+                            </Link>
                         </li>
                     </ul>
 

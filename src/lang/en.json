@@ -534,6 +534,76 @@
     "card3Text": "Creating greater value together, with business, technology and enabling partners who extend what Estidam can deliver.",
     "card3Cta": "Become a partner"
   },
+  "contactPage": {
+    "hero": {
+      "badge": "Get in touch",
+      "titleStrong": "Start with the challenge",
+      "titleMuted": "you want to solve",
+      "description": "Three quick steps and the right team will contact you.",
+      "reply": "We reply within one business day"
+    },
+    "help": {
+      "title": "How can we help you?",
+      "requestType": "Request type",
+      "fullName": "Full name",
+      "organization": "Organization",
+      "jobTitle": "Job title",
+      "email": "Work email",
+      "emailPlaceholder": "name@company.sa",
+      "mobile": "Mobile number",
+      "mobilePlaceholder": "+966 5X XXX XXXX",
+      "consent": "I agree to be contacted by the Estidam team about this request.",
+      "submit": "Send request",
+      "privacy": "Your data is used only to answer your request",
+      "types": {
+        "operational": {
+          "label": "Operational challenge",
+          "hint": "Bring us a process that isn't working.",
+          "title": "I have an operational challenge",
+          "text": "Bring us a process that isn't working. We'll map it, diagnose the friction and design a way through it.",
+          "message": "Tell us about the challenge"
+        },
+        "ai": {
+          "label": "Apply AI",
+          "hint": "Put intelligence inside a real workflow.",
+          "title": "I want to apply AI",
+          "text": "Tell us where the work is slow or manual. We'll find a practical use case and what it needs to succeed.",
+          "message": "Tell us where AI could help"
+        },
+        "demo": {
+          "label": "Product demo",
+          "hint": "See a product in the context of your work.",
+          "title": "I want a product demo",
+          "text": "See how an Estidam product fits your operation, with a walkthrough shaped around your team.",
+          "message": "Tell us what you want to see"
+        },
+        "partner": {
+          "label": "Partner with us",
+          "hint": "Build more value together.",
+          "title": "I want to partner with you",
+          "text": "If you bring a capability, a market, or a delivery strength, we'll look at how we can create more value together.",
+          "message": "Tell us about the partnership"
+        }
+      }
+    },
+    "direct": {
+      "title": "Prefer to reach us directly?",
+      "copy": "Copy",
+      "copied": "Copied",
+      "follow": "Follow us",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone",
+      "whatsappLabel": "WhatsApp",
+      "addressLabel": "Address",
+      "email": "hello@estidam.agency",
+      "phone": "+966 12 000 0000",
+      "whatsapp": "+966 50 000 0000",
+      "address": "Makkah, Saudi Arabia",
+      "linkedin": "LinkedIn",
+      "x": "X",
+      "instagram": "Instagram"
+    }
+  },
   "getInTouch": {
     "badge": "Get In Touch",
     "titleStrong": "Start with the Challenge",
