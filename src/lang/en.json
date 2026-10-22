@@ -602,6 +602,19 @@
       "linkedin": "LinkedIn",
       "x": "X",
       "instagram": "Instagram"
+    },
+    "faq": {
+      "badge": "FAQ",
+      "titleStrong": "Frequently asked",
+      "titleMuted": "questions",
+      "q1": "When should we expect a reply?",
+      "a1": "Our team contacts you within one business day to book an intro call.",
+      "q2": "Do you work with domestic and international pilgrim companies?",
+      "a2": "Yes. We work with both domestic and international pilgrim companies, and shape each engagement around how your season actually runs.",
+      "q3": "Do we need to know the technology before reaching out?",
+      "a3": "No. Start with the challenge or process you want to improve — we handle the technology side and recommend what fits.",
+      "q4": "Can we start with a limited pilot?",
+      "a4": "Yes. We often start with a focused pilot on one process, measure the results, then scale what proves its value."
     }
   },
   "getInTouch": {

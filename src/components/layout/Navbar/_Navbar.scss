@@ -57,6 +57,12 @@
             color: var(--dark) !important;
         }
 
+        .nav-menu-btn {
+            span {
+                background-color: var(--dark);
+            }
+        }
+
     }
 
     &.homeNav {

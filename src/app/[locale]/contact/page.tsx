@@ -3,6 +3,8 @@ import Navbar from "@/components/layout/Navbar/Navbar";
 import ContactHero from "@/components/contact/ContactHero/ContactHero";
 import ContactHelp from "@/components/contact/ContactHelp/ContactHelp";
 import ContactDirect from "@/components/contact/ContactDirect/ContactDirect";
+import ContactFaq from "@/components/contact/ContactFaq/ContactFaq";
+import CallToAction from "@/components/solutions/CallToAction/CallToAction";
 
 export default function ContactPage() {
     return (
@@ -13,6 +15,8 @@ export default function ContactPage() {
                 <ContactHero />
                 <ContactHelp />
                 <ContactDirect />
+                <ContactFaq />
+                <CallToAction />
             </main>
 
             <Footer />
