@@ -1,0 +1,144 @@
+.products_configure {
+    position: relative;
+    background-color: #f7f8fa;
+
+    .products_configure_head {
+        padding: 88px 0 48px;
+    }
+
+    .products_configure_badge {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 18px;
+        padding: 5px 10px;
+        border-radius: 8px;
+        background-color: #2e70e014;
+        color: var(--blue);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .products_configure_title {
+        margin: 0;
+        font-size: 40px;
+        line-height: 1.25;
+    }
+
+    .products_configure_title_strong {
+        color: #121826;
+    }
+
+    .products_configure_title_muted {
+        color: #9aa3b2;
+    }
+
+    .products_configure_grid {
+        position: relative;
+    }
+
+    .products_configure_card {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 280px;
+        padding: 36px 32px 40px;
+        border-inline-end: 1px solid rgba(17, 24, 39, 0.08);
+        border-bottom: 1px solid rgba(17, 24, 39, 0.08);
+        background-color: transparent;
+        overflow: hidden;
+        transition: background-color 0.35s ease;
+
+        &::before {
+            position: absolute;
+            content: "";
+            inset: 0;
+            background-image: url("/images/gr-card-bg.png");
+            background-size: cover;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+        }
+
+        &:hover {
+            background-color: #fff;
+
+            &::before {
+                opacity: 1;
+            }
+
+            .products_configure_icon {
+                background-color: transparent;
+                transform: scale(1.06);
+            }
+        }
+    }
+
+    .products_configure_grid > [class*="col"]:last-child .products_configure_card {
+        border-inline-end: 0;
+    }
+
+    .products_configure_icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        margin-bottom: 28px;
+        border: 1px solid #e3ecf8;
+        border-radius: 14px;
+        background-color: #f3f7fd;
+        transition:
+            background-color 0.35s ease,
+            transform 0.35s ease;
+
+        img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+        }
+    }
+
+    .products_configure_card_title {
+        max-width: 280px;
+        margin: 0 0 12px;
+        color: #121826;
+        font-size: 20px;
+        line-height: 1.35;
+    }
+
+    .products_configure_card_text {
+        max-width: 300px;
+        margin: 0;
+        color: #6b7280;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.65;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .products_configure {
+        .products_configure_head {
+            padding: 64px 0 32px;
+        }
+
+        .products_configure_title {
+            font-size: 30px;
+        }
+
+        .products_configure_card {
+            min-height: auto;
+            border-inline-end: 0;
+            padding: 32px 24px;
+        }
+
+        .products_configure_grid > [class*="col"]:last-child .products_configure_card {
+            border-bottom: 0;
+        }
+    }
+}

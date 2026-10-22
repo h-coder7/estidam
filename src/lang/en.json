@@ -617,6 +617,132 @@
       "a4": "Yes. We often start with a focused pilot on one process, measure the results, then scale what proves its value."
     }
   },
+
+  "productsPage": {
+    "hero": {
+      "badge": "Products",
+      "titleStrong": "Turning Recurring Challenges into",
+      "titleMuted": "Scalable Products",
+      "description": "Some challenges repeat across the sector. When a problem is validated and a solution proves its value, it can evolve into a reusable and scalable digital product.",
+      "primaryCta": "Explore Products",
+      "secondaryCta": "Request a demo",
+      "imageAlt": "Operational flow solution overview"
+    },
+    "birth": {
+      "badge": "How a product is born",
+      "titleLine1": "From a recurring challenge",
+      "titleLine2": "to a proven product",
+      "step1Number": "01",
+      "step1Title": "A recurring challenge",
+      "step1Text": "We spot a problem that repeats across organizations.",
+      "step2Number": "02",
+      "step2Title": "A tailored solution",
+      "step2Text": "We build for one client and measure impact in a real season.",
+      "step3Number": "03",
+      "step3Title": "Proven value",
+      "step3Text": "We document results and decide what can be generalized.",
+      "step4Number": "04",
+      "step4Title": "A scalable product",
+      "step4Text": "We turn it into a configurable platform for more organizations."
+    },
+    "configure": {
+      "badge": "Configured to you",
+      "titleStrong": "A Ready-to-Configure Product,",
+      "titleMuted": "Not a Fixed Template",
+      "card1Title": "Configured to your operations",
+      "card1Text": "Roles, workflows and reports are set to your structure.",
+      "card2Title": "Integration-ready where interfaces exist",
+      "card2Text": "Connects to your available systems instead of adding another silo.",
+      "card3Title": "AI within approved permissions",
+      "card3Text": "AI works only within the permissions and data you approve."
+    },
+    "demo": {
+      "badge": "Request a demo",
+      "title1": "Want to see how this product",
+      "title2": "can be configured",
+      "title3": "for your operations?",
+      "text": "Tell us about your operations and we will prepare a demo built around your case.",
+      "point1": "A demo on a case close to your operations",
+      "point2": "Configuration and integration discussion",
+      "point3": "An initial timeline estimate",
+      "product": "Product",
+      "products": {
+        "hrh": "HRH",
+        "mayar": "Ma'yar",
+        "maydan": "Maydan"
+      },
+      "fullName": "Full name",
+      "organization": "Organization",
+      "jobTitle": "Job title",
+      "email": "Work email",
+      "mobile": "Mobile number (+966)",
+      "message": "Message (optional)",
+      "consent": "I agree to be contacted by the Estidam team about this request.",
+      "submit": "Send request",
+      "privacy": "Your data is used only to answer this request"
+    },
+    "list": {
+      "badge": "Our products",
+      "titleStrong": "Products built",
+      "titleMuted": "for season operations",
+      "filterAll": "All",
+      "filterAvailable": "Available",
+      "filterSoon": "Coming soon",
+      "problem": "Problem solved",
+      "users": "Target users",
+      "capabilities": "Key capabilities",
+      "statusAvailable": "Available",
+      "statusSoon": "Coming soon",
+      "items": {
+        "hrh": {
+          "name": "HRH",
+          "kicker": "Hajj-season HR platform",
+          "headline": "The full seasonal employee lifecycle in one environment",
+          "problem": "Workforce data scattered across files and channels, slow screening, and complex roster allocation.",
+          "users": "HR and operations teams at Hajj service companies.",
+          "capabilities": [
+            "Recruitment & candidate management",
+            "Contracts & documents",
+            "Rosters & attendance"
+          ],
+          "primary": "Explore the product",
+          "secondary": "Request a demo",
+          "imageAlt": "HRH dashboard"
+        },
+        "mayar": {
+          "name": "Ma'yar",
+          "kicker": "",
+          "headline": "A compliance and evidence platform that turns manual procedures into a trusted digital record",
+          "problem": "Scattered evidence and hard-to-prove compliance across departments and agencies.",
+          "users": "Governance and compliance units in government and semi-government entities.",
+          "capabilities": [
+            "Digital evidence record",
+            "Compliance tracking",
+            "Ready reports"
+          ],
+          "primary": "Explore Products",
+          "secondary": "Request a demo",
+          "imageAlt": "Ma'yar dashboard"
+        },
+        "maydan": {
+          "name": "Maydan",
+          "kicker": "",
+          "headline": "Live field follow-up for operations teams",
+          "problem": "Limited visibility of what happens in the field during the season.",
+          "users": "Operations and field supervisors.",
+          "capabilities": [
+            "Field reports",
+            "Live board",
+            "Team dispatch"
+          ],
+          "primary": "Discuss your requirements",
+          "secondary": "Notify me at launch",
+          "imageAlt": "Maydan dashboard"
+        }
+      }
+    }
+  },
+
   "getInTouch": {
     "badge": "Get In Touch",
     "titleStrong": "Start with the Challenge",

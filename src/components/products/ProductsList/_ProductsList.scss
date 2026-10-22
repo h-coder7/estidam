@@ -1,0 +1,105 @@
+.productsList {
+    position: relative;
+    padding: 100px 0;
+
+    .productsList_head {
+        margin-bottom: 28px;
+    }
+
+    .productsList_badge {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 14px;
+        padding: 6px 12px;
+        border: 1px solid #e6ebf2;
+        border-radius: 999px;
+        background-color: #fff;
+        color: #3d4656;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1;
+    }
+
+    .productsList_title {
+        margin: 0;
+        color: #121826;
+        font-size: 40px;
+        line-height: 1.2;
+    }
+
+    .productsList_filters {
+        position: relative;
+        width: max-content;
+        gap: 8px;
+        background-color: #fff;
+        border-radius: 30px;
+        padding: 4px;
+        border: 1px solid #9992;
+    }
+
+    .productsList_filter {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 8px 7px 14px;
+        border-radius: 999px;
+        background-color: #fff;
+        color: #5c6573;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1;
+        text-decoration: none;
+        cursor: pointer;
+
+        &.is-active {
+            background-color: var(--dark);
+            color: #fff;
+
+            .productsList_filter_count {
+                background-color: rgba(255, 255, 255, 0.16);
+                color: #fff;
+            }
+        }
+
+        &:hover:not(.is-active) {
+            border-color: #d5dbe4;
+            color: #1a2332;
+        }
+    }
+
+    .productsList_filter_count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        border-radius: 999px;
+        background-color: #f2f4f7;
+        color: #1a2332;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .productsList_cards {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .productsList {
+        padding-bottom: 72px;
+
+        .productsList_title {
+            font-size: 30px;
+        }
+
+        .productsList_filters {
+            justify-content: flex-start;
+            margin-top: 18px;
+        }
+    }
+}

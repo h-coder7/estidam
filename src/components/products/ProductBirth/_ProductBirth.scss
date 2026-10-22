@@ -1,0 +1,186 @@
+.products_birth {
+    position: relative;
+    overflow: hidden;
+    background-color: #12263f;
+    color: #fff;
+    overflow: hidden;
+    padding: 200px 0 100px;
+    background-image: url("/images/delivery_lines.png");
+    background-size: cover;
+
+    .products_birth_content {
+        position: relative;
+    }
+
+    .products_birth_arc {
+        position: absolute;
+        left: 50%;
+        top: -100px;
+        width: 110vw;
+        height: 110vw;
+        background-color: #12263f;
+        border-radius: 50%;
+        box-shadow: -15px -15px 100px #0ce3ff44;
+        transform: translateX(-50%);
+    }
+
+    .products_birth_head {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        margin-bottom: 60px;
+    }
+
+    .products_birth_head_inner {
+        margin: 0 auto;
+    }
+
+    .products_birth_badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 22px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        background-color: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .products_birth_title {
+        margin: 0;
+        color: #fff;
+        font-size: 40px;
+        line-height: 1.25;
+    }
+
+    .products_birth_title_muted {
+        color: var(--blue);
+    }
+
+    .products_birth_body {
+        position: relative;
+        z-index: 2;
+    }
+
+    .products_birth_steps {
+
+        > div > div {
+            height: 100%;
+        }
+    }
+
+    .products_birth_step {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 20px;
+        height: 100%;
+        min-height: 180px;
+        padding: 26px 22px 28px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background-color: transparent;
+        transition:
+            background-color 0.35s ease,
+            transform 0.35s ease,
+            box-shadow 0.35s ease;
+
+        &:hover {
+            position: relative;
+            z-index: 3;
+            border-color: transparent;
+            background-color: #fff;
+            box-shadow: 0 18px 40px rgba(6, 16, 32, 0.28);
+            transform: translateY(-24px);
+
+            .products_birth_num {
+                color: #8b95a7;
+            }
+
+            .products_birth_step_title {
+                color: #121826;
+            }
+
+            .products_birth_step_text {
+                color: #4b5563;
+            }
+        }
+    }
+
+    .products_birth_num {
+        display: block;
+        color: rgba(255, 255, 255, 0.46);
+        font-size: 28px;
+        font-weight: 200;
+        line-height: 1;
+        transition: color 0.35s ease;
+    }
+
+    .products_birth_step_title {
+        margin: 0 0 8px;
+        color: #fff;
+        font-size: 16px;
+        line-height: 1.35;
+        transition: color 0.35s ease;
+    }
+
+    .products_birth_step_text {
+        color: rgba(226, 232, 240, 0.68);
+        font-size: 13px;
+        font-weight: 300;
+        line-height: 1.55;
+        transition: color 0.35s ease;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .products_birth {
+        .products_birth_arc {
+            top: 40px;
+            width: 160vw;
+            height: 70vw;
+        }
+
+        .products_birth_head {
+            padding: 48px 0 36px;
+        }
+
+        .products_birth_title {
+            font-size: 30px;
+        }
+
+        .products_birth_step {
+            min-height: 190px;
+        }
+
+        .products_birth_step:hover {
+            transform: none;
+        }
+
+        .products_birth_steps > [class*="col"]:nth-child(2n) .products_birth_step {
+            border-inline-end: 0;
+        }
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .products_birth {
+        .products_birth_step {
+            min-height: 170px;
+            padding: 20px 16px 22px;
+            gap: 24px;
+        }
+
+        .products_birth_num {
+            font-size: 24px;
+        }
+
+        .products_birth_step_title {
+            font-size: 15px;
+        }
+    }
+}
