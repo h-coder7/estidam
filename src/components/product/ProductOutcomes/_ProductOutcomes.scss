@@ -1,0 +1,202 @@
+.products_outcomes {
+    position: relative;
+    background: #f7f8fa;
+
+    .row > * {
+        min-width: 0;
+    }
+
+    .products_outcomes_band {
+        position: relative;
+        height: 48px;
+        overflow: hidden;
+        background: #f7f8fa;
+        border-block: 1px solid #dce4ec;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: #12263f;
+            opacity: 0.04;
+            pointer-events: none;
+            -webkit-mask-image: url("/images/product-det/outcomes-stripes.png");
+            mask-image: url("/images/product-det/outcomes-stripes.png");
+            -webkit-mask-size: 331px;
+            mask-size: 331px;
+            -webkit-mask-repeat: repeat;
+            mask-repeat: repeat;
+            -webkit-mask-position: center;
+            mask-position: center;
+        }
+    }
+
+    .products_outcomes_body {
+        position: relative;
+        padding: 76px 0 84px;
+    }
+
+    .products_outcomes_badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 18px;
+        padding: 8px 15px;
+        border-radius: 5px;
+        background: rgba(46, 112, 224, 0.04);
+        color: #295cc7;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.84px;
+        line-height: normal;
+        text-transform: uppercase;
+    }
+
+    .products_outcomes_title {
+        margin: 0;
+        max-width: min(437px, 100%);
+        color: #1c1d1f;
+        font-size: 40px;
+        line-height: 1.2;
+        letter-spacing: -0.8px;
+    }
+
+    .products_outcomes_title_muted {
+        color: #6f7988;
+    }
+
+    .products_outcomes_description {
+        max-width: min(459px, 100%);
+        margin: 18px 0 0;
+        color: #526273;
+        font-size: 14px;
+        line-height: 1.4;
+        letter-spacing: -0.28px;
+    }
+
+    .products_outcomes_chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        max-width: 360px;
+        margin-top: 22px;
+    }
+
+    .products_outcomes_chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 12px;
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 10px 25px rgba(18, 38, 63, 0.05);
+        color: #12263f;
+        font-size: 10px;
+        line-height: 1.4;
+        letter-spacing: -0.2px;
+
+        img {
+            display: block;
+            flex: none;
+            width: 14px;
+            height: 14px;
+            max-width: none;
+            max-height: none;
+        }
+
+        &.is-dark {
+            background: #12263f;
+            color: #fff;
+        }
+    }
+
+    .products_outcomes_card {
+        padding: 20px;
+        border: 1px solid #dce4ec;
+        border-radius: 20px;
+        background: #fff;
+    }
+
+    .products_outcomes_board {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 699 / 462;
+
+        img {
+            position: absolute;
+            top: -6.9%;
+            left: -6.14%;
+            display: block;
+            width: 112.42%;
+            height: 109.62%;
+            max-width: none;
+            max-height: none;
+        }
+    }
+
+    .products_outcomes_line {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: calc(50% - 80px);
+        z-index: 1;
+        width: 1px;
+        margin: 0;
+        padding: 0;
+        pointer-events: none;
+
+        img {
+            display: block;
+            width: 1px;
+            height: 100%;
+            max-width: none;
+            max-height: none;
+            object-fit: fill;
+        }
+    }
+}
+
+@media (min-width: 1200px) {
+    .products_outcomes .products_outcomes_line {
+        left: calc(50% - 95px);
+    }
+}
+
+@media (min-width: 1400px) {
+    .products_outcomes .products_outcomes_line {
+        left: calc(50% - 110px);
+    }
+}
+
+[dir="rtl"] .products_outcomes .products_outcomes_line {
+    left: auto;
+    right: calc(50% - 80px);
+}
+
+@media (min-width: 1200px) {
+    [dir="rtl"] .products_outcomes .products_outcomes_line {
+        right: calc(50% - 95px);
+    }
+}
+
+@media (min-width: 1400px) {
+    [dir="rtl"] .products_outcomes .products_outcomes_line {
+        right: calc(50% - 110px);
+    }
+}
+
+@media (max-width: 991px) {
+    .products_outcomes {
+        .products_outcomes_body {
+            padding: 56px 0 64px;
+        }
+
+        .products_outcomes_title {
+            font-size: 30px;
+        }
+
+        .products_outcomes_line {
+            display: none;
+        }
+    }
+}

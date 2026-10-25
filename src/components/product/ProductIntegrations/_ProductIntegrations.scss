@@ -1,0 +1,444 @@
+.products_integrations {
+    position: relative;
+    overflow: hidden;
+    padding: 100px 0;
+    background-color: #f7f9fc;
+    background-image: radial-gradient(ellipse 62% 78% at 74% 46%, rgba(186, 212, 242, 0.55), rgba(247, 249, 252, 0) 72%);
+
+    .row > * {
+        min-width: 0;
+    }
+
+    .products_integrations_badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 18px;
+        padding: 8px 15px;
+        border-radius: 5px;
+        background: rgba(46, 112, 224, 0.04);
+        color: #295cc7;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.84px;
+        line-height: normal;
+        text-transform: uppercase;
+    }
+
+    .products_integrations_title {
+        margin: 0;
+        max-width: 520px;
+        color: #1c1d1f;
+        font-size: 40px;
+        line-height: 1.2;
+        letter-spacing: -0.8px;
+    }
+
+    .products_integrations_title_muted {
+        color: #6f7988;
+    }
+
+    .products_integrations_description {
+        max-width: 540px;
+        margin: 18px 0 0;
+        color: #526273;
+        font-size: 14px;
+        line-height: 1.4;
+        letter-spacing: -0.28px;
+    }
+
+    .products_integrations_note {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        max-width: 540px;
+        margin-top: 22px;
+        padding: 28px 24px;
+        border-radius: 20px;
+        background: #fff;
+
+        img {
+            display: block;
+            flex: none;
+            width: 24px;
+            height: 24px;
+            max-width: none;
+            max-height: none;
+        }
+
+        p {
+            margin: 0;
+            color: #526273;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        strong {
+            color: #1c1d1f;
+            font-weight: 500;
+        }
+    }
+
+    .products_integrations_chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+    }
+
+    .products_integrations_chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 12px;
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 10px 25px rgba(18, 38, 63, 0.05);
+        color: #12263f;
+        font-size: 10px;
+        line-height: 1.2;
+        letter-spacing: -0.2px;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: #12263f;
+            color: #fff;
+        }
+
+        img {
+            display: block;
+            width: 14px;
+            height: 14px;
+            max-width: none;
+            max-height: none;
+        }
+
+        &.is-gold {
+            border: 1px solid rgba(235, 179, 9, 0.2);
+        }
+    }
+
+    .products_integrations_map {
+        container-type: inline-size;
+    }
+
+    .products_integrations_scale {
+        position: relative;
+        height: 530px;
+        overflow: hidden;
+    }
+
+    .products_integrations_stage {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 680px;
+        height: 530px;
+        margin-left: -340px;
+        transform-origin: top center;
+    }
+
+    .products_integrations_link {
+        position: absolute;
+        z-index: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+
+        img {
+            display: block;
+            height: 1px;
+            max-width: none;
+            max-height: none;
+        }
+
+        &.is-web {
+            left: 305px;
+            top: 324px;
+            width: 41px;
+            height: 110px;
+
+            img {
+                width: 117.393px;
+                transform: rotate(110.44deg);
+            }
+        }
+
+        &.is-notify {
+            left: 395px;
+            top: 244px;
+            width: 130px;
+            height: 123px;
+
+            img {
+                width: 178.966px;
+                transform: rotate(43.42deg);
+            }
+        }
+
+        &.is-erp {
+            left: 373px;
+            top: 62px;
+            width: 74px;
+            height: 103px;
+
+            img {
+                width: 126.827px;
+                transform: rotate(-54.3deg);
+            }
+        }
+
+        &.is-api {
+            left: 377px;
+            top: 174px;
+            width: 108.867px;
+            height: 15px;
+
+            img {
+                width: 109.867px;
+                transform: rotate(-172.26deg);
+            }
+        }
+
+        &.is-data {
+            left: 161px;
+            top: 103px;
+            width: 126px;
+            height: 71px;
+
+            img {
+                width: 144.627px;
+                transform: rotate(-150.6deg);
+            }
+        }
+
+        &.is-internal {
+            left: 230px;
+            top: 267px;
+            width: 65px;
+            height: 81px;
+
+            img {
+                width: 103.856px;
+                transform: rotate(128.75deg);
+            }
+        }
+
+        &.is-crm {
+            left: 211px;
+            top: 192px;
+            width: 68px;
+            height: 39px;
+
+            img {
+                width: 78.39px;
+                transform: rotate(150.16deg);
+            }
+        }
+    }
+
+    .products_integrations_dots {
+        position: absolute;
+        left: 220px;
+        top: 104px;
+        z-index: 1;
+        display: block;
+        width: 260px;
+        height: 264px;
+        max-width: none;
+        max-height: none;
+        pointer-events: none;
+    }
+
+    .products_integrations_hub {
+        position: absolute;
+        left: 248px;
+        top: 153px;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 172px;
+        height: 172px;
+        border-radius: 50%;
+        background: #e7ebf2;
+    }
+
+    .products_integrations_hub_face {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 148px;
+        height: 148px;
+        border-radius: 50%;
+        background: #fff;
+
+        img {
+            display: block;
+            width: 78px;
+            height: 43px;
+            max-width: none;
+            max-height: none;
+            object-fit: contain;
+        }
+
+        span {
+            color: #12263f;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1;
+            letter-spacing: -0.28px;
+        }
+    }
+
+    .products_integrations_node {
+        position: absolute;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: max-content;
+        padding: 10px;
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 10px 25px rgba(18, 38, 63, 0.05);
+
+        &.is-data {
+            left: 8px;
+            top: 49px;
+        }
+
+        &.is-erp {
+            left: 387px;
+            top: 8px;
+        }
+
+        &.is-crm {
+            left: 26px;
+            top: 220px;
+        }
+
+        &.is-api {
+            left: 422px;
+            top: 192px;
+        }
+
+        &.is-internal {
+            left: 105px;
+            top: 348px;
+        }
+
+        &.is-notify {
+            left: 429px;
+            top: 367px;
+        }
+
+        &.is-web {
+            left: 209px;
+            top: 434px;
+        }
+    }
+
+    .products_integrations_node_icon {
+        display: flex;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border: 1px solid #dce4ec;
+        border-radius: 40px;
+        background: #f7f8fa;
+
+        img {
+            display: block;
+            width: auto;
+            height: 13px;
+            max-width: none;
+            max-height: none;
+        }
+    }
+
+    .products_integrations_node_title {
+        margin: 0;
+        color: #12263f;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.2;
+        letter-spacing: -0.28px;
+        white-space: nowrap;
+    }
+
+    .products_integrations_node_text {
+        margin: 2px 0 0;
+        color: #526273;
+        font-size: 10px;
+        line-height: 1.2;
+        letter-spacing: -0.2px;
+        white-space: nowrap;
+    }
+}
+
+@container (max-width: 680px) {
+    .products_integrations .products_integrations_scale {
+        height: calc(100cqi * 530 / 680);
+    }
+
+    .products_integrations .products_integrations_stage {
+        transform: scale(calc(100cqi / 680px));
+    }
+}
+
+@media (max-width: 991px) {
+    .products_integrations {
+        padding: 72px 0;
+
+        .products_integrations_title {
+            font-size: 30px;
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .products_integrations {
+        .products_integrations_map .products_integrations_scale {
+            height: auto;
+            overflow: visible;
+        }
+
+        .products_integrations_map .products_integrations_stage {
+            position: static;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            width: auto;
+            height: auto;
+            margin: 0;
+            transform: none;
+        }
+
+        .products_integrations_link,
+        .products_integrations_dots {
+            display: none;
+        }
+
+        .products_integrations_hub,
+        .products_integrations_node {
+            position: static;
+        }
+
+        .products_integrations_hub {
+            width: 148px;
+            height: 148px;
+        }
+
+        .products_integrations_hub_face {
+            width: 124px;
+            height: 124px;
+        }
+    }
+}

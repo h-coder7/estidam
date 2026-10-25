@@ -1,0 +1,12 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="310" height="226" viewBox="0 0 310 226" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="Subtract">
+<use xlink:href="#stroke0_0_22" fill="#152A44"/>
+<mask id="stroke1_0_22" fill="white">
+<use xlink:href="#stroke0_0_22"/>
+</mask>
+<path d="M290 0H158C149.716 0 143 6.71573 143 15C143 23.2843 136.284 30 128 30H20C8.95431 30 0 38.9543 0 50V206C0 217.046 8.9543 226 20 226H290C301.046 226 310 217.046 310 206V20C310 8.95431 301.046 0 290 0Z" stroke-width="2" stroke="white" stroke-opacity="0.1" mask="url(#stroke1_0_22)"/>
+</g>
+<defs>
+<path id="stroke0_0_22" d="M310 206C310 217.046 301.046 226 290 226H20C8.9543 226 0 217.046 0 206V50C0 38.9543 8.9543 30 20 30H128C136.284 30 143 23.2843 143 15C143 6.71573 149.716 0 158 0H290C301.046 0 310 8.95431 310 20V206Z"/>
+</defs>
+</svg>

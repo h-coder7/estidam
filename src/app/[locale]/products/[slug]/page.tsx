@@ -1,7 +1,16 @@
 import { notFound } from "next/navigation";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar/Navbar";
-import ProductCard from "@/components/products/ProductCard/ProductCard";
+import ProductAi from "@/components/product/ProductAi/ProductAi";
+import ProductUseCases from "@/components/product/ProductUseCases/ProductUseCases";
+import ProductNext from "@/components/product/ProductNext/ProductNext";
+import ProductRelated from "@/components/product/ProductRelated/ProductRelated";
+import ProductOutcomes from "@/components/product/ProductOutcomes/ProductOutcomes";
+import ProductIntegrations from "@/components/product/ProductIntegrations/ProductIntegrations";
+import ProductWorks from "@/components/product/ProductWorks/ProductWorks";
+import ProductCapabilities from "@/components/product/ProductCapabilities/ProductCapabilities";
+import ProductChallenges from "@/components/product/ProductChallenges/ProductChallenges";
+import ProductDetailHero from "@/components/product/ProductDetailHero/ProductDetailHero";
 import { productItems } from "@/components/products/ProductsList/ProductsList";
 
 export function generateStaticParams() {
@@ -26,13 +35,16 @@ export default async function ProductPage({
             <Navbar className="inner-nav" />
 
             <main>
-                <section className="productSingle">
-                    <div className="container">
-                        <div className="content px-lg-4">
-                            <ProductCard product={product} index={index} items={productItems} />
-                        </div>
-                    </div>
-                </section>
+                <ProductDetailHero productId={product.id} />
+                <ProductChallenges />
+                <ProductCapabilities />
+                <ProductAi />
+                <ProductUseCases />
+                <ProductWorks />
+                <ProductIntegrations />
+                <ProductOutcomes />
+                <ProductRelated />
+                <ProductNext />
             </main>
 
             <Footer />

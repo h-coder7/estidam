@@ -681,6 +681,340 @@
       "submit": "Send request",
       "privacy": "Your data is used only to answer this request"
     },
+    "detail": {
+      "hrh": {
+        "badge": "Hajj-season HR platform · Estidam product",
+        "titleStrong": "Smarter Seasonal Workforce Management — From",
+        "titleAccent": "Recruitment to Completion",
+        "description": "An intelligent platform for managing seasonal Hajj workforce—from recruitment and contracts to attendance, shifts, and completion.",
+        "primaryCta": "Request a Product Demo",
+        "secondaryCta": "Discuss Your Requirements",
+        "imageAlt": "HRH seasonal workforce dashboard",
+        "points": [
+          "Configured to your operations",
+          "Integration-ready where interfaces exist",
+          "AI within approved permissions"
+        ]
+      },
+      "mayar": {
+        "badge": "Compliance platform · Estidam product",
+        "titleStrong": "A Trusted Digital Record — From",
+        "titleAccent": "Procedures to Proof",
+        "description": "A compliance and evidence platform that turns manual procedures into a record teams can trust.",
+        "primaryCta": "Request a Product Demo",
+        "secondaryCta": "Discuss Your Requirements",
+        "imageAlt": "Ma'yar product",
+        "points": [
+          "Configured to your operations",
+          "Integration-ready where interfaces exist",
+          "AI within approved permissions"
+        ]
+      },
+      "maydan": {
+        "badge": "Field operations · Estidam product",
+        "titleStrong": "Live Field Follow-up — From",
+        "titleAccent": "Report to Dispatch",
+        "description": "A live view of what happens in the field, so operations teams can follow work as it moves.",
+        "primaryCta": "Discuss Your Requirements",
+        "secondaryCta": "Notify Me at Launch",
+        "imageAlt": "Maydan product",
+        "points": [
+          "Configured to your operations",
+          "Integration-ready where interfaces exist",
+          "AI within approved permissions"
+        ]
+      },
+      "challenges": {
+        "badge": "Challenges addressed",
+        "titleStrong": "The Current",
+        "titleMuted": "Operating Reality",
+        "description": "When a seasonal workforce is run through separate files and channels, small gaps add up to operational pressure within a short window.",
+        "items": [
+          {
+            "number": "01",
+            "title": "Scattered data",
+            "description": "Workforce data scattered across files and communication channels."
+          },
+          {
+            "number": "02",
+            "title": "High volume, short season",
+            "description": "Difficulty managing large numbers of seasonal employees within a short period."
+          },
+          {
+            "number": "03",
+            "title": "Slow candidate screening",
+            "description": "Slow screening and selection of candidates against job requirements."
+          },
+          {
+            "number": "04",
+            "title": "Complex allocation and rosters",
+            "description": "Complex workforce allocation, shift planning and roster management."
+          },
+          {
+            "number": "05",
+            "title": "Limited follow-up visibility",
+            "description": "Limited visibility into contracts, documents, attendance and due actions."
+          },
+          {
+            "number": "06",
+            "title": "Errors and delayed reports",
+            "description": "Higher risk of administrative errors and delayed reporting."
+          }
+        ],
+        "nodes": {
+          "files": "Separate files",
+          "contracts": "Contracts",
+          "shifts": "Shift sheets",
+          "chat": "Chat channels",
+          "attendance": "Attendance"
+        },
+        "hubLine1": "Operational",
+        "hubLine2": "pressure",
+        "caption": "Disconnected HR processes converge into a single point of pressure at peak time."
+      },
+      "capabilities": {
+        "badge": "Product Capabilities",
+        "titleStrong": "The full seasonal employee",
+        "titleMuted": "lifecycle in one environment",
+        "description": "Select an area to see how it appears inside the product and what it adds for HR and operations teams.",
+        "doesLabel": "What it does",
+        "valueLabel": "Value for the team",
+        "items": {
+          "recruitment": {
+            "title": "Recruitment & candidate management"
+          },
+          "contracts": {
+            "title": "Contracts & documents",
+            "does": "Contract and document management with validity tracking.",
+            "value": "Reduce delays and improve administrative compliance.",
+            "interface": "In the interface: document register and validity status",
+            "imageAlt": "Contracts and documents register"
+          },
+          "lifecycle": {
+            "title": "Employee lifecycle"
+          },
+          "attendance": {
+            "title": "Attendance, shifts & rosters"
+          },
+          "alerts": {
+            "title": "Alerts & due actions"
+          },
+          "dashboards": {
+            "title": "Dashboards & reports"
+          }
+        }
+      },
+      "ai": {
+        "badge": "Role of Artificial Intelligence",
+        "titleStrong": "AI that speeds up analysis, while",
+        "titleMuted": "decisions stay with your team",
+        "description": "Artificial intelligence supports teams by accelerating analysis and access to information, while sensitive decisions and actions remain governed by user permissions and approved policies.",
+        "imageAlt": "Illustrative AI example for applicant screening",
+        "pillTitle": "AI layer",
+        "pillText": "Works on product data within permissions",
+        "governanceTitle": "Clear governance",
+        "governanceText": "Sensitive decisions and actions remain governed by user permissions and approved policies: AI suggests and analyzes, the authorized team approves.",
+        "cards": [
+          {
+            "title": "Applicant screening & classification",
+            "text": "Screen and classify applicants against role requirements."
+          },
+          {
+            "title": "Candidate-to-role matching",
+            "text": "Support candidate-to-role matching."
+          },
+          {
+            "title": "Shift-allocation support",
+            "text": "Analyze workforce data to support shift allocation."
+          },
+          {
+            "title": "AI assistant for enquiries & reports",
+            "text": "Provide an AI assistant for employee-data enquiries, information retrieval and reporting."
+          }
+        ]
+      },
+      "cases": {
+        "badge": "Use Cases",
+        "titleStrong": "See the Product in Real",
+        "titleMuted": "Operational Scenarios",
+        "description": "Select the scenario closest to your challenge to understand the problem, how the product responds and the outcome that can be measured.",
+        "chartBefore": "From ",
+        "chartCount": "186",
+        "chartAfter": " applications to a shortlist",
+        "snapshot": "Illustrative interface snapshot",
+        "measureLabel": "What We Measure",
+        "tabs": [
+          { "title": "Accelerate Candidate Screening" },
+          { "title": "Manage Shifts and Workforce Allocation" },
+          { "title": "Track Documents and Due Actions" }
+        ],
+        "bars": [
+          { "label": "Applied", "value": "186" },
+          { "label": "Screened", "value": "186" },
+          { "label": "High match", "value": "48" },
+          { "label": "Team review", "value": "22" }
+        ],
+        "steps": [
+          {
+            "title": "Current Challenge",
+            "text": "HR teams manually review high volumes of applications within limited time."
+          },
+          {
+            "title": "How the Product Helps",
+            "text": "Centralize, screen and classify applications against defined requirements for each role."
+          },
+          {
+            "title": "Expected Value",
+            "text": "Reach a more relevant shortlist faster while keeping final decisions with the HR team."
+          }
+        ],
+        "measures": [
+          "Screening time",
+          "Percentage of applications reviewed"
+        ]
+      },
+      "works": {
+        "badge": "How the Product Works",
+        "titleStrong": "A Ready-to-Configure Product,",
+        "titleMuted": "Not a Fixed Template",
+        "steps": [
+          {
+            "title": "Understand",
+            "text": "Understand processes, users & systems."
+          },
+          {
+            "title": "Define scope",
+            "text": "Define scope, features, roles and integrations."
+          },
+          {
+            "title": "Configure",
+            "text": "Configure the product, data and workflows."
+          },
+          {
+            "title": "Integrate & test",
+            "text": "Implement and test available integrations."
+          },
+          {
+            "title": "Pilot",
+            "text": "Run a controlled pilot and measure results."
+          },
+          {
+            "title": "Launch & improve",
+            "text": "Train users, launch, monitor and improve."
+          }
+        ]
+      },
+      "integrations": {
+        "badge": "Systems and Integrations",
+        "titleStrong": "Part of your existing digital environment,",
+        "titleMuted": "not a replacement",
+        "description": "We design the product to work with existing systems and data wherever the required interfaces and permissions are available, avoiding unnecessary replacement. Integrations may include internal systems, ERP and CRM, websites and applications, notification channels, data sources and APIs.",
+        "noteStrong": "Integration scope is confirmed after review.",
+        "note": "Each integration scope is confirmed after reviewing technical documentation, data and available access.",
+        "chips": [
+          "Data sources",
+          "Permissions-based",
+          "No replacement needed"
+        ],
+        "hub": "Platform",
+        "nodes": [
+          {
+            "title": "Data sources",
+            "text": "Warehouse • Lake"
+          },
+          {
+            "title": "ERP",
+            "text": "SAP • Oracle • NetSuite"
+          },
+          {
+            "title": "CRM",
+            "text": "Salesforce • HubSpot"
+          },
+          {
+            "title": "APIs",
+            "text": "REST • GraphQL"
+          },
+          {
+            "title": "Internal systems",
+            "text": "Core stack"
+          },
+          {
+            "title": "Notification channels",
+            "text": "Email • Push • Slack"
+          },
+          {
+            "title": "Websites & apps",
+            "text": "Frontend • Mobile"
+          }
+        ]
+      },
+      "outcomes": {
+        "badge": "Outcomes and Performance Indicators",
+        "titleStrong": "Outcomes measured against your",
+        "titleMuted": "own operations",
+        "description": "Expected outcomes focus on improved visibility, speed and follow-up quality, with less manual work. Target values are agreed after assessing the current state and establishing an appropriate baseline.",
+        "chips": [
+          "Visibility",
+          "Speed",
+          "Follow-up quality",
+          "Less manual work"
+        ]
+      },
+      "related": {
+        "badge": "Related Products",
+        "titleStrong": "Products that complement",
+        "titleMuted": "Hajj HR",
+        "action": "View Product",
+        "items": [
+          {
+            "title": "Hajj Maydan",
+            "text": "Hajj Maydan for field teams and operational activities"
+          },
+          {
+            "title": "Hajj Ma'yar",
+            "text": "Hajj Ma'yar for service-center quality and compliance"
+          }
+        ]
+      },
+      "next": {
+        "badge": "Next step",
+        "titleStrong": "Want to See How This Product Can Be Configured",
+        "titleMuted": "for Your Operations?",
+        "description": "Tell us about your challenge and current operating model, and we will help define the right scope and first implementation step.",
+        "demo": "Request a Product Demo",
+        "contact": "Contact the Estidam Team",
+        "formTitleStrong": "Request a",
+        "formTitleMuted": "Product Demo",
+        "formNote": "A short form — fields marked * are required.",
+        "fullName": "Full Name",
+        "organization": "Organization",
+        "jobTitle": "Job Title",
+        "email": "Work Email",
+        "emailPlaceholder": "name@company.sa",
+        "mobile": "Mobile Number",
+        "mobilePlaceholder": "+966 5X XXX XXXX",
+        "product": "Product of Interest",
+        "productValue": "Hajj HR",
+        "challenge": "Main Challenge",
+        "challengePlaceholder": "Choose the closest challenge",
+        "channelLabel": "Preferred contact channel",
+        "channels": {
+          "email": "Email",
+          "phone": "Phone",
+          "whatsapp": "WhatsApp"
+        },
+        "consent": "I agree that Estidam may use my details only to contact me about this request, in line with the privacy policy.",
+        "submit": "Send Request",
+        "challenges": [
+          "Scattered data",
+          "High volume, short season",
+          "Slow candidate screening",
+          "Complex allocation and rosters",
+          "Limited follow-up visibility",
+          "Errors and delayed reports"
+        ]
+      }
+    },
     "list": {
       "badge": "Our products",
       "titleStrong": "Products built",

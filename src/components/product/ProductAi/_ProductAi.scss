@@ -1,0 +1,277 @@
+.products_ai {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--dark);
+    padding: 100px 0;
+    z-index: 2;
+
+    .bg-pattern {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        object-fit: cover;
+        z-index: -1;
+    }
+
+    .container {
+        position: relative;
+        z-index: 1;
+    }
+
+    .row > * {
+        min-width: 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    .products_ai_head {
+        margin-bottom: 48px;
+    }
+
+    .products_ai_badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 18px;
+        padding: 8px 15px;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.84px;
+        line-height: normal;
+        text-transform: uppercase;
+    }
+
+    .products_ai_title {
+        margin: 0;
+        max-width: min(630px, 100%);
+        color: #fff;
+        font-size: 40px;
+        line-height: 1.3;
+        letter-spacing: -0.8px;
+        white-space: normal;
+    }
+
+    .products_ai_title_muted {
+        color: #6f7988;
+    }
+
+    .products_ai_description {
+        max-width: 520px;
+        margin-inline-start: auto;
+        color: #dadada;
+        font-size: 14px;
+        line-height: 1.4;
+        letter-spacing: -0.28px;
+    }
+
+    .products_ai_grid {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 10px;
+    }
+
+    .products_ai_card {
+        position: relative;
+        min-width: 0;
+    }
+
+    .products_ai_card_shape {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    .products_ai_card_body {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 32px 26px 22px;
+    }
+
+    .products_ai_icon {
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        margin-bottom: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        background: #12263f;
+    }
+
+    .products_ai_card_title {
+        margin: 0 0 12px;
+        max-width: 100%;
+        color: #fff;
+        font-size: 18px;
+        line-height: 1.25;
+        letter-spacing: -0.36px;
+        overflow-wrap: break-word;
+    }
+
+    .products_ai_card_text {
+        max-width: 100%;
+        color: #dce4ec;
+        font-size: 13px;
+        line-height: 1.4;
+        letter-spacing: -0.26px;
+        overflow-wrap: break-word;
+    }
+
+    .products_ai_pill {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: max-content;
+        max-width: 78%;
+        padding: 8px 18px 8px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 115px;
+        background: #fff;
+        box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.05);
+        transform: translate(-50%, -60%);
+
+        span {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+    }
+
+    .products_ai_pill_title {
+        color: #12263f;
+        font-size: 16px;
+        line-height: 1.4;
+        letter-spacing: -0.32px;
+    }
+
+    .products_ai_pill_text {
+        color: #526273;
+        font-size: 10px;
+        line-height: 1.4;
+        letter-spacing: -0.2px;
+    }
+
+    .products_ai_governance {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-top: 10px;
+        padding: 26px 28px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        background:
+            radial-gradient(40% 120% at 20% 0%, rgba(80, 140, 255, 0.18), transparent 60%),
+            #152a44;
+
+        img {
+            flex: 0 0 auto;
+            margin-top: 2px;
+        }
+    }
+
+    .products_ai_governance_title {
+        margin: 0 0 8px;
+        color: #fff;
+        font-size: 22px;
+        line-height: 1.4;
+        letter-spacing: -0.44px;
+    }
+
+    .products_ai_governance_text {
+        color: #dce4ec;
+        font-size: 13px;
+        line-height: 1.4;
+        letter-spacing: -0.26px;
+    }
+
+    .products_ai_visual {
+        display: block;
+        width: min(100%, 560px);
+        max-width: 100%;
+        height: auto;
+        margin-inline-start: auto;
+    }
+}
+
+@media (max-width: 991px) {
+    .products_ai {
+        padding: 64px 0 72px;
+
+        .products_ai_title {
+            font-size: 30px;
+        }
+
+        .products_ai_description {
+            margin-inline-start: 0;
+        }
+
+        .products_ai_visual {
+            margin-inline: auto;
+        }
+    }
+}
+
+@media (max-width: 575px) {
+    .products_ai {
+        .products_ai_card {
+            min-height: 228px;
+        }
+
+        .products_ai_card_shape {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .products_ai_card_body {
+            padding: 16px 12px 42px;
+        }
+
+        .products_ai_card:nth-child(3) .products_ai_card_body,
+        .products_ai_card:nth-child(4) .products_ai_card_body {
+            padding-top: 46px;
+            padding-bottom: 14px;
+        }
+
+        .products_ai_icon {
+            width: 34px;
+            height: 34px;
+            margin-bottom: 10px;
+        }
+
+        .products_ai_card_title {
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .products_ai_card_text {
+            font-size: 11px;
+        }
+
+        .products_ai_pill {
+            max-width: calc(100% - 12px);
+            padding: 6px 12px 6px 10px;
+        }
+
+        .products_ai_governance {
+            padding: 20px 16px;
+        }
+
+        .products_ai_governance_title {
+            font-size: 18px;
+        }
+    }
+}
