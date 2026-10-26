@@ -421,7 +421,33 @@
     "itemTitleStrong": "Business & Process",
     "itemTitleMuted": "Transformation",
     "itemText": "Redesign processes, improve workflows and identify automation opportunities.",
-    "itemHighlight": "Clearer operating paths with less friction before peak season."
+    "itemHighlight": "Clearer operating paths with less friction before peak season.",
+    "prev": "Previous solution",
+    "next": "Next solution",
+    "dotsLabel": "Solutions",
+    "items": [
+      {
+        "label": "Solution",
+        "titleStrong": "Business & Process",
+        "titleMuted": "Transformation",
+        "text": "Redesign processes, improve workflows and identify automation opportunities.",
+        "highlight": "Clearer operating paths with less friction before peak season."
+      },
+      {
+        "label": "Solution",
+        "titleStrong": "Seasonal",
+        "titleMuted": "Readiness",
+        "text": "Bring owners, checkpoints and readiness signals into one operating path before the season peaks.",
+        "highlight": "Clearer visibility into readiness and risk."
+      },
+      {
+        "label": "Solution",
+        "titleStrong": "Beneficiary",
+        "titleMuted": "Journey",
+        "text": "Connect service channels to internal steps so the journey and the operation move together.",
+        "highlight": "A faster and more consistent experience."
+      }
+    ]
   },
   "operations": {
     "badge": "AI Operations + AI Readiness",

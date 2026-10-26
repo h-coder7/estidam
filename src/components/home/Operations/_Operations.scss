@@ -29,8 +29,10 @@
 
     .operations_body {
         position: relative;
+        padding: 80px 0;
+        background-image: repeating-linear-gradient(90deg, #ffffff08 0 1px, #0000 1px 8px);
+        border-top: 1px solid #fff2;
         z-index: 1;
-        padding: 0 0 90px;
     }
 
     .operations_card {

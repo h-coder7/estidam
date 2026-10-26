@@ -179,20 +179,34 @@
         }
     }
 
+    .journey_visual_col {
+        align-self: stretch;
+        display: flex;
+    }
+
     .journey_visual {
-        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 100%;
-        animation: journeyFade 0.35s ease;
+        width: 100%;
+        min-height: 420px;
+        overflow: hidden;
+    }
+
+    .journey_visual_reveal {
+        position: relative;
+        z-index: 1;
+        width: 100%;
     }
 
     .journey_visual_img {
+        display: block;
         width: 100%;
         max-width: 360px;
         height: auto;
+        margin-inline: auto;
         object-fit: contain;
+        animation: journeyFade 0.35s ease;
         transition: transform 0.35s ease;
 
         &:hover {

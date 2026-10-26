@@ -6,6 +6,7 @@
     background-size: cover;
     background-position: top;
     background-repeat: no-repeat;
+    background-attachment: fixed;
     color: #fff;
 
     .section-head {
@@ -29,6 +30,7 @@
 
     .proof_cases {
         position: relative;
+        min-height: calc(100vh - 120px);
         padding: 20px 0 110px;
     }
 
@@ -39,42 +41,35 @@
     }
 
     .proof_stack {
+        display: grid;
         overflow: visible;
-
-        .swiper-wrapper {
-            overflow: visible;
-        }
-
-        .swiper-slide {
-            position: relative;
-            height: auto;
-            .proof_card {
-                position: relative;
-                width: 70%;
-            }
-            &:nth-of-type(2) {
-                .proof_card {
-                    left: 15%;
-                }
-            }
-            &:nth-of-type(1) {
-                .proof_card {
-                    left: 30%;
-                }
-            }
-        }
     }
 
     .proof_card {
+        grid-area: 1 / 1;
+        align-self: start;
+        justify-self: left;
         position: relative;
-        height: 100%;
-        padding: 50px 30px 30px 30px;
+        width: 70%;
+        height: auto;
+        margin-left: calc(var(--stack, 0) * 15%);
+        padding: 0;
         z-index: 2;
+
+        .proof_card_motion {
+            position: relative;
+            height: 100%;
+            padding: 50px 30px 30px 30px;
+        }
+
         .card-bg {
             position: absolute;
             left: 0;
             top: 0;
             width: 100%;
+            height: auto;
+            max-width: none;
+            max-height: none;
             z-index: -1;
         }
     }
@@ -245,7 +240,12 @@
             padding-inline-start: 32px;
         }
 
-        .proof_card {
+        .proof_stack .proof_card {
+            width: 86%;
+            margin-left: calc(var(--stack, 0) * 7%);
+        }
+
+        .proof_card_motion {
             padding: 28px 22px;
         }
 
@@ -267,7 +267,12 @@
             padding-inline-start: 16px;
         }
 
-        .proof_card {
+        .proof_stack .proof_card {
+            width: 100%;
+            margin-left: calc(var(--stack, 0) * 16px);
+        }
+
+        .proof_card_motion {
             clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 0 100%);
         }
 

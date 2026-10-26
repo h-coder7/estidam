@@ -45,9 +45,7 @@ const ExperienceProof = async () => {
                         </div>
                     </div>
 
-                    <Reveal animation="fade-up" trigger="load">
-                        <ExperienceCases />
-                    </Reveal>
+                    <ExperienceCases />
                 </div>
             </div>
 

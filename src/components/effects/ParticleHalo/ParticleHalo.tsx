@@ -2,7 +2,19 @@
 
 import { useEffect, useRef } from "react";
 
-const ParticleHalo = () => {
+import "./_ParticleHalo.scss";
+
+type ParticleHaloProps = {
+    className?: string;
+    placement?: "center" | "side";
+    variant?: "hero" | "ring";
+};
+
+const ParticleHalo = ({
+    className,
+    placement = "center",
+    variant = "ring",
+}: ParticleHaloProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -15,16 +27,18 @@ const ParticleHalo = () => {
 
         import("./particleHaloScene").then(({ mountParticleHalo }) => {
             if (disposed || !container.isConnected) return;
-            cleanup = mountParticleHalo(container);
+            cleanup = mountParticleHalo(container, { placement, variant });
         });
 
         return () => {
             disposed = true;
             cleanup();
         };
-    }, []);
+    }, [placement, variant]);
 
-    return <div className="hero_particles" ref={containerRef} aria-hidden="true" />;
+    const classes = className ? `particle_halo ${className}` : "particle_halo";
+
+    return <div className={classes} ref={containerRef} aria-hidden="true" />;
 };
 
 export default ParticleHalo;

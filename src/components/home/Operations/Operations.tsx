@@ -45,7 +45,7 @@ const Operations = async () => {
                     </div>
                 </div>
 
-                <div className="operations_body px-4">
+                <div className="operations_body px-lg-4">
                     <div className="d-lg-flex gap-4">
                         <Reveal animation="fade-up" trigger="load">
                             <div className="operations_card">

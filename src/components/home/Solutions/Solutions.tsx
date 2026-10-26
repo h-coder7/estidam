@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import SolutionsCube from "./SolutionsCube";
 
 import "./_Solutions.scss";
 
@@ -45,42 +46,7 @@ const Solutions = async () => {
                     </div>
                 </div>
 
-                <div className="solutions_body border-top px-4">
-                    <div className="row gx-0 align-items-center">
-                        <div className="col-lg-5">
-                            <Reveal animation="fade-up" trigger="load">
-                                <div className="solutions_content">
-                                    <p className="solutions_label">{t("itemLabel")}</p>
-
-                                    <h3 className="solutions_title">
-                                        <span className="solutions_title_strong">
-                                            {t("itemTitleStrong")}
-                                        </span>{" "}
-                                        <span className="solutions_title_muted cr-blue fw-500">
-                                            {t("itemTitleMuted")}
-                                        </span>
-                                    </h3>
-
-                                    <p className="solutions_text">{t("itemText")}</p>
-
-                                    <p className="solutions_highlight">{t("itemHighlight")}</p>
-                                </div>
-                            </Reveal>
-                        </div>
-
-                        <div className="col-lg-7">
-                            <Reveal animation="fade-up" trigger="load">
-                                <div className="solutions_visual">
-                                    <img
-                                        src="/images/solution1.png"
-                                        alt={t("itemTitleStrong")}
-                                        className="solutions_img"
-                                    />
-                                </div>
-                            </Reveal>
-                        </div>
-                    </div>
-                </div>
+                <SolutionsCube />
             </div>
 
             <div className="sec-lines">

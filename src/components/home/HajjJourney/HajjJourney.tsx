@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import Reveal from "@/components/animations/Reveal";
+import ParticleHalo from "@/components/effects/ParticleHalo/ParticleHalo";
 
 import "./_HajjJourney.scss";
 
@@ -93,7 +94,7 @@ const HajjJourney = () => {
                 </div>
 
             </div>
-            <div className="journey_body border-top py-4">
+            <div className="journey_body border-top">
                 <div className="container">
                     <div className="row gx-0 align-items-center">
                         <div className="col-lg-3">
@@ -144,16 +145,20 @@ const HajjJourney = () => {
                             </Reveal>
                         </div>
 
-                        <div className="col-lg-4">
-                            <Reveal animation="fade-up" trigger="load">
-                                <div className="journey_visual" key={activePhase.id}>
+                        <div className="col-lg-4 journey_visual_col">
+                            <div className="journey_visual">
+                                <ParticleHalo />
+                                <Reveal animation="fade-up" trigger="load" className="journey_visual_reveal">
+                                    <div className="img p-5">
                                     <img
+                                        key={activePhase.id}
                                         src={activePhase.image}
                                         alt={t(activePhase.titleKey)}
                                         className="journey_visual_img"
                                     />
-                                </div>
-                            </Reveal>
+                                    </div>
+                                </Reveal>
+                            </div>
                         </div>
                     </div>
                 </div>
