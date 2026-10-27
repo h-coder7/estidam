@@ -103,7 +103,7 @@ const ExperienceCases = () => {
             anticipatePin: 1,
             invalidateOnRefresh: true,
             snap: reduced
-                ? false
+                ? undefined
                 : {
                       snapTo: 1 / (count - 1),
                       duration: 0.45,
