@@ -581,6 +581,7 @@
       "consent": "I agree to be contacted by the Estidam team about this request.",
       "submit": "Send request",
       "privacy": "Your data is used only to answer your request",
+      "sendFailed": "Could not send your request. Please try again.",
       "types": {
         "operational": {
           "label": "Operational challenge",

@@ -25,6 +25,7 @@ export const endpoints = {
     home: "cms/pages/home",
     about: "cms/pages/about",
     contact: "cms/pages/contact",
+    contactUs: "contact-us",
     products: "products",
     product: (slug: string) => `products/${slug}`,
     footer: "/pages/footer",
@@ -51,6 +52,28 @@ export const api = {
 
     getContactPage: (locale?: string) =>
         apiClient.get(endpoints.contact, withLang(locale)).then((res) => res.data),
+
+    submitContact: (
+        body: {
+            name: string;
+            email: string;
+            phone: string;
+            organization: string;
+            job_title: string;
+            source: string;
+            message: string;
+            consent: boolean;
+        },
+        locale?: string,
+    ) =>
+        apiClient
+            .post(endpoints.contactUs, body, {
+                headers: {
+                    ...(locale ? { lang: locale } : {}),
+                    "Idempotency-Key": crypto.randomUUID(),
+                },
+            })
+            .then((res) => res.data),
 
     getProducts: (locale?: string) =>
         apiClient

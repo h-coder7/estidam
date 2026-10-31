@@ -1,12 +1,12 @@
 "use client";
 
-import { FormEvent, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { FormEvent, useEffect, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import Reveal from "@/components/animations/Reveal";
 
 import "./_ContactHelp.scss";
 
-export const CONTACT_HELP_ENDPOINT = "/api/contact";
+export const CONTACT_HELP_ENDPOINT = "/api/contact/";
 
 export type ContactHelpPathView = {
     id: string;
@@ -44,7 +44,10 @@ export const readContactHelpPayload = (form: HTMLFormElement): ContactHelpPayloa
 
 const ContactHelpForm = ({ paths }: { paths: ContactHelpPathView[] }) => {
     const t = useTranslations("contactPage.help");
+    const locale = useLocale();
     const firstId = paths[0]?.id || "";
+    const [sending, setSending] = useState(false);
+    const [status, setStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
     useEffect(() => {
         const tabList = document.getElementById("contactHelpTab");
@@ -72,13 +75,44 @@ const ContactHelpForm = ({ paths }: { paths: ContactHelpPathView[] }) => {
         return () => tabList.removeEventListener("shown.bs.tab", onShown);
     }, []);
 
-    const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (sending) return;
 
-        const payload = readContactHelpPayload(event.currentTarget);
+        const form = event.currentTarget;
+        const payload = readContactHelpPayload(form);
+        setSending(true);
+        setStatus(null);
 
-        // POST payload to CONTACT_HELP_ENDPOINT when the contact API is ready.
-        void payload;
+        try {
+            const response = await fetch(CONTACT_HELP_ENDPOINT, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ ...payload, locale }),
+            });
+            const result = (await response.json().catch(() => null)) as { success?: boolean; message?: string } | null;
+            const message = typeof result?.message === "string" ? result.message : "";
+
+            if (!response.ok || result?.success === false) {
+                setStatus({ type: "error", message: message || t("sendFailed") });
+                return;
+            }
+
+            const activeType = form.querySelector(".contact_help_type.active")?.getAttribute("data-request-type") || "";
+            form.reset();
+            const requestTypeInput = form.querySelector("#contact-request-type");
+            if (requestTypeInput instanceof HTMLInputElement && activeType) {
+                requestTypeInput.value = activeType;
+            }
+            setStatus({ type: "success", message });
+        } catch {
+            setStatus({ type: "error", message: t("sendFailed") });
+        } finally {
+            setSending(false);
+        }
     };
 
     return (
@@ -287,7 +321,7 @@ const ContactHelpForm = ({ paths }: { paths: ContactHelpPathView[] }) => {
                                         </label>
 
                                         <div className="contact_help_actions d-flex flex-wrap">
-                                            <button className="butn butn-blue" type="submit">
+                                            <button className="butn butn-blue" type="submit" disabled={sending}>
                                                 <span>{t("submit")}</span>
                                                 <img
                                                     src="/images/icons/arrow-wh.svg"
@@ -299,6 +333,12 @@ const ContactHelpForm = ({ paths }: { paths: ContactHelpPathView[] }) => {
 
                                             <p className="contact_help_note mb-0">{t("privacy")}</p>
                                         </div>
+
+                                        {status ? (
+                                            <p className={`contact_help_status mb-0${status.type === "error" ? " is_error" : " is_success"}`} role="status">
+                                                {status.message}
+                                            </p>
+                                        ) : null}
                                     </div>
                                 </div>
                             </div>

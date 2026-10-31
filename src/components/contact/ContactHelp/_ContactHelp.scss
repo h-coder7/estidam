@@ -257,6 +257,24 @@
         font-size: 12px;
         line-height: 1.4;
     }
+
+    .contact_help_actions .butn:disabled {
+        opacity: 0.6;
+    }
+
+    .contact_help_status {
+        margin-top: 14px;
+        font-size: 14px;
+        line-height: 1.5;
+
+        &.is_success {
+            color: #067647;
+        }
+
+        &.is_error {
+            color: #b42318;
+        }
+    }
 }
 
 @media screen and (max-width: 991px) {
