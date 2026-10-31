@@ -141,7 +141,7 @@ function titleParts(data: Record<string, unknown>) {
     if (before || accent || after) return { titleBefore: before, titleAccent: accent, titleAfter: after };
 
     const title = text(data.title);
-    const match = title.match(/^(.*?)\*\*(.+?)\*\*(.*)$/s);
+    const match = title.match(/^([\s\S]*?)\*\*([\s\S]+?)\*\*([\s\S]*)$/);
     if (!match) return { titleBefore: title, titleAccent: "", titleAfter: "" };
 
     return {
@@ -224,7 +224,7 @@ function approachTitle(data: Record<string, unknown>) {
     if (strong || muted) return { titleStrong: strong, titleMuted: muted };
 
     const title = text(data.title);
-    const match = title.match(/^(.*?)\*\*(.+?)\*\*(.*)$/s);
+    const match = title.match(/^([\s\S]*?)\*\*([\s\S]+?)\*\*([\s\S]*)$/);
     if (!match) return { titleStrong: title, titleMuted: "" };
 
     return {
@@ -307,7 +307,7 @@ function journeyTitle(data: Record<string, unknown>) {
     }
 
     const title = text(data.title);
-    const match = title.match(/^(.*?)\*\*(.+?)\*\*(.*)$/s);
+    const match = title.match(/^([\s\S]*?)\*\*([\s\S]+?)\*\*([\s\S]*)$/);
     if (!match) return { titleBefore: title, titleMutedStart: "", titleMutedRest: "", titleAfter: "" };
 
     const accent = match[2].trim();
@@ -368,7 +368,7 @@ function markedTitle(data: Record<string, unknown>) {
     if (titleStrong || titleMuted) return { titleStrong, titleMuted };
 
     const title = text(data.title);
-    const match = title.match(/^(.*?)\*\*(.+?)\*\*(.*)$/s);
+    const match = title.match(/^([\s\S]*?)\*\*([\s\S]+?)\*\*([\s\S]*)$/);
     if (!match) return { titleStrong: title, titleMuted: "" };
 
     const after = match[3].trim();

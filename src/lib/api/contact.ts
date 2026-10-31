@@ -30,7 +30,7 @@ function markedTitle(data: Record<string, unknown>) {
     if (titleStrong || titleMuted) return { titleStrong, titleMuted };
 
     const title = text(data.title);
-    const match = title.match(/^(.*?)\*\*(.+?)\*\*(.*)$/s);
+    const match = title.match(/^([\s\S]*?)\*\*([\s\S]+?)\*\*([\s\S]*)$/);
     if (!match) return { titleStrong: title, titleMuted: "" };
 
     const after = match[3].trim();
