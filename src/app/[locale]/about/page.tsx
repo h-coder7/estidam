@@ -6,8 +6,10 @@ import AboutApproach from "@/components/about/AboutApproach/AboutApproach";
 import AboutJourney from "@/components/about/AboutJourney/AboutJourney";
 import AboutStudio from "@/components/about/AboutStudio/AboutStudio";
 import AboutLogos from "@/components/about/AboutLogos/AboutLogos";
-import HowWeDeliver from "@/components/home/HowWeDeliver/HowWeDeliver";
+import AboutDelivery from "@/components/about/AboutDelivery/AboutDelivery";
 import CallToAction from "@/components/solutions/CallToAction/CallToAction";
+
+export const revalidate = 0;
 
 export default function AboutPage() {
     return (
@@ -19,10 +21,10 @@ export default function AboutPage() {
                 <AboutStats />
                 <AboutApproach />
                 <AboutJourney />
-                <HowWeDeliver />
+                <AboutDelivery />
                 <AboutStudio />
                 <AboutLogos />
-                <CallToAction />
+                <CallToAction source="about" />
             </main>
 
             <Footer />

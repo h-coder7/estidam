@@ -3,6 +3,11 @@
     padding-bottom: 100px;
     background-color: var(--light-gray);
 
+    .about_logos_title_muted {
+        color: #777;
+        font-weight: 500;
+    }
+
     .about_logos_grid > div > div {
         height: 100%;
     }

@@ -1,10 +1,58 @@
-import { getTranslations } from "next-intl/server";
+import { ReactNode } from "react";
+import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import { getEcosystemContent, headingFromCms } from "@/lib/api/home";
+import { Link } from "@/i18n/routing";
 
 import "./_GrowthEcosystem.scss";
 
+function CmsLink({ href, className, children }: { href: string; className: string; children: ReactNode }) {
+    if (/^https?:\/\//i.test(href) || href.startsWith("#")) {
+        return (
+            <a href={href} className={className}>
+                {children}
+            </a>
+        );
+    }
+
+    return (
+        <Link href={href} className={className}>
+            {children}
+        </Link>
+    );
+}
+
+const cardFallbacks = [
+    { title: "card1Title", text: "card1Text", cta: "card1Cta", icon: "/images/icons/gr1.svg" },
+    { title: "card2Title", text: "card2Text", cta: "card2Cta", icon: "/images/icons/gr2.svg" },
+    { title: "card3Title", text: "card3Text", cta: "card3Cta", icon: "/images/icons/gr3.svg" },
+] as const;
+
 const GrowthEcosystem = async () => {
+    const locale = await getLocale();
     const t = await getTranslations("growthEcosystem");
+    const content = await getEcosystemContent(locale);
+    const heading = headingFromCms(content, t("titleStrong"), t("titleMuted"));
+    const badge = content?.eyebrow || t("badge");
+    const description = content?.description || t("description");
+    const cards = content?.cards.length
+        ? content.cards.map((card, index) => {
+              const fallback = cardFallbacks[index];
+              return {
+                  title: card.title || (fallback ? t(fallback.title) : ""),
+                  text: card.text || (fallback ? t(fallback.text) : ""),
+                  cta: card.cta || (fallback ? t(fallback.cta) : ""),
+                  ctaUrl: card.ctaUrl || "#",
+                  icon: card.icon || fallback?.icon || cardFallbacks[0].icon,
+              };
+          })
+        : cardFallbacks.map((card) => ({
+              title: t(card.title),
+              text: t(card.text),
+              cta: t(card.cta),
+              ctaUrl: "#",
+              icon: card.icon,
+          }));
 
     return (
         <section className="growth_ecosystem border-top" id="growth-ecosystem">
@@ -12,7 +60,7 @@ const GrowthEcosystem = async () => {
                 <div className="content px-lg-4">
                     <div className="section-head">
                         <Reveal animation="fade-up" trigger="load">
-                            <span className="section-head-badge">{t("badge")}</span>
+                            <span className="section-head-badge">{badge}</span>
                         </Reveal>
 
                         <div className="row gx-0 justify-content-between">
@@ -20,13 +68,15 @@ const GrowthEcosystem = async () => {
                                 <div className="section-head-left mt-3">
                                     <Reveal animation="fade-up" trigger="load">
                                         <h2 className="section-head-title fsz-40 fw-600 lh-2">
-                                            <span className="section-head-title-strong">
-                                                {t("titleStrong")}
-                                            </span>
-                                            <br />
-                                            <span className="section-head-title-muted cr-blue fw-500">
-                                                {t("titleMuted")}
-                                            </span>
+                                            <span className="section-head-title-strong">{heading.titleStrong}</span>
+                                            {heading.titleMuted ? (
+                                                <>
+                                                    <br />
+                                                    <span className="section-head-title-muted cr-blue fw-500">
+                                                        {heading.titleMuted}
+                                                    </span>
+                                                </>
+                                            ) : null}
                                         </h2>
                                     </Reveal>
                                 </div>
@@ -36,7 +86,7 @@ const GrowthEcosystem = async () => {
                                 <div className="section-head-right mt-3">
                                     <Reveal animation="fade-up" trigger="load">
                                         <p className="section-head-description mb-0">
-                                            {t("description")}
+                                            {description}
                                         </p>
                                     </Reveal>
                                 </div>
@@ -46,89 +96,31 @@ const GrowthEcosystem = async () => {
                 </div>
 
                 <div className="ecosystem_grid row gx-0 border-top">
-                    <div className="col-lg-4">
-                        <Reveal animation="fade-up" trigger="load">
-                            <article className="ecosystem_card">
-                                <div className="ecosystem_card_icon">
-                                    <img
-                                        src="/images/icons/gr1.svg"
-                                        alt=""
-                                        aria-hidden="true"
-                                    />
-                                </div>
+                    {cards.map((card) => (
+                        <div className="col-lg-4" key={card.title}>
+                            <Reveal animation="fade-up" trigger="load">
+                                <article className="ecosystem_card">
+                                    <div className="ecosystem_card_icon">
+                                        <img src={card.icon} alt="" aria-hidden="true" />
+                                    </div>
 
-                                <h3 className="ecosystem_card_title">{t("card1Title")}</h3>
+                                    <h3 className="ecosystem_card_title">{card.title}</h3>
 
-                                <p className="ecosystem_card_text">{t("card1Text")}</p>
+                                    <p className="ecosystem_card_text">{card.text}</p>
 
-                                <a href="#" className="ecosystem_card_link">
-                                    <span>{t("card1Cta")}</span>
-                                    <img
-                                        src="/images/icons/arrow-bl.svg"
-                                        alt=""
-                                        className="ecosystem_card_arrow"
-                                        aria-hidden="true"
-                                    />
-                                </a>
-                            </article>
-                        </Reveal>
-                    </div>
-
-                    <div className="col-lg-4">
-                        <Reveal animation="fade-up" trigger="load">
-                            <article className="ecosystem_card">
-                                <div className="ecosystem_card_icon">
-                                    <img
-                                        src="/images/icons/gr2.svg"
-                                        alt=""
-                                        aria-hidden="true"
-                                    />
-                                </div>
-
-                                <h3 className="ecosystem_card_title">{t("card2Title")}</h3>
-
-                                <p className="ecosystem_card_text">{t("card2Text")}</p>
-
-                                <a href="#" className="ecosystem_card_link">
-                                    <span>{t("card2Cta")}</span>
-                                    <img
-                                        src="/images/icons/arrow-bl.svg"
-                                        alt=""
-                                        className="ecosystem_card_arrow"
-                                        aria-hidden="true"
-                                    />
-                                </a>
-                            </article>
-                        </Reveal>
-                    </div>
-
-                    <div className="col-lg-4">
-                        <Reveal animation="fade-up" trigger="load">
-                            <article className="ecosystem_card">
-                                <div className="ecosystem_card_icon">
-                                    <img
-                                        src="/images/icons/gr3.svg"
-                                        alt=""
-                                        aria-hidden="true"
-                                    />
-                                </div>
-
-                                <h3 className="ecosystem_card_title">{t("card3Title")}</h3>
-
-                                <p className="ecosystem_card_text">{t("card3Text")}</p>
-
-                                <a href="#" className="ecosystem_card_link">
-                                    <span>{t("card3Cta")}</span>
-                                    <img
-                                        src="/images/icons/arrow-bl.svg"
-                                        alt=""
-                                        className="ecosystem_card_arrow"
-                                        aria-hidden="true"
-                                    />
-                                </a>
-                            </article>
-                        </Reveal>
-                    </div>
+                                    <CmsLink href={card.ctaUrl} className="ecosystem_card_link">
+                                        <span>{card.cta}</span>
+                                        <img
+                                            src="/images/icons/arrow-bl.svg"
+                                            alt=""
+                                            className="ecosystem_card_arrow"
+                                            aria-hidden="true"
+                                        />
+                                    </CmsLink>
+                                </article>
+                            </Reveal>
+                        </div>
+                    ))}
                 </div>
             </div>
 

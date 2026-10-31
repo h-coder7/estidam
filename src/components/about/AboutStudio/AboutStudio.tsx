@@ -1,14 +1,27 @@
-import { getTranslations } from "next-intl/server";
+import { ReactNode } from "react";
+import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import { getAboutStudioContent } from "@/lib/api/about";
+import { headingFromCms } from "@/lib/api/home";
+import { Link } from "@/i18n/routing";
 
 import "./_AboutStudio.scss";
 
-const steps = [
-    { number: "01", title: "step1Title", text: "step1Text" },
-    { number: "02", title: "step2Title", text: "step2Text" },
-    { number: "03", title: "step3Title", text: "step3Text" },
-    { number: "04", title: "step4Title", text: "step4Text" },
-] as const;
+function CmsLink({ href, className, children }: { href: string; className: string; children: ReactNode }) {
+    if (/^https?:\/\//i.test(href) || href.startsWith("#")) {
+        return (
+            <a href={href} className={className}>
+                {children}
+            </a>
+        );
+    }
+
+    return (
+        <Link href={href} className={className}>
+            {children}
+        </Link>
+    );
+}
 
 const disciplines = [
     { key: "discipline1", tone: "is_ops" },
@@ -27,7 +40,31 @@ const topicRows = [
 ] as const;
 
 const AboutStudio = async () => {
+    const locale = await getLocale();
     const t = await getTranslations("aboutPage.studio");
+    const studio = await getAboutStudioContent(locale);
+    const heading = headingFromCms(studio, t("titleStrong"), t("titleMuted"));
+    const badge = studio?.eyebrow || t("badge");
+    const description = studio?.description || t("description");
+    const cta = studio?.cta || t("cta");
+    const ctaUrl = studio?.ctaUrl || "#get-in-touch";
+
+    const steps = [
+        { number: "01", title: "step1Title", text: "step1Text" },
+        { number: "02", title: "step2Title", text: "step2Text" },
+        { number: "03", title: "step3Title", text: "step3Text" },
+        { number: "04", title: "step4Title", text: "step4Text" },
+    ].map((step, index) => {
+        const point = studio?.points[index];
+        const fallback = { title: t(step.title), text: t(step.text) };
+        if (!point) return { number: step.number, ...fallback };
+
+        return {
+            number: step.number,
+            title: point.title || fallback.title,
+            text: point.title ? point.text : point.text || fallback.text,
+        };
+    });
 
     return (
         <section className="about_studio" id="solutions-studio">
@@ -36,20 +73,22 @@ const AboutStudio = async () => {
                     <div className="content pb-100 px-lg-4">
                         <div className="section-head">
                             <Reveal animation="fade-up" trigger="load">
-                                <span className="section-head-badge">{t("badge")}</span>
+                                <span className="section-head-badge">{badge}</span>
                             </Reveal>
 
                             <div className="row gx-0 justify-content-between align-items-center">
                                 <div className="col-lg-7">
                                     <Reveal animation="fade-up" trigger="load">
                                         <h2 className="section-head-title fsz-40 fw-600 lh-2 mb-0">
-                                            <span className="section-head-title-strong">
-                                                {t("titleStrong")}
-                                            </span>
-                                            <br />
-                                            <span className="about_studio_title_muted">
-                                                {t("titleMuted")}
-                                            </span>
+                                            {heading.titleStrong ? (
+                                                <span className="section-head-title-strong">{heading.titleStrong}</span>
+                                            ) : null}
+                                            {heading.titleMuted ? (
+                                                <>
+                                                    {heading.titleStrong ? <br /> : null}
+                                                    <span className="about_studio_title_muted">{heading.titleMuted}</span>
+                                                </>
+                                            ) : null}
                                         </h2>
                                     </Reveal>
                                 </div>
@@ -57,7 +96,7 @@ const AboutStudio = async () => {
                                 <div className="col-lg-4">
                                     <Reveal animation="fade-up" trigger="load">
                                         <p className="about_studio_description fsz-13 fw-400 mb-0 ps-lg-4">
-                                            {t("description")}
+                                            {description}
                                         </p>
                                     </Reveal>
                                 </div>
@@ -80,11 +119,13 @@ const AboutStudio = async () => {
                                                     </span>
                                                     <div className="about_studio_step_copy">
                                                         <h3 className="about_studio_step_title fsz-18 mb-0">
-                                                            {t(step.title)}
+                                                            {step.title}
                                                         </h3>
-                                                        <p className="about_studio_step_text fsz-14 fw-400 mb-0">
-                                                            {t(step.text)}
-                                                        </p>
+                                                        {step.text ? (
+                                                            <p className="about_studio_step_text fsz-14 fw-400 mb-0">
+                                                                {step.text}
+                                                            </p>
+                                                        ) : null}
                                                     </div>
                                                 </li>
                                             ))}
@@ -159,15 +200,15 @@ const AboutStudio = async () => {
                                                     <h3 className="about_studio_cta_title fsz-22 fw-600">
                                                         {t("ctaTitle")}
                                                     </h3>
-                                                    <a href="#get-in-touch" className="butn butn-blue">
-                                                        <span>{t("cta")}</span>
+                                                    <CmsLink href={ctaUrl} className="butn butn-blue">
+                                                        <span>{cta}</span>
                                                         <img
                                                             src="/images/icons/arrow-wh.svg"
                                                             alt=""
                                                             className="butn-icon"
                                                             aria-hidden="true"
                                                         />
-                                                    </a>
+                                                    </CmsLink>
                                                 </article>
                                             </Reveal>
                                         </div>

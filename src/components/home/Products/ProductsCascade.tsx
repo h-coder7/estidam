@@ -3,16 +3,31 @@
 import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useLenis } from "@/components/LenisProvider";
-import {
-    PRODUCTS_CASCADE_CONFIG as CONFIG,
-    type ProductCascadeCard,
-} from "./productsCascadeConfig";
+import { PRODUCTS_CASCADE_CONFIG as CONFIG } from "./productsCascadeConfig";
+import type { CatalogProduct } from "@/lib/api/home";
 
 const clamp = (x: number, min: number, max: number) =>
     Math.min(max, Math.max(min, x));
 
-const ProductsCascade = () => {
+const ProductsCascade = ({ cards }: { cards?: CatalogProduct[] }) => {
     const t = useTranslations("products");
+    const viewCards: CatalogProduct[] = cards?.length
+        ? cards
+        : CONFIG.cards.map((card) => ({
+              id: card.id,
+              img: card.img,
+              status: t(card.statusKey),
+              statusTone: card.statusTone,
+              title: t(card.titleKey),
+              tagline: t(card.taglineKey),
+              logo: card.logo,
+              problemLabel: t(card.problemLabelKey),
+              problem: t(card.problemKey),
+              usersLabel: t(card.usersLabelKey),
+              users: t(card.usersKey),
+          }));
+    const titlesRef = useRef(viewCards.map((card) => card.title));
+    titlesRef.current = viewCards.map((card) => card.title);
     const lenis = useLenis();
     const sectionRef = useRef<HTMLDivElement>(null);
     const stageRef = useRef<HTMLDivElement>(null);
@@ -25,7 +40,7 @@ const ProductsCascade = () => {
     const rafRef = useRef(0);
     const sizeRef = useRef({ cw: 720, ch: 346, perspective: 1600 });
 
-    const N = CONFIG.cards.length;
+    const N = viewCards.length;
     const trackVh = Math.max(280, N * CONFIG.scroll.perCardVh);
 
     const getScrollMetrics = (section: HTMLElement) => {
@@ -129,7 +144,7 @@ const ProductsCascade = () => {
             tick.setAttribute("aria-current", i === index ? "true" : "false");
         });
         if (liveRef.current) {
-            liveRef.current.textContent = t(CONFIG.cards[index].titleKey);
+            liveRef.current.textContent = titlesRef.current[index] ?? "";
         }
     };
 
@@ -265,7 +280,7 @@ const ProductsCascade = () => {
             <div className="products_cascade_sticky">
                 <div className="products_stage" ref={stageRef}>
                     <div className="products_deck">
-                        {CONFIG.cards.map((card, index) => (
+                        {viewCards.map((card, index) => (
                             <article
                                 key={card.id}
                                 className="products_card"
@@ -274,10 +289,7 @@ const ProductsCascade = () => {
                                 }}
                                 aria-hidden={index !== 0}
                             >
-                                <ProductCardFace
-                                    card={card}
-                                    t={t as unknown as (key: string) => string}
-                                />
+                                <ProductCardFace card={card} />
                             </article>
                         ))}
                     </div>
@@ -292,7 +304,7 @@ const ProductsCascade = () => {
                         onPointerCancel={endDrag}
                     >
                         <span className="products_rail_line" aria-hidden="true"></span>
-                        {CONFIG.cards.map((card, index) => (
+                        {viewCards.map((card, index) => (
                             <button
                                 key={card.id}
                                 type="button"
@@ -300,7 +312,7 @@ const ProductsCascade = () => {
                                 ref={(el) => {
                                     if (el) ticksRef.current[index] = el;
                                 }}
-                                aria-label={`${String(index + 1).padStart(2, "0")} — ${t(card.titleKey)}`}
+                                aria-label={`${String(index + 1).padStart(2, "0")} — ${card.title}`}
                                 aria-current={index === 0 ? "true" : "false"}
                                 onClick={() => scrollToCard(index)}
                             >
@@ -311,19 +323,14 @@ const ProductsCascade = () => {
                 </nav>
 
                 <div className="visually-hidden" aria-live="polite" ref={liveRef}>
-                    {t(CONFIG.cards[0].titleKey)}
+                    {viewCards[0]?.title}
                 </div>
             </div>
         </div>
     );
 };
 
-type FaceProps = {
-    card: ProductCascadeCard;
-    t: (key: string) => string;
-};
-
-const ProductCardFace = ({ card, t }: FaceProps) => {
+const ProductCardFace = ({ card }: { card: CatalogProduct }) => {
     return (
         <div className="products_card_inner">
             <div className="products_card_media">
@@ -333,17 +340,15 @@ const ProductCardFace = ({ card, t }: FaceProps) => {
             <div className="products_card_body">
                 <div className="products_card_head">
                     <div className="products_card_head_main">
-                        <span
-                            className={`products_card_status is_${card.statusTone}`}
-                        >
+                        <span className={`products_card_status is_${card.statusTone}`}>
                             <i></i>
-                            {t(card.statusKey)}
+                            {card.status}
                         </span>
 
                         <div className="products_card_title_row">
                             <div>
-                                <h3 className="products_card_title">{t(card.titleKey)}</h3>
-                                <p className="products_card_tagline">{t(card.taglineKey)}</p>
+                                <h3 className="products_card_title">{card.title}</h3>
+                                {card.tagline ? <p className="products_card_tagline">{card.tagline}</p> : null}
                             </div>
 
                             <div className="products_card_logo" aria-hidden="true">
@@ -353,20 +358,22 @@ const ProductCardFace = ({ card, t }: FaceProps) => {
                     </div>
                 </div>
 
-                <div className="products_card_meta">
-                    <div className="products_card_meta_item">
-                        <span className="products_card_meta_label">
-                            {t(card.problemLabelKey)}
-                        </span>
-                        <p className="products_card_meta_text">{t(card.problemKey)}</p>
+                {card.problem || card.users ? (
+                    <div className="products_card_meta">
+                        {card.problem ? (
+                            <div className="products_card_meta_item">
+                                <span className="products_card_meta_label">{card.problemLabel}</span>
+                                <p className="products_card_meta_text">{card.problem}</p>
+                            </div>
+                        ) : null}
+                        {card.users ? (
+                            <div className="products_card_meta_item">
+                                <span className="products_card_meta_label">{card.usersLabel}</span>
+                                <p className="products_card_meta_text">{card.users}</p>
+                            </div>
+                        ) : null}
                     </div>
-                    <div className="products_card_meta_item">
-                        <span className="products_card_meta_label">
-                            {t(card.usersLabelKey)}
-                        </span>
-                        <p className="products_card_meta_text">{t(card.usersKey)}</p>
-                    </div>
-                </div>
+                ) : null}
             </div>
 
             <span className="products_card_sheen" aria-hidden="true"></span>

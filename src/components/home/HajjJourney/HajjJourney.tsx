@@ -1,174 +1,78 @@
-"use client";
+import { getLocale, getTranslations } from "next-intl/server";
+import { getJourneyContent } from "@/lib/api/home";
+import HajjJourneyView from "./HajjJourneyView";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
-import Reveal from "@/components/animations/Reveal";
-import ParticleHalo from "@/components/effects/ParticleHalo/ParticleHalo";
-
-import "./_HajjJourney.scss";
-
-const phases = [
+const phaseFallbacks = [
     {
         id: "before",
-        number: "01",
-        phaseKey: "phase1Label",
-        titleKey: "phase1Title",
-        textKey: "phase1Text",
-        pointsKey: "phase1Points",
+        label: "phase1Label",
+        title: "phase1Title",
+        text: "phase1Text",
+        points: "phase1Points",
         image: "/images/journey-1.png",
     },
     {
         id: "during",
-        number: "02",
-        phaseKey: "phase2Label",
-        titleKey: "phase2Title",
-        textKey: "phase2Text",
-        pointsKey: "phase2Points",
+        label: "phase2Label",
+        title: "phase2Title",
+        text: "phase2Text",
+        points: "phase2Points",
         image: "/images/journey-1.png",
     },
     {
         id: "after",
-        number: "03",
-        phaseKey: "phase3Label",
-        titleKey: "phase3Title",
-        textKey: "phase3Text",
-        pointsKey: "phase3Points",
+        label: "phase3Label",
+        title: "phase3Title",
+        text: "phase3Text",
+        points: "phase3Points",
         image: "/images/journey-1.png",
     },
 ] as const;
 
-const HajjJourney = () => {
-    const t = useTranslations("hajjJourney");
-    const [activeId, setActiveId] = useState<(typeof phases)[number]["id"]>("before");
-    const activePhase = phases.find((phase) => phase.id === activeId) ?? phases[0];
-    const points = t.raw(activePhase.pointsKey) as string[];
+const HajjJourney = async () => {
+    const locale = await getLocale();
+    const t = await getTranslations("hajjJourney");
+    const journey = await getJourneyContent(locale);
+
+    const phases = journey?.phases.length
+        ? journey.phases.map((phase, index) => {
+              const fallback = phaseFallbacks[index];
+              const points = phase.points.length
+                  ? phase.points
+                  : fallback
+                    ? (t.raw(fallback.points) as string[])
+                    : [];
+
+              return {
+                  id: phase.id,
+                  number: phase.number,
+                  label: phase.label || (fallback ? t(fallback.label) : ""),
+                  title: phase.title || (fallback ? t(fallback.title) : ""),
+                  text: phase.text || (fallback ? t(fallback.text) : ""),
+                  points,
+                  image: phase.image || fallback?.image || phaseFallbacks[0].image,
+              };
+          })
+        : phaseFallbacks.map((phase, index) => ({
+              id: phase.id,
+              number: String(index + 1).padStart(2, "0"),
+              label: t(phase.label),
+              title: t(phase.title),
+              text: t(phase.text),
+              points: t.raw(phase.points) as string[],
+              image: phase.image,
+          }));
 
     return (
-        <section className="hajj_journey" id="hajj-journey">
-            <div className="container">
-                <div className="content px-lg-4">
-                    <div className="section-head">
-                        <Reveal animation="fade-up" trigger="load">
-                            <span className="section-head-badge">{t("badge")}</span>
-                        </Reveal>
-
-                        <div className="row gx-0 justify-content-between">
-                            <div className="col-lg-6">
-                                <div className="section-head-left mt-3">
-                                    <Reveal animation="fade-up" trigger="load">
-                                        <h2 className="section-head-title fsz-40 fw-600 lh-2">
-                                            <span className="section-head-title-strong">
-                                                {t("titleStrong")}
-                                            </span>{" "}
-                                            <span className="section-head-title-muted cr-blue fw-500">
-                                                {t("titleMuted")}
-                                            </span>
-                                        </h2>
-                                    </Reveal>
-                                </div>
-                            </div>
-
-                            <div className="col-lg-5">
-                                <div className="section-head-right mt-3">
-                                    <Reveal animation="fade-up" trigger="load">
-                                        <p className="section-head-description">
-                                            {t("description")}
-                                        </p>
-                                    </Reveal>
-
-                                    <Reveal animation="fade-up" trigger="load">
-                                        <a href="#" className="butn butn-outline">
-                                            <span>{t("cta")}</span>
-                                            <img
-                                                src="/images/icons/arrow-bl.svg"
-                                                alt=""
-                                                className="butn-icon"
-                                                aria-hidden="true"
-                                            />
-                                        </a>
-                                    </Reveal>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div className="journey_body border-top">
-                <div className="container">
-                    <div className="row gx-0 align-items-center">
-                        <div className="col-lg-3">
-                            <Reveal animation="fade-up" trigger="load">
-                                <nav className="journey_nav" aria-label={t("badge")}>
-                                    {phases.map((phase) => {
-                                        const isActive = phase.id === activeId;
-
-                                        return (
-                                            <button
-                                                key={phase.id}
-                                                type="button"
-                                                className={`journey_nav_item${isActive ? " is_active" : ""}`}
-                                                onClick={() => setActiveId(phase.id)}
-                                                aria-pressed={isActive}
-                                            >
-                                                <span className="journey_nav_number">{phase.number}</span>
-                                                <span className="journey_nav_copy">
-                                                    <span className="journey_nav_phase">
-                                                        {t(phase.phaseKey)}
-                                                    </span>
-                                                    <span className="journey_nav_title">
-                                                        {t(phase.titleKey)}
-                                                    </span>
-                                                </span>
-                                            </button>
-                                        );
-                                    })}
-                                </nav>
-                            </Reveal>
-                        </div>
-
-                        <div className="col-lg-5">
-                            <Reveal animation="fade-up" trigger="load">
-                                <div className="journey_detail" key={activePhase.id}>
-                                    <p className="journey_detail_phase">{t(activePhase.phaseKey)}</p>
-                                    <h3 className="journey_detail_title">{t(activePhase.titleKey)}</h3>
-                                    <p className="journey_detail_text">{t(activePhase.textKey)}</p>
-
-                                    <ul className="journey_points row">
-                                        {points.map((point) => (
-                                            <li key={point} className="col-md-6">
-                                                <span>{point}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </Reveal>
-                        </div>
-
-                        <div className="col-lg-4 journey_visual_col">
-                            <div className="journey_visual">
-                                <ParticleHalo />
-                                <Reveal animation="fade-up" trigger="load" className="journey_visual_reveal">
-                                    <div className="img p-5">
-                                    <img
-                                        key={activePhase.id}
-                                        src={activePhase.image}
-                                        alt={t(activePhase.titleKey)}
-                                        className="journey_visual_img"
-                                    />
-                                    </div>
-                                </Reveal>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="sec-lines">
-                <span></span>
-                <span></span>
-            </div>
-        </section>
+        <HajjJourneyView
+            badge={journey?.eyebrow || t("badge")}
+            titleStrong={journey?.titleStrong || t("titleStrong")}
+            titleMuted={journey ? journey.titleMuted : t("titleMuted")}
+            description={journey?.description || t("description")}
+            cta={journey?.cta || t("cta")}
+            ctaUrl={journey?.ctaUrl || "#"}
+            phases={phases}
+        />
     );
 };
 

@@ -1,12 +1,12 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import { getAboutJourneyContent } from "@/lib/api/about";
 
 import "./_AboutJourney.scss";
 
-const phases = [
+const fallbackKeys = [
     {
         id: "before",
-        number: "01",
         col: "col-lg-5",
         label: "phase1Label",
         title: "phase1Title",
@@ -15,7 +15,6 @@ const phases = [
     },
     {
         id: "during",
-        number: "02",
         col: "col-lg-3",
         label: "phase2Label",
         title: "phase2Title",
@@ -24,7 +23,6 @@ const phases = [
     },
     {
         id: "after",
-        number: "03",
         col: "col-lg-4",
         label: "phase3Label",
         title: "phase3Title",
@@ -34,7 +32,37 @@ const phases = [
 ] as const;
 
 const AboutJourney = async () => {
+    const locale = await getLocale();
     const t = await getTranslations("aboutPage.journey");
+    const journey = await getAboutJourneyContent(locale);
+
+    const badge = journey?.eyebrow || t("badge");
+    const titleBefore = journey ? journey.titleBefore : t("titleBefore");
+    const titleMutedStart = journey ? journey.titleMutedStart : t("titleMutedStart");
+    const titleMutedRest = journey ? journey.titleMutedRest : t("titleMutedRest");
+    const titleAfter = journey ? journey.titleAfter : t("titleAfter");
+
+    const phases = fallbackKeys.map((item, index) => {
+        const phase = journey?.phases[index];
+        const fallback = {
+            id: item.id,
+            number: String(index + 1).padStart(2, "0"),
+            col: item.col,
+            label: t(item.label),
+            title: t(item.title),
+            text: t(item.text),
+            points: t.raw(item.points) as string[],
+        };
+        if (!phase) return fallback;
+
+        return {
+            ...fallback,
+            label: phase.label || fallback.label,
+            title: phase.title || fallback.title,
+            text: phase.text || fallback.text,
+            points: phase.points.length ? phase.points : fallback.points,
+        };
+    });
 
     return (
         <section className="about_journey" id="hajj-operations-journey">
@@ -43,26 +71,28 @@ const AboutJourney = async () => {
                         <Reveal animation="fade-up" trigger="load">
                             <div className="about_journey_eyebrow d-inline-flex align-items-center gap-2">
                                 <span className="about_journey_index fsz-12 fw-600">{t("index")}</span>
-                                <span className="fsz-13 fw-500">{t("badge")}</span>
+                                <span className="fsz-13 fw-500">{badge}</span>
                             </div>
                         </Reveal>
                         <div className="row gx-0 justify-content-between">
                             <div className="col-lg-8">
                                 <Reveal animation="fade-up" trigger="load">
                                     <h2 className="section-head-title fsz-40 fw-600 lh-2 mb-0">
-                                        <span className="section-head-title-strong">
-                                            {t("titleBefore")}
-                                        </span>{" "}
-                                        <span className="about_journey_title_muted">
-                                            {t("titleMutedStart")}
-                                        </span>
-                                        <br />
-                                        <span className="about_journey_title_muted">
-                                            {t("titleMutedRest")}
-                                        </span>{" "}
-                                        <span className="section-head-title-strong">
-                                            {t("titleAfter")}
-                                        </span>
+                                        {titleBefore ? (
+                                            <span className="section-head-title-strong">{titleBefore}</span>
+                                        ) : null}
+                                        {titleBefore && titleMutedStart ? " " : null}
+                                        {titleMutedStart ? (
+                                            <span className="about_journey_title_muted">{titleMutedStart}</span>
+                                        ) : null}
+                                        {titleMutedRest || titleAfter ? <br /> : null}
+                                        {titleMutedRest ? (
+                                            <span className="about_journey_title_muted">{titleMutedRest}</span>
+                                        ) : null}
+                                        {titleMutedRest && titleAfter ? " " : null}
+                                        {titleAfter ? (
+                                            <span className="section-head-title-strong">{titleAfter}</span>
+                                        ) : null}
                                     </h2>
                                 </Reveal>
                             </div>
@@ -97,10 +127,10 @@ const AboutJourney = async () => {
                                                 <span className="about_journey_stage_meta fsz-12 fw-500">
                                                     {phase.number}
                                                     <span aria-hidden="true"> · </span>
-                                                    {t(phase.label)}
+                                                    {phase.label}
                                                 </span>
                                                 <span className="about_journey_stage_title fsz-18 fw-600">
-                                                    {t(phase.title)}
+                                                    {phase.title}
                                                 </span>
                                             </button>
                                         </div>
@@ -119,8 +149,6 @@ const AboutJourney = async () => {
                             <Reveal animation="fade-up" trigger="load">
                                 <div className="tab-content" id="aboutJourneyContent">
                                     {phases.map((phase, index) => {
-                                        const points = t.raw(phase.points) as string[];
-
                                         return (
                                             <div
                                                 key={phase.id}
@@ -134,16 +162,16 @@ const AboutJourney = async () => {
                                                     <div className="row g-4">
                                                         <div className="col-lg-5">
                                                             <h3 className="about_journey_panel_title fsz-28 fw-600 mb-3">
-                                                                {t(phase.title)}
+                                                                {phase.title}
                                                             </h3>
                                                             <p className="about_journey_panel_text fsz-14 fw-400 mb-0">
-                                                                {t(phase.text)}
+                                                                {phase.text}
                                                             </p>
                                                         </div>
 
                                                         <div className="col-lg-7">
                                                             <div className="row g-3">
-                                                                {points.map((point) => (
+                                                                {phase.points.map((point) => (
                                                                     <div key={point} className="col-md-6">
                                                                         <div className="about_journey_point fsz-14 fw-500">
                                                                             <span className="about_journey_check">

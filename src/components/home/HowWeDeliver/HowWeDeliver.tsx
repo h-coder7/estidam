@@ -1,10 +1,55 @@
-import { getTranslations } from "next-intl/server";
+import { Fragment, ReactNode } from "react";
+import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import { getDeliveryContent, headingFromCms } from "@/lib/api/home";
+import { Link } from "@/i18n/routing";
 
 import "./_HowWeDeliver.scss";
 
+function CmsLink({ href, className, children }: { href: string; className: string; children: ReactNode }) {
+    if (/^https?:\/\//i.test(href) || href.startsWith("#")) {
+        return (
+            <a href={href} className={className}>
+                {children}
+            </a>
+        );
+    }
+
+    return (
+        <Link href={href} className={className}>
+            {children}
+        </Link>
+    );
+}
+
+const stepFallbacks = [
+    { key: "step1", icon: "fa-regular fa-bullseye" },
+    { key: "step2", icon: "fa-regular fa-magnifying-glass" },
+    { key: "step3", icon: "fa-regular fa-lightbulb" },
+    { key: "step4", icon: "fa-regular fa-code" },
+    { key: "step5", icon: "fa-regular fa-rocket" },
+    { key: "step6", icon: "fa-regular fa-chart-simple" },
+    { key: "step7", icon: "fa-regular fa-arrows-rotate" },
+] as const;
+
 const HowWeDeliver = async () => {
+    const locale = await getLocale();
     const t = await getTranslations("howWeDeliver");
+    const content = await getDeliveryContent(locale);
+    const heading = headingFromCms(content, t("titleStrong"), t("titleMuted"));
+    const badge = content?.eyebrow || t("badge");
+    const description = content?.description || t("description");
+    const cta = content?.cta || t("cta");
+    const ctaUrl = content?.ctaUrl || "#";
+    const steps = content?.steps.length
+        ? content.steps.map((label, index) => {
+              const fallback = stepFallbacks[index];
+              return {
+                  label: label || (fallback ? t(fallback.key) : ""),
+                  icon: fallback?.icon ?? stepFallbacks[stepFallbacks.length - 1].icon,
+              };
+          })
+        : stepFallbacks.map((step) => ({ label: t(step.key), icon: step.icon }));
 
     return (
         <section className="how_we_deliver border-top pb-100" id="how-we-deliver">
@@ -12,7 +57,7 @@ const HowWeDeliver = async () => {
                 <div className="content px-lg-4">
                     <div className="section-head">
                         <Reveal animation="fade-up" trigger="load">
-                            <span className="section-head-badge">{t("badge")}</span>
+                            <span className="section-head-badge">{badge}</span>
                         </Reveal>
 
                         <div className="row gx-0 justify-content-between">
@@ -20,13 +65,15 @@ const HowWeDeliver = async () => {
                                 <div className="section-head-left mt-3">
                                     <Reveal animation="fade-up" trigger="load">
                                         <h2 className="section-head-title fsz-40 fw-600 lh-2">
-                                            <span className="section-head-title-strong">
-                                                {t("titleStrong")}
-                                            </span>
-                                            <br />
-                                            <span className="section-head-title-muted cr-blue fw-500">
-                                                {t("titleMuted")}
-                                            </span>
+                                            <span className="section-head-title-strong">{heading.titleStrong}</span>
+                                            {heading.titleMuted ? (
+                                                <>
+                                                    <br />
+                                                    <span className="section-head-title-muted cr-blue fw-500">
+                                                        {heading.titleMuted}
+                                                    </span>
+                                                </>
+                                            ) : null}
                                         </h2>
                                     </Reveal>
                                 </div>
@@ -36,20 +83,20 @@ const HowWeDeliver = async () => {
                                 <div className="section-head-right mt-3">
                                     <Reveal animation="fade-up" trigger="load">
                                         <p className="section-head-description">
-                                            {t("description")}
+                                            {description}
                                         </p>
                                     </Reveal>
 
                                     <Reveal animation="fade-up" trigger="load">
-                                        <a href="#" className="butn butn-outline">
-                                            <span>{t("cta")}</span>
+                                        <CmsLink href={ctaUrl} className="butn butn-outline">
+                                            <span>{cta}</span>
                                             <img
                                                 src="/images/icons/arrow-bl.svg"
                                                 alt=""
                                                 className="butn-icon"
                                                 aria-hidden="true"
                                             />
-                                        </a>
+                                        </CmsLink>
                                     </Reveal>
                                 </div>
                             </div>
@@ -58,73 +105,18 @@ const HowWeDeliver = async () => {
 
                     <Reveal animation="fade-up" trigger="load">
                         <div className="deliver_steps">
-                            <div className="deliver_step">
-                                <div className="deliver_step_icon">
-                                    <span className="deliver_step_num">01</span>
-                                    <i className="fa-regular fa-bullseye"></i>
-                                </div>
-                                <p className="deliver_step_label">{t("step1")}</p>
-                            </div>
-
-                            <span className="deliver_step_arrow" aria-hidden="true"></span>
-
-                            <div className="deliver_step">
-                                <div className="deliver_step_icon">
-                                    <span className="deliver_step_num">02</span>
-                                    <i className="fa-regular fa-magnifying-glass"></i>
-                                </div>
-                                <p className="deliver_step_label">{t("step2")}</p>
-                            </div>
-
-                            <span className="deliver_step_arrow" aria-hidden="true"></span>
-
-                            <div className="deliver_step">
-                                <div className="deliver_step_icon">
-                                    <span className="deliver_step_num">03</span>
-                                    <i className="fa-regular fa-lightbulb"></i>
-                                </div>
-                                <p className="deliver_step_label">{t("step3")}</p>
-                            </div>
-
-                            <span className="deliver_step_arrow" aria-hidden="true"></span>
-
-                            <div className="deliver_step">
-                                <div className="deliver_step_icon">
-                                    <span className="deliver_step_num">04</span>
-                                    <i className="fa-regular fa-code"></i>
-                                </div>
-                                <p className="deliver_step_label">{t("step4")}</p>
-                            </div>
-
-                            <span className="deliver_step_arrow" aria-hidden="true"></span>
-
-                            <div className="deliver_step">
-                                <div className="deliver_step_icon">
-                                    <span className="deliver_step_num">05</span>
-                                    <i className="fa-regular fa-rocket"></i>
-                                </div>
-                                <p className="deliver_step_label">{t("step5")}</p>
-                            </div>
-
-                            <span className="deliver_step_arrow" aria-hidden="true"></span>
-
-                            <div className="deliver_step">
-                                <div className="deliver_step_icon">
-                                    <span className="deliver_step_num">06</span>
-                                    <i className="fa-regular fa-chart-simple"></i>
-                                </div>
-                                <p className="deliver_step_label">{t("step6")}</p>
-                            </div>
-
-                            <span className="deliver_step_arrow" aria-hidden="true"></span>
-
-                            <div className="deliver_step">
-                                <div className="deliver_step_icon">
-                                    <span className="deliver_step_num">07</span>
-                                    <i className="fa-regular fa-arrows-rotate"></i>
-                                </div>
-                                <p className="deliver_step_label">{t("step7")}</p>
-                            </div>
+                            {steps.map((step, index) => (
+                                <Fragment key={`${step.label}-${index}`}>
+                                    {index > 0 ? <span className="deliver_step_arrow" aria-hidden="true"></span> : null}
+                                    <div className="deliver_step">
+                                        <div className="deliver_step_icon">
+                                            <span className="deliver_step_num">{String(index + 1).padStart(2, "0")}</span>
+                                            <i className={step.icon}></i>
+                                        </div>
+                                        <p className="deliver_step_label">{step.label}</p>
+                                    </div>
+                                </Fragment>
+                            ))}
                         </div>
                     </Reveal>
 

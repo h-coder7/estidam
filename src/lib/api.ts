@@ -22,7 +22,11 @@ export const endpoints = {
     settings: "/settings",
     pages: "/pages",
     page: (pageKey: PageKey) => `/pages/${pageKey}`,
-    hero: "/pages/hero_section",
+    home: "cms/pages/home",
+    about: "cms/pages/about",
+    contact: "cms/pages/contact",
+    products: "products",
+    product: (slug: string) => `products/${slug}`,
     footer: "/pages/footer",
 };
 
@@ -39,8 +43,22 @@ export const api = {
     getPage: (pageKey: PageKey, locale?: string) =>
         apiClient.get(endpoints.page(pageKey), withLang(locale)).then((res) => res.data),
 
-    getHero: (locale?: string) =>
-        apiClient.get(endpoints.hero, withLang(locale)).then((res) => res.data),
+    getHome: (locale?: string) =>
+        apiClient.get(endpoints.home, withLang(locale)).then((res) => res.data),
+
+    getAbout: (locale?: string) =>
+        apiClient.get(endpoints.about, withLang(locale)).then((res) => res.data),
+
+    getContactPage: (locale?: string) =>
+        apiClient.get(endpoints.contact, withLang(locale)).then((res) => res.data),
+
+    getProducts: (locale?: string) =>
+        apiClient
+            .get(endpoints.products, { ...withLang(locale), params: { per_page: 50 } })
+            .then((res) => res.data),
+
+    getProduct: (slug: string, locale?: string) =>
+        apiClient.get(endpoints.product(slug), withLang(locale)).then((res) => res.data),
 
     getFooter: (locale?: string) =>
         apiClient.get(endpoints.footer, withLang(locale)).then((res) => res.data),

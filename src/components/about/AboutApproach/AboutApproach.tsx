@@ -1,12 +1,12 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import { getAboutApproachContent } from "@/lib/api/about";
 
 import "./_AboutApproach.scss";
 
-const items = [
+const fallbackKeys = [
     {
         id: "understand",
-        number: "01",
         icon: "fal fa-landmark",
         title: "item1Title",
         text: "item1Text",
@@ -14,7 +14,6 @@ const items = [
     },
     {
         id: "operations",
-        number: "02",
         icon: "fal fa-gears",
         title: "item2Title",
         text: "item2Text",
@@ -22,7 +21,6 @@ const items = [
     },
     {
         id: "ai",
-        number: "03",
         icon: "fal fa-sparkles",
         title: "item3Title",
         text: "item3Text",
@@ -30,7 +28,6 @@ const items = [
     },
     {
         id: "measure",
-        number: "04",
         icon: "fal fa-chart-line",
         title: "item4Title",
         text: "item4Text",
@@ -39,7 +36,37 @@ const items = [
 ] as const;
 
 const AboutApproach = async () => {
+    const locale = await getLocale();
     const t = await getTranslations("aboutPage.approach");
+    const approach = await getAboutApproachContent(locale);
+
+    const badge = approach?.eyebrow || t("badge");
+    const titleStrong = approach ? approach.titleStrong : t("titleStrong");
+    const titleMuted = approach ? approach.titleMuted : t("titleMuted");
+    const description = approach?.description || t("description");
+
+    const fallbackItems = fallbackKeys.map((item, index) => ({
+        id: item.id,
+        number: String(index + 1).padStart(2, "0"),
+        icon: item.icon,
+        title: t(item.title),
+        text: t(item.text),
+        points: t.raw(item.points) as string[],
+    }));
+
+    const items = fallbackItems.map((fallback, index) => {
+        const card = approach?.cards[index];
+        if (!card) return fallback;
+
+        return {
+            id: fallback.id,
+            number: fallback.number,
+            icon: card.icon || fallback.icon,
+            title: card.title || fallback.title,
+            text: card.text || fallback.text,
+            points: card.points.length ? card.points : fallback.points,
+        };
+    });
 
     return (
         <section className="about_approach" id="our-approach">
@@ -47,19 +74,20 @@ const AboutApproach = async () => {
                 <div className="content px-lg-4">
                     <div className="section-head">
                         <Reveal animation="fade-up" trigger="load">
-                            <span className="section-head-badge">{t("badge")}</span>
+                            <span className="section-head-badge">{badge}</span>
                         </Reveal>
 
                         <div className="row gx-0 justify-content-between align-items-center">
                             <div className="col-lg-7">
                                 <Reveal animation="fade-up" trigger="load">
                                     <h2 className="section-head-title fsz-40 fw-600 lh-2 mb-0">
-                                        <span className="section-head-title-strong">
-                                            {t("titleStrong")}
-                                        </span>{" "}
-                                        <span className="about_approach_title_muted cr-blue">
-                                            {t("titleMuted")}
-                                        </span>
+                                        {titleStrong ? (
+                                            <span className="section-head-title-strong">{titleStrong}</span>
+                                        ) : null}
+                                        {titleStrong && titleMuted ? " " : null}
+                                        {titleMuted ? (
+                                            <span className="about_approach_title_muted cr-blue">{titleMuted}</span>
+                                        ) : null}
                                     </h2>
                                 </Reveal>
                             </div>
@@ -67,7 +95,7 @@ const AboutApproach = async () => {
                             <div className="col-lg-4">
                                 <Reveal animation="fade-up" trigger="load">
                                     <p className="about_approach_description fsz-13 fw-400 mb-0 ps-lg-4">
-                                        {t("description")}
+                                        {description}
                                     </p>
                                 </Reveal>
                             </div>
@@ -99,7 +127,7 @@ const AboutApproach = async () => {
                                                 {item.number}
                                             </span>
                                             <span className="about_approach_label fsz-15 fw-500">
-                                                {t(item.title)}
+                                                {item.title}
                                             </span>
                                             <i
                                                 className="fal fa-arrow-right about_approach_arrow"
@@ -115,8 +143,6 @@ const AboutApproach = async () => {
                             <Reveal animation="fade-up" trigger="load">
                                 <div className="tab-content" id="aboutApproachContent">
                                     {items.map((item, index) => {
-                                        const points = t.raw(item.points) as string[];
-
                                         return (
                                             <div
                                                 key={item.id}
@@ -132,18 +158,22 @@ const AboutApproach = async () => {
                                                     </span>
 
                                                     <span className="about_approach_icon">
-                                                        <i className={item.icon} aria-hidden="true" />
+                                                        {item.icon.includes("fa-") ? (
+                                                            <i className={item.icon} aria-hidden="true" />
+                                                        ) : (
+                                                            <img src={item.icon} alt="" aria-hidden="true" />
+                                                        )}
                                                     </span>
 
                                                     <h3 className="about_approach_card_title fsz-22 fw-600 mb-2">
-                                                        {t(item.title)}
+                                                        {item.title}
                                                     </h3>
                                                     <p className="about_approach_card_text fsz-14 fw-400">
-                                                        {t(item.text)}
+                                                        {item.text}
                                                     </p>
 
                                                     <ul className="about_approach_points col-lg-7">
-                                                        {points.map((point) => (
+                                                        {item.points.map((point) => (
                                                             <li key={point} className="fsz-14 fw-500">
                                                                 <span className="about_approach_diamond" />
                                                                 {point}

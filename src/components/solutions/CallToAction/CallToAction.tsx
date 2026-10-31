@@ -1,10 +1,35 @@
-import { getTranslations } from "next-intl/server";
+import { ReactNode } from "react";
+import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import { getAboutCtaContent } from "@/lib/api/about";
+import { Link } from "@/i18n/routing";
 
 import "./_CallToAction.scss";
 
-const CallToAction = async () => {
+function CmsLink({ href, className, children }: { href: string; className: string; children: ReactNode }) {
+    if (/^https?:\/\//i.test(href) || href.startsWith("#")) {
+        return (
+            <a href={href} className={className}>
+                {children}
+            </a>
+        );
+    }
+
+    return (
+        <Link href={href} className={className}>
+            {children}
+        </Link>
+    );
+}
+
+const CallToAction = async ({ source }: { source?: "about" }) => {
+    const locale = await getLocale();
     const t = await getTranslations("solutionsPage.callToAction");
+    const content = source === "about" ? await getAboutCtaContent(locale) : null;
+    const primaryLabel = content?.primaryLabel || t("primaryCta");
+    const primaryHref = content?.primaryHref || "#";
+    const secondaryLabel = content?.secondaryLabel || t("secondaryCta");
+    const secondaryHref = content?.secondaryHref || "#";
 
     return (
         <section className="solutions_call_to_action" id="call-to-action">
@@ -16,7 +41,20 @@ const CallToAction = async () => {
                     </Reveal>
 
                     <Reveal animation="fade-up" trigger="load">
-                        <h2 className="call_to_action_title fsz-40 fw-600 lh-2">{t("title")}</h2>
+                        <h2 className="call_to_action_title fsz-40 fw-600 lh-2">
+                            {content ? (
+                                <>
+                                    {content.titleBefore ? <span>{content.titleBefore}</span> : null}
+                                    {content.titleBefore && content.titleAccent ? " " : null}
+                                    {content.titleAccent ? (
+                                        <span className="call_to_action_title_accent">{content.titleAccent}</span>
+                                    ) : null}
+                                    {content.titleAfter ? <span> {content.titleAfter}</span> : null}
+                                </>
+                            ) : (
+                                t("title")
+                            )}
+                        </h2>
                     </Reveal>
 
                     <Reveal animation="fade-up" trigger="load">
@@ -25,27 +63,27 @@ const CallToAction = async () => {
 
                     <div className="call_to_action_actions mt-5">
                         <Reveal animation="fade-up" trigger="load">
-                            <a href="#" className="butn butn-blue">
-                                <span>{t("primaryCta")}</span>
+                            <CmsLink href={primaryHref} className="butn butn-blue">
+                                <span>{primaryLabel}</span>
                                 <img
                                     src="/images/icons/arrow-wh.svg"
                                     alt=""
                                     className="butn-icon"
                                     aria-hidden="true"
                                 />
-                            </a>
+                            </CmsLink>
                         </Reveal>
 
                         <Reveal animation="fade-up" trigger="load">
-                            <a href="#" className="butn butn-ghost border-wh-2">
-                                <span>{t("secondaryCta")}</span>
+                            <CmsLink href={secondaryHref} className="butn butn-ghost border-wh-2">
+                                <span>{secondaryLabel}</span>
                                 <img
                                     src="/images/icons/arrow-bl.svg"
                                     alt=""
                                     className="butn-icon"
                                     aria-hidden="true"
                                 />
-                            </a>
+                            </CmsLink>
                         </Reveal>
                     </div>
                 </div>

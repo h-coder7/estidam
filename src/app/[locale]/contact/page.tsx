@@ -6,6 +6,8 @@ import ContactDirect from "@/components/contact/ContactDirect/ContactDirect";
 import ContactFaq from "@/components/contact/ContactFaq/ContactFaq";
 import CallToAction from "@/components/solutions/CallToAction/CallToAction";
 
+export const revalidate = 0;
+
 export default function ContactPage() {
     return (
         <div className="inner-page">
