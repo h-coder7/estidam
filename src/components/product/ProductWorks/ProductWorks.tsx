@@ -1,5 +1,7 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import { getProductWorks } from "@/lib/api/productsPage";
+import ProductWorksSteps from "./ProductWorksSteps";
 
 import "./_ProductWorks.scss";
 
@@ -8,9 +10,11 @@ type WorkStep = {
     text: string;
 };
 
-const ProductWorks = async () => {
+const ProductWorks = async ({ productId }: { productId: "hrh" | "mayar" | "maydan" }) => {
+    const locale = await getLocale();
     const t = await getTranslations("productsPage.detail.works");
-    const steps = t.raw("steps") as WorkStep[];
+    const works = await getProductWorks(locale, productId);
+    const steps = works.length ? works : (t.raw("steps") as WorkStep[]);
 
     return (
         <section className="products_works" id="product-works">
@@ -33,56 +37,7 @@ const ProductWorks = async () => {
                             </h2>
                         </Reveal>
                         <Reveal animation="fade-up">
-                            <ol className="products_works_steps">
-                                <img
-                                    className="products_works_line"
-                                    src="/images/product-det/works-line.svg"
-                                    alt=""
-                                    width={1286}
-                                    height={1}
-                                />
-                                <img
-                                    className="products_works_line_active"
-                                    src="/images/product-det/works-line-active.svg"
-                                    alt=""
-                                    width={313}
-                                    height={1}
-                                />
-                                {steps.map((step, index) => {
-                                    const active = index < 2;
-                                    const number = String(index + 1).padStart(2, "0");
-
-                                    return (
-                                        <li className={`products_works_step${active ? " is-active" : ""}`} key={number}>
-                                            <span className="products_works_marker">
-                                                {active && (
-                                                    <img
-                                                        className="products_works_ring"
-                                                        src="/images/product-det/works-step-ring.svg"
-                                                        alt=""
-                                                        width={46}
-                                                        height={46}
-                                                    />
-                                                )}
-                                                <img
-                                                    className="products_works_face"
-                                                    src={
-                                                        active
-                                                            ? "/images/product-det/works-step-active.svg"
-                                                            : "/images/product-det/works-step-idle.svg"
-                                                    }
-                                                    alt=""
-                                                    width={40}
-                                                    height={40}
-                                                />
-                                                <span className="products_works_num">{number}</span>
-                                            </span>
-                                            <h3 className="products_works_step_title fw-500">{step.title}</h3>
-                                            <p className="products_works_step_text mb-0">{step.text}</p>
-                                        </li>
-                                    );
-                                })}
-                            </ol>
+                            <ProductWorksSteps steps={steps} />
                         </Reveal>
                     </div>
                     <div className="sec-lines"><span></span><span></span></div>

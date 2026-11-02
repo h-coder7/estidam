@@ -104,10 +104,10 @@ export async function getHeroContent(locale: string): Promise<HeroContent | null
 }
 
 const whyIcons = [
-    "/images/icons/kabaa.svg",
-    "/images/icons/report.svg",
-    "/images/icons/brand.svg",
-    "/images/icons/chart.svg",
+    "fa-regular fa-kaaba",
+    "fa-regular fa-file-lines",
+    "fa-regular fa-share-nodes",
+    "fa-regular fa-chart-column",
 ];
 
 export type WhyCardContent = {
@@ -206,21 +206,42 @@ function labels(value: unknown) {
     });
 }
 
+const iconAliases: Record<string, string> = {
+    workflow: "diagram-project",
+    barChart3: "chart-column",
+    "bar-chart3": "chart-column",
+    "bar-chart": "chart-column",
+    fileCheck2: "file-check",
+    "file-check2": "file-check",
+    brainCircuit: "brain-circuit",
+};
+
+function fontAwesomeIcon(value: unknown, index: number, fallbacks: string[]) {
+    const fallback = fallbacks[index] ?? fallbacks[fallbacks.length - 1] ?? "fa-regular fa-circle";
+    const record = value && typeof value === "object" ? (value as Record<string, unknown>) : null;
+    const raw = record
+        ? text(record.class ?? record.className ?? record.name ?? record.value ?? record.icon)
+        : text(value);
+    const source = (raw.match(/class=["']([^"']+)["']/i)?.[1] ?? raw).replace(/<[^>]+>/g, "").trim();
+
+    if (!source) return fallback;
+    if (/\bfa-/.test(source)) return source;
+
+    const name = source
+        .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+        .replace(/[\s_]+/g, "-")
+        .replace(/^fa-/, "")
+        .replace(/(\D)\d+$/, "$1")
+        .toLowerCase();
+
+    if (!name || /^https?:/.test(name) || name.startsWith("/") || name.startsWith("images")) return fallback;
+
+    const aliased = iconAliases[name] ?? iconAliases[source] ?? name;
+    return `fa-regular fa-${aliased}`;
+}
+
 function whyIcon(value: unknown, index: number) {
-    const raw =
-        value && typeof value === "object"
-            ? text(
-                  (value as Record<string, unknown>).url ??
-                      (value as Record<string, unknown>).src ??
-                      (value as Record<string, unknown>).path,
-              )
-            : text(value);
-
-    if (raw && (/^https?:\/\//i.test(raw) || raw.startsWith("/") || raw.startsWith("images/"))) {
-        return mediaUrl(raw);
-    }
-
-    return whyIcons[index] ?? whyIcons[whyIcons.length - 1];
+    return fontAwesomeIcon(value, index, whyIcons);
 }
 
 function whyCards(value: unknown): WhyCardContent[] {
@@ -351,6 +372,62 @@ export type HomeSectionContent = ReturnType<typeof sectionHeading>;
 export async function getSolutionsContent(locale: string): Promise<HomeSectionContent | null> {
     const data = sectionData(await loadHomePage(locale), "solutions");
     return data ? sectionHeading(data) : null;
+}
+
+export type SolutionCubeSlide = {
+    id: string;
+    title: string;
+    titleStrong: string;
+    titleMuted: string;
+    text: string;
+    highlight: string;
+    image: string;
+};
+
+function solutionTitleParts(title: string) {
+    const ampersand = title.indexOf("&");
+    if (ampersand > 0 && ampersand < title.length - 1) {
+        return {
+            titleStrong: title.slice(0, ampersand).trim(),
+            titleMuted: title.slice(ampersand + 1).trim(),
+        };
+    }
+
+    return headingParts({ title });
+}
+
+export async function getSolutionCubeSlides(locale: string): Promise<SolutionCubeSlide[]> {
+    const section = sectionData(await loadHomePage(locale), "solutions");
+    const limitRaw = Number(section?.limit);
+    const limit = Number.isFinite(limitRaw) && limitRaw > 0 ? Math.floor(limitRaw) : 6;
+
+    try {
+        const payload = await api.getSolutions(locale);
+        const items = records((payload as { data?: unknown })?.data ?? payload);
+
+        return items.slice(0, limit).flatMap((item, index) => {
+            const title = text(item.title);
+            const textBody = text(item.summary ?? item.description ?? item.text);
+            const highlight = text(item.outcome ?? item.highlight);
+            if (!title && !textBody && !highlight) return [];
+
+            const parts = solutionTitleParts(title);
+
+            return [
+                {
+                    id: text(item.id) || `solution-${index + 1}`,
+                    title,
+                    titleStrong: parts.titleStrong || title,
+                    titleMuted: parts.titleMuted,
+                    text: textBody,
+                    highlight,
+                    image: journeyImage(item.image ?? item.cover ?? item.photo ?? item.media),
+                },
+            ];
+        });
+    } catch {
+        return [];
+    }
 }
 
 export type OperationsContent = HomeSectionContent & {
@@ -492,7 +569,92 @@ export async function getProofContent(locale: string): Promise<HomeSectionConten
     return data ? sectionHeading(data) : null;
 }
 
-const ecosystemIcons = ["/images/icons/gr1.svg", "/images/icons/gr2.svg", "/images/icons/gr3.svg"];
+export type ProofCaseCard = {
+    id: string;
+    eyebrow: string;
+    title: string;
+    proof: string;
+    proofLabel: string;
+    challenge: string;
+    solution: string;
+    role: string;
+    logo: string;
+};
+
+const proofLogos = ["/images/exp-logo1.png", "/images/exp-logo2.png", "/images/exp-logo3.png"];
+
+function firstRecord(value: unknown) {
+    return records(value)[0] ?? null;
+}
+
+export async function getProofCases(locale: string): Promise<ProofCaseCard[]> {
+    const section = sectionData(await loadHomePage(locale), "proof");
+    const limitRaw = Number(section?.limit);
+    const limit = Number.isFinite(limitRaw) && limitRaw > 0 ? Math.floor(limitRaw) : 3;
+
+    try {
+        const payload = await api.getProducts(locale);
+        const items = records((payload as { data?: unknown })?.data ?? payload)
+            .filter((item) => item.show_on_products_page !== false && item.show_on_products_page !== 0)
+            .sort((a, b) => {
+                const featuredA = a.featured === true || a.featured === 1 ? 0 : 1;
+                const featuredB = b.featured === true || b.featured === 1 ? 0 : 1;
+                return featuredA - featuredB;
+            })
+            .slice(0, limit);
+
+        const cards = await Promise.all(
+            items.map(async (item, index) => {
+                const slug = text(item.slug);
+                let detail: Record<string, unknown> = {};
+
+                if (slug) {
+                    try {
+                        const response = await api.getProduct(slug, locale);
+                        const data = (response as { data?: unknown })?.data;
+                        if (data && typeof data === "object") detail = data as Record<string, unknown>;
+                    } catch {
+                        detail = {};
+                    }
+                }
+
+                const name = text(item.name ?? detail.name);
+                const tagline = text(item.tagline ?? detail.tagline);
+                const outcome = firstRecord(detail.outcomes);
+                const capability = firstRecord(detail.capabilities);
+                const useCase = firstRecord(detail.use_cases);
+                const logo =
+                    journeyImage(item.image ?? detail.image) ||
+                    proofLogos[index % proofLogos.length];
+
+                return {
+                    id: slug || String(item.id ?? index),
+                    eyebrow: name,
+                    title: tagline || name,
+                    proof: text(outcome?.value),
+                    proofLabel: text(outcome?.label),
+                    challenge: text(detail.problem),
+                    solution:
+                        text(detail.overview) ||
+                        text(capability?.description ?? capability?.title) ||
+                        text(useCase?.description ?? useCase?.title),
+                    role: text(detail.audience ?? detail.users),
+                    logo,
+                } satisfies ProofCaseCard;
+            }),
+        );
+
+        return cards.filter((card) => card.eyebrow || card.title);
+    } catch {
+        return [];
+    }
+}
+
+const ecosystemIcons = [
+    "fa-regular fa-sprout",
+    "fa-regular fa-diagram-project",
+    "fa-regular fa-handshake",
+];
 
 export type EcosystemCardContent = {
     title: string;
@@ -514,7 +676,6 @@ export async function getEcosystemContent(locale: string): Promise<EcosystemCont
         ? data.cards.flatMap((item, index) => {
               if (!item || typeof item !== "object") return [];
               const card = item as Record<string, unknown>;
-              const icon = journeyImage(card.icon);
 
               return [
                   {
@@ -522,7 +683,7 @@ export async function getEcosystemContent(locale: string): Promise<EcosystemCont
                       text: text(card.description ?? card.text),
                       cta: text(card.ctaLabel ?? card.cta),
                       ctaUrl: text(card.ctaHref ?? card.href ?? card.url),
-                      icon: icon || ecosystemIcons[index] || ecosystemIcons[0],
+                      icon: fontAwesomeIcon(card.icon, index, ecosystemIcons),
                   },
               ];
           })

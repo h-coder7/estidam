@@ -116,11 +116,11 @@
 
 @media screen and (min-width: 992px) {
     .contact_direct {
-        .col-lg-3:first-child .contact_direct_item {
+        .contact_direct_grid > [class*="col"]:first-child .contact_direct_item {
             padding-inline-start: 0;
         }
 
-        .col-lg-3:last-child .contact_direct_item {
+        .contact_direct_grid > [class*="col"]:last-child .contact_direct_item {
             border-inline-end: 0;
         }
     }
@@ -162,6 +162,16 @@
 
         .col-6:nth-child(odd) .contact_direct_item {
             padding-inline-start: 0;
+        }
+
+        .col-12 .contact_direct_item {
+            padding-inline: 0;
+            border-inline-end: 0;
+            border-bottom: 1px solid #e4e8ee;
+        }
+
+        .col-12:last-child .contact_direct_item {
+            border-bottom: 0;
         }
     }
 }

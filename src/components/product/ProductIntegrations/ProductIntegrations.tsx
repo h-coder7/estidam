@@ -29,8 +29,6 @@ const chipIcons = [
     "/images/product-det/integrations-chip-spark.svg",
 ] as const;
 
-const chipTones = ["", "is-dark", "is-gold"] as const;
-
 type IntegrationNode = {
     title: string;
     text: string;
@@ -62,7 +60,7 @@ const ProductIntegrations = async () => {
                             </div>
                             <div className="products_integrations_chips">
                                 {chips.map((chip, index) => (
-                                    <span className={`products_integrations_chip ${chipTones[index]}`} key={chip}>
+                                    <span className={`products_integrations_chip${index === 2 ? " is-gold" : ""}`} key={chip}>
                                         <img src={chipIcons[index]} alt="" width={14} height={14} />
                                         {chip}
                                     </span>

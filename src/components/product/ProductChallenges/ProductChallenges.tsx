@@ -1,5 +1,6 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import { getProductChallenges } from "@/lib/api/productsPage";
 
 import "./_ProductChallenges.scss";
 
@@ -17,9 +18,17 @@ const nodes = [
     { key: "attendance", className: "is-attendance" },
 ] as const;
 
-const ProductChallenges = async () => {
+const ProductChallenges = async ({ productId }: { productId: "hrh" | "mayar" | "maydan" }) => {
+    const locale = await getLocale();
     const t = await getTranslations("productsPage.detail.challenges");
-    const items = t.raw("items") as ChallengeItem[];
+    const challenges = await getProductChallenges(locale, productId);
+    const items: ChallengeItem[] = challenges.length
+        ? challenges.map((item, index) => ({
+              number: String(index + 1).padStart(2, "0"),
+              title: item.title,
+              description: item.text,
+          }))
+        : (t.raw("items") as ChallengeItem[]);
 
     return (
         <section className="products_challenges" id="product-challenges">

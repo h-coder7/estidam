@@ -1,96 +1,63 @@
-"use client";
-
-import { useState } from "react";
-import { useTranslations } from "next-intl";
-import Reveal from "@/components/animations/Reveal";
+import { getLocale, getTranslations } from "next-intl/server";
+import { getContactDirectContent } from "@/lib/api/contact";
+import ContactDirectView, {
+    type ContactDirectChannelView,
+    type ContactDirectSocialView,
+} from "./ContactDirectView";
 
 import "./_ContactDirect.scss";
 
-const channels = [
-    { id: "email", label: "emailLabel", value: "email", dir: "ltr" },
-    { id: "phone", label: "phoneLabel", value: "phone", dir: "ltr" },
-    { id: "whatsapp", label: "whatsappLabel", value: "whatsapp", dir: "ltr" },
-    { id: "address", label: "addressLabel", value: "address" },
-] as const;
+const channelIds = ["email", "phone", "whatsapp", "address"] as const;
+const socialIds = ["linkedin", "x", "instagram"] as const;
 
-const socials = [
-    { id: "linkedin", href: "#" },
-    { id: "x", href: "#" },
-    { id: "instagram", href: "#" },
-] as const;
+const labelKey = {
+    email: "emailLabel",
+    phone: "phoneLabel",
+    whatsapp: "whatsappLabel",
+    address: "addressLabel",
+} as const;
 
-const ContactDirect = () => {
-    const t = useTranslations("contactPage.direct");
-    const [copied, setCopied] = useState<string | null>(null);
+const ContactDirect = async () => {
+    const locale = await getLocale();
+    const t = await getTranslations("contactPage.direct");
+    const content = await getContactDirectContent(locale);
 
-    const onCopy = async (id: string, value: string) => {
-        try {
-            await navigator.clipboard.writeText(value);
-            setCopied(id);
-            window.setTimeout(() => {
-                setCopied((current) => (current === id ? null : current));
-            }, 1600);
-        } catch {
-            setCopied(null);
-        }
-    };
+    const channels: ContactDirectChannelView[] =
+        content && content.channels.length
+            ? content.channels.map((channel) => ({
+                  id: channel.id,
+                  label: t(labelKey[channel.id]),
+                  value: channel.value,
+                  ltr: channel.ltr,
+              }))
+            : channelIds.map((id) => ({
+                  id,
+                  label: t(labelKey[id]),
+                  value: t(id),
+                  ltr: id !== "address",
+              }));
+
+    const socials: ContactDirectSocialView[] = content
+        ? content.socials.map((social) => ({
+              id: social.id,
+              label: t(social.id),
+              href: social.href,
+          }))
+        : socialIds.map((id) => ({
+              id,
+              label: t(id),
+              href: "#",
+          }));
 
     return (
-        <section className="contact_direct" id="contact-direct">
-            <div className="container">
-                <Reveal animation="fade-up" trigger="load">
-                    <h2 className="contact_direct_title fw-600">{t("title")}</h2>
-                </Reveal>
-
-                <Reveal animation="fade-up" trigger="load">
-                    <div className="row g-0 contact_direct_grid">
-                        {channels.map((channel) => {
-                            const value = t(channel.value);
-
-                            return (
-                                <div className="col-6 col-lg-3" key={channel.id}>
-                                    <div className="contact_direct_item">
-                                        <p className="contact_direct_label fsz-11 fw-600">
-                                            {t(channel.label)}
-                                        </p>
-                                        <p
-                                            className="contact_direct_value fw-600 mb-0"
-                                            dir={"dir" in channel ? channel.dir : undefined}
-                                        >
-                                            {value}
-                                        </p>
-                                        <button
-                                            className="contact_direct_copy"
-                                            type="button"
-                                            onClick={() => onCopy(channel.id, value)}
-                                        >
-                                            {copied === channel.id ? t("copied") : t("copy")}
-                                        </button>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </Reveal>
-
-                <Reveal animation="fade-up" trigger="load">
-                    <div className="contact_direct_social d-flex align-items-center flex-wrap">
-                        <span className="contact_direct_follow">{t("follow")}</span>
-                        {socials.map((social) => (
-                            <a
-                                key={social.id}
-                                className="contact_direct_pill"
-                                href={social.href}
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                {t(social.id)}
-                            </a>
-                        ))}
-                    </div>
-                </Reveal>
-            </div>
-        </section>
+        <ContactDirectView
+            title={content?.title || t("title")}
+            channels={channels}
+            socials={socials}
+            follow={t("follow")}
+            copy={t("copy")}
+            copied={t("copied")}
+        />
     );
 };
 

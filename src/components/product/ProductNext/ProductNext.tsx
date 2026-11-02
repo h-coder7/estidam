@@ -1,9 +1,10 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Reveal from "@/components/animations/Reveal";
 import { Link } from "@/i18n/routing";
+import { CONTACT_HELP_ENDPOINT, readContactHelpPayload } from "@/components/contact/ContactHelp/ContactHelpForm";
 
 import "./_ProductNext.scss";
 
@@ -17,11 +18,55 @@ type ChannelId = (typeof channels)[number]["id"];
 
 const ProductNext = () => {
     const t = useTranslations("productsPage.detail.next");
+    const locale = useLocale();
     const challenges = t.raw("challenges") as string[];
     const [channel, setChannel] = useState<ChannelId>("email");
+    const [sending, setSending] = useState(false);
+    const [status, setStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
-    const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (sending) return;
+
+        const form = event.currentTarget;
+        const payload = readContactHelpPayload(form);
+        const data = new FormData(form);
+        const challenge = String(data.get("challenge") || "");
+        const productLabel = t("productValue");
+        const channelLabel = t(`channels.${channel}`);
+        payload.message = [
+            locale === "ar" ? `المنتج: ${productLabel}` : `Product: ${productLabel}`,
+            locale === "ar" ? `التحدي: ${challenge}` : `Challenge: ${challenge}`,
+            locale === "ar" ? `قناة التواصل: ${channelLabel}` : `Preferred channel: ${channelLabel}`,
+        ].join("\n");
+        setSending(true);
+        setStatus(null);
+
+        try {
+            const response = await fetch(CONTACT_HELP_ENDPOINT, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ ...payload, locale }),
+            });
+            const result = (await response.json().catch(() => null)) as { success?: boolean; message?: string } | null;
+            const message = typeof result?.message === "string" ? result.message : "";
+
+            if (!response.ok || result?.success === false) {
+                setStatus({ type: "error", message: message || t("sendFailed") });
+                return;
+            }
+
+            form.reset();
+            setChannel("email");
+            setStatus({ type: "success", message });
+        } catch {
+            setStatus({ type: "error", message: t("sendFailed") });
+        } finally {
+            setSending(false);
+        }
     };
 
     return (
@@ -34,7 +79,7 @@ const ProductNext = () => {
                             <span className="products_next_badge">{t("badge")}</span>
                             <h2 className="products_next_title fw-500">
                                 {t("titleStrong")}{" "}
-                                <span className="products_next_title_muted">{t("titleMuted")}</span>
+                                <span className="products_next_title_muted cr-blue">{t("titleMuted")}</span>
                             </h2>
                             <p className="products_next_description">{t("description")}</p>
                             <div className="products_next_actions d-flex flex-wrap align-items-center">
@@ -57,6 +102,7 @@ const ProductNext = () => {
                                     <span className="products_next_title_muted">{t("formTitleMuted")}</span>
                                 </h3>
                                 <p className="products_next_form_note">{t("formNote")}</p>
+                                <input type="hidden" name="requestType" value="product_demo" />
                                 <input type="hidden" name="product" value="hrh" />
                                 <input type="hidden" name="channel" value={channel} />
 
@@ -164,7 +210,13 @@ const ProductNext = () => {
                                     <span>{t("consent")}</span>
                                 </label>
 
-                                <button className="products_next_submit" type="submit">
+                                {status ? (
+                                    <p className={`products_next_status is-${status.type}`} role="status">
+                                        {status.message}
+                                    </p>
+                                ) : null}
+
+                                <button className="products_next_submit" type="submit" disabled={sending}>
                                     {t("submit")}
                                     <img src="/images/product-det/next-arrow-send.svg" alt="" width={20} height={20} />
                                 </button>

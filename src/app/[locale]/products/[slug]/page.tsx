@@ -13,6 +13,8 @@ import ProductChallenges from "@/components/product/ProductChallenges/ProductCha
 import ProductDetailHero from "@/components/product/ProductDetailHero/ProductDetailHero";
 import { productItems } from "@/components/products/ProductsList/ProductsList";
 
+export const revalidate = 0;
+
 export function generateStaticParams() {
     return productItems.map((product) => ({ slug: product.id }));
 }
@@ -36,13 +38,13 @@ export default async function ProductPage({
 
             <main>
                 <ProductDetailHero productId={product.id} />
-                <ProductChallenges />
-                <ProductCapabilities />
-                <ProductAi />
-                <ProductUseCases />
-                <ProductWorks />
+                <ProductChallenges productId={product.id} />
+                <ProductCapabilities productId={product.id} />
+                <ProductAi productId={product.id} />
+                <ProductUseCases productId={product.id} />
+                <ProductWorks productId={product.id} />
                 <ProductIntegrations />
-                <ProductOutcomes />
+                <ProductOutcomes productId={product.id} />
                 <ProductRelated />
                 <ProductNext />
             </main>

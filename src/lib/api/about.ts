@@ -63,6 +63,13 @@ export type AboutCtaContent = {
     secondaryHref: string;
 };
 
+export type AboutPartnerLogo = {
+    id: string;
+    name: string;
+    url: string;
+    src: string;
+};
+
 export type AboutLogosContent = {
     eyebrow: string;
     titleStrong: string;
@@ -70,6 +77,7 @@ export type AboutLogosContent = {
     description: string;
     cta: string;
     ctaUrl: string;
+    logos: AboutPartnerLogo[];
 };
 
 export type AboutStudioPoint = {
@@ -445,20 +453,56 @@ export async function getAboutStudioContent(locale: string): Promise<AboutStudio
     };
 }
 
+function partnerRecords(value: unknown) {
+    if (Array.isArray(value)) {
+        return value.filter((item): item is Record<string, unknown> => !!item && typeof item === "object");
+    }
+
+    if (value && typeof value === "object" && Array.isArray((value as { data?: unknown }).data)) {
+        return partnerRecords((value as { data: unknown }).data);
+    }
+
+    return [];
+}
+
+export async function getAboutPartnerLogos(locale: string): Promise<AboutPartnerLogo[]> {
+    try {
+        const payload = await api.getPartners(locale);
+        return partnerRecords((payload as { data?: unknown })?.data ?? payload).flatMap((item, index) => {
+            const name = text(item.name);
+            const src = mediaUrl(item.logo ?? item.image ?? item.icon);
+            if (!name && !src) return [];
+
+            return [
+                {
+                    id: text(item.id) || `partner-${index + 1}`,
+                    name,
+                    url: text(item.url ?? item.href ?? item.link) || "#",
+                    src,
+                },
+            ];
+        });
+    } catch {
+        return [];
+    }
+}
+
 export async function getAboutLogosContent(locale: string): Promise<AboutLogosContent | null> {
     const payload = await loadAboutPage(locale);
     const section = payload?.data?.sections?.find((item) => item.key === "partners")?.data ?? null;
-    if (!section) return null;
+    const logos = await getAboutPartnerLogos(locale);
+    if (!section && !logos.length) return null;
 
-    const title = markedTitle(section);
+    const title = section ? markedTitle(section) : { titleStrong: "", titleMuted: "" };
 
     return {
-        eyebrow: text(section.eyebrow),
+        eyebrow: text(section?.eyebrow),
         titleStrong: title.titleStrong,
         titleMuted: title.titleMuted,
-        description: text(section.description),
-        cta: text(section.ctaLabel ?? section.cta),
-        ctaUrl: text(section.ctaHref ?? section.cta_url ?? section.ctaUrl),
+        description: text(section?.description),
+        cta: text(section?.ctaLabel ?? section?.cta),
+        ctaUrl: text(section?.ctaHref ?? section?.cta_url ?? section?.ctaUrl),
+        logos,
     };
 }
 

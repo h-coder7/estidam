@@ -194,6 +194,25 @@
         gap: 16px;
     }
 
+    .products_demo_actions .butn:disabled {
+        opacity: 0.6;
+    }
+
+    .products_demo_status {
+        width: 100%;
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.5;
+
+        &.is_success {
+            color: #067647;
+        }
+
+        &.is_error {
+            color: #b42318;
+        }
+    }
+
     .products_demo_note {
         display: inline-flex;
         align-items: center;

@@ -27,25 +27,25 @@ const cards = [
         titleKey: "card1Title",
         titleRestKey: "card1TitleRest",
         textKey: "card1Text",
-        icon: "/images/icons/kabaa.svg",
+        icon: "fa-regular fa-kaaba",
     },
     {
         titleKey: "card2Title",
         titleRestKey: "card2TitleRest",
         textKey: "card2Text",
-        icon: "/images/icons/report.svg",
+        icon: "fa-regular fa-file-lines",
     },
     {
         titleKey: "card3Title",
         titleRestKey: "card3TitleRest",
         textKey: "card3Text",
-        icon: "/images/icons/brand.svg",
+        icon: "fa-regular fa-share-nodes",
     },
     {
         titleKey: "card4Title",
         titleRestKey: "card4TitleRest",
         textKey: "card4Text",
-        icon: "/images/icons/chart.svg",
+        icon: "fa-regular fa-chart-column",
     },
 ] as const;
 
@@ -146,7 +146,7 @@ const WhyEstidam = async () => {
 
                                         <div className="why_card_body">
                                             <div className="why_card_icon">
-                                                <img src={card.icon} alt="" aria-hidden="true" />
+                                                <i className={card.icon} aria-hidden="true" />
                                             </div>
                                             <p className="why_card_text">{card.text}</p>
                                         </div>

@@ -25,9 +25,13 @@ export const endpoints = {
     home: "cms/pages/home",
     about: "cms/pages/about",
     contact: "cms/pages/contact",
+    productsPage: "cms/pages/products",
     contactUs: "contact-us",
     products: "products",
     product: (slug: string) => `products/${slug}`,
+    solutions: "solutions",
+    partners: "partners",
+    faqs: "faqs",
     footer: "/pages/footer",
 };
 
@@ -52,6 +56,9 @@ export const api = {
 
     getContactPage: (locale?: string) =>
         apiClient.get(endpoints.contact, withLang(locale)).then((res) => res.data),
+
+    getProductsPage: (locale?: string) =>
+        apiClient.get(endpoints.productsPage, withLang(locale)).then((res) => res.data),
 
     submitContact: (
         body: {
@@ -82,6 +89,19 @@ export const api = {
 
     getProduct: (slug: string, locale?: string) =>
         apiClient.get(endpoints.product(slug), withLang(locale)).then((res) => res.data),
+
+    getSolutions: (locale?: string) =>
+        apiClient
+            .get(endpoints.solutions, { ...withLang(locale), params: { per_page: 50 } })
+            .then((res) => res.data),
+
+    getPartners: (locale?: string) =>
+        apiClient
+            .get(endpoints.partners, { ...withLang(locale), params: { per_page: 50 } })
+            .then((res) => res.data),
+
+    getFaqs: (locale?: string) =>
+        apiClient.get(endpoints.faqs, withLang(locale)).then((res) => res.data),
 
     getFooter: (locale?: string) =>
         apiClient.get(endpoints.footer, withLang(locale)).then((res) => res.data),

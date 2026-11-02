@@ -1,12 +1,13 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import { getProductUseCases } from "@/lib/api/productsPage";
 
 import "./_ProductUseCases.scss";
 
-const tabs = [
-    { id: "screening", icon: "/images/product-det/use-case-icon-users.svg" },
-    { id: "shifts", icon: "/images/product-det/use-case-icon-calendar.svg" },
-    { id: "documents", icon: "/images/product-det/use-case-icon-file.svg" },
+const icons = [
+    "/images/product-det/use-case-icon-users.svg",
+    "/images/product-det/use-case-icon-calendar.svg",
+    "/images/product-det/use-case-icon-file.svg",
 ] as const;
 
 const bars = [
@@ -27,16 +28,40 @@ const measures = [
     { icon: "/images/product-det/use-case-icon-percent.svg" },
 ] as const;
 
+const staticTabs = [
+    { id: "shifts", icon: icons[1], titleIndex: 1 },
+    { id: "documents", icon: icons[2], titleIndex: 2 },
+] as const;
+
 type LabeledValue = { label: string; value: string };
 type StepCopy = { title: string; text: string };
 type TabCopy = { title: string };
 
-const ProductUseCases = async () => {
+const ProductUseCases = async ({ productId }: { productId: "hrh" | "mayar" | "maydan" }) => {
+    const locale = await getLocale();
     const t = await getTranslations("productsPage.detail.cases");
+    const cases = await getProductUseCases(locale, productId);
     const tabCopy = t.raw("tabs") as TabCopy[];
     const barCopy = t.raw("bars") as LabeledValue[];
     const stepCopy = t.raw("steps") as StepCopy[];
     const measureCopy = t.raw("measures") as string[];
+
+    const viewTabs = [
+        ...cases.map((item, index) => ({
+            id: `case-${index + 1}`,
+            icon: icons[index % icons.length],
+            title: item.title,
+            text: item.text,
+            staticPanel: false,
+        })),
+        ...staticTabs.map((tab) => ({
+            id: tab.id,
+            icon: tab.icon,
+            title: tabCopy[tab.titleIndex].title,
+            text: "",
+            staticPanel: true,
+        })),
+    ];
 
     return (
         <section className="products_cases" id="product-cases">
@@ -65,7 +90,7 @@ const ProductUseCases = async () => {
                 <div className="content">
                     <Reveal animation="fade-up">
                         <ul className="nav nav-tabs products_cases_tabs" id="productCasesTabs" role="tablist">
-                            {tabs.map((tab, index) => (
+                            {viewTabs.map((tab, index) => (
                                 <li className="nav-item" role="presentation" key={tab.id}>
                                     <button
                                         className={`nav-link${index === 0 ? " active" : ""}`}
@@ -80,87 +105,82 @@ const ProductUseCases = async () => {
                                         <span className="products_cases_tab_icon">
                                             <img src={tab.icon} alt="" width={18} height={18} />
                                         </span>
-                                        <span>{tabCopy[index].title}</span>
+                                        <span>{tab.title}</span>
                                     </button>
                                 </li>
                             ))}
                         </ul>
 
                         <div className="tab-content" id="productCasesContent">
-                            <div
-                                className="tab-pane fade show active"
-                                id="product_cases_panel_screening"
-                                role="tabpanel"
-                                aria-labelledby="product_cases_tab_screening"
-                                tabIndex={0}
-                            >
-                                <div className="row g-0 products_cases_body">
-                                    <div className="col-lg-5 products_cases_chart">
-                                        <div>
-                                            <h3 className="products_cases_chart_title fw-500">
-                                                {t("chartBefore")}
-                                                <span>{t("chartCount")}</span>
-                                                {t("chartAfter")}
-                                            </h3>
-                                            {bars.map((bar, index) => (
-                                                <div className="products_cases_bar" key={bar.tone}>
-                                                    <div className="products_cases_bar_meta">
-                                                        <span>{barCopy[index].label}</span>
-                                                        <span className="products_cases_bar_value">{barCopy[index].value}</span>
-                                                    </div>
-                                                    <div
-                                                        className={`progress products_cases_progress is-${bar.tone}${bar.short ? " is-short" : ""}`}
-                                                        role="progressbar"
-                                                        aria-valuenow={bar.width}
-                                                        aria-valuemin={0}
-                                                        aria-valuemax={100}
-                                                        aria-label={barCopy[index].label}
-                                                    >
-                                                        <div className="progress-bar" style={{ width: bar.short ? "100%" : `${bar.width}%` }} />
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <p className="products_cases_snapshot mb-0">{t("snapshot")}</p>
-                                    </div>
-                                    <div className="col-lg-7 products_cases_detail">
-                                        <div>
-                                            <h3 className="products_cases_detail_title fw-500">{tabCopy[0].title}</h3>
-                                            <ol className="products_cases_steps">
-                                                {steps.map((step, index) => (
-                                                    <li className={`products_cases_step is-${step.tone}`} key={step.tone}>
-                                                        <img className="products_cases_dot" src={step.dot} alt="" width={12} height={12} />
-                                                        <h4 className="products_cases_step_title fw-500">{stepCopy[index].title}</h4>
-                                                        <p className="products_cases_step_text mb-0">{stepCopy[index].text}</p>
-                                                    </li>
-                                                ))}
-                                            </ol>
-                                        </div>
-                                        <div className="products_cases_measure">
-                                            <span className="products_cases_measure_label fw-500">{t("measureLabel")}</span>
-                                            {measures.map((measure, index) => (
-                                                <span className="products_cases_chip" key={measure.icon}>
-                                                    <img src={measure.icon} alt="" width={16} height={16} />
-                                                    {measureCopy[index]}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {tabs.slice(1).map((tab, index) => (
+                            {viewTabs.map((tab, index) => (
                                 <div
-                                    className="tab-pane fade"
+                                    className={`tab-pane fade${index === 0 ? " show active" : ""}`}
                                     id={`product_cases_panel_${tab.id}`}
                                     role="tabpanel"
                                     aria-labelledby={`product_cases_tab_${tab.id}`}
                                     tabIndex={0}
                                     key={tab.id}
                                 >
-                                    <div className="products_cases_detail">
-                                        <h3 className="products_cases_detail_title fw-500">{tabCopy[index + 1].title}</h3>
-                                    </div>
+                                    {tab.staticPanel ? (
+                                        <div className="row g-0 products_cases_body">
+                                            <div className="col-lg-5 products_cases_chart">
+                                                <div>
+                                                    <h3 className="products_cases_chart_title fw-500">
+                                                        {t("chartBefore")}
+                                                        <span>{t("chartCount")}</span>
+                                                        {t("chartAfter")}
+                                                    </h3>
+                                                    {bars.map((bar, barIndex) => (
+                                                        <div className="products_cases_bar" key={bar.tone}>
+                                                            <div className="products_cases_bar_meta">
+                                                                <span>{barCopy[barIndex].label}</span>
+                                                                <span className="products_cases_bar_value">{barCopy[barIndex].value}</span>
+                                                            </div>
+                                                            <div
+                                                                className={`progress products_cases_progress is-${bar.tone}${bar.short ? " is-short" : ""}`}
+                                                                role="progressbar"
+                                                                aria-valuenow={bar.width}
+                                                                aria-valuemin={0}
+                                                                aria-valuemax={100}
+                                                                aria-label={barCopy[barIndex].label}
+                                                            >
+                                                                <div className="progress-bar" style={{ width: bar.short ? "100%" : `${bar.width}%` }} />
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <p className="products_cases_snapshot mb-0">{t("snapshot")}</p>
+                                            </div>
+                                            <div className="col-lg-7 products_cases_detail">
+                                                <div>
+                                                    <h3 className="products_cases_detail_title fw-500">{tab.title}</h3>
+                                                    <ol className="products_cases_steps">
+                                                        {steps.map((step, stepIndex) => (
+                                                            <li className={`products_cases_step is-${step.tone}`} key={step.tone}>
+                                                                <img className="products_cases_dot" src={step.dot} alt="" width={12} height={12} />
+                                                                <h4 className="products_cases_step_title fw-500">{stepCopy[stepIndex].title}</h4>
+                                                                <p className="products_cases_step_text mb-0">{stepCopy[stepIndex].text}</p>
+                                                            </li>
+                                                        ))}
+                                                    </ol>
+                                                </div>
+                                                <div className="products_cases_measure">
+                                                    <span className="products_cases_measure_label fw-500">{t("measureLabel")}</span>
+                                                    {measures.map((measure, measureIndex) => (
+                                                        <span className="products_cases_chip" key={measure.icon}>
+                                                            <img src={measure.icon} alt="" width={16} height={16} />
+                                                            {measureCopy[measureIndex]}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="products_cases_detail">
+                                            <h3 className="products_cases_detail_title fw-500">{tab.title}</h3>
+                                            {tab.text ? <p className="products_cases_copy mb-0">{tab.text}</p> : null}
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>

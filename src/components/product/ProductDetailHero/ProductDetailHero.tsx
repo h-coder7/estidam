@@ -1,5 +1,6 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import { getProductHeroContent } from "@/lib/api/productsPage";
 
 import "./_ProductDetailHero.scss";
 
@@ -8,8 +9,16 @@ type ProductDetailHeroProps = {
 };
 
 const ProductDetailHero = async ({ productId }: ProductDetailHeroProps) => {
+    const locale = await getLocale();
     const t = await getTranslations(`productsPage.detail.${productId}`);
+    const hero = await getProductHeroContent(locale, productId);
     const points = t.raw("points") as string[];
+    const badge = hero?.badge || t("badge");
+    const titleStrong = hero?.title || t("titleStrong");
+    const titleAccent = hero?.title ? "" : t("titleAccent");
+    const description = hero ? hero.description : t("description");
+    const secondaryLabel = hero?.secondaryLabel || t("secondaryCta");
+    const image = hero?.image || "/images/product-det/hero1.png";
 
     return (
         <section className="productDetailHero">
@@ -30,20 +39,26 @@ const ProductDetailHero = async ({ productId }: ProductDetailHeroProps) => {
                                 <Reveal animation="fade-up" trigger="load">
                                     <p className="productDetailHero_badge mb-0">
                                         <span className="productDetailHero_dot" aria-hidden="true"></span>
-                                        {t("badge")}
+                                        {badge}
                                     </p>
                                 </Reveal>
 
                                 <Reveal animation="fade-up" trigger="load">
                                     <h1 className="productDetailHero_title fw-600">
-                                        <span className="d-block productDetailHero_title_strong">{t("titleStrong")}</span>
-                                        <span className="d-block productDetailHero_title_accent">{t("titleAccent")}</span>
+                                        {titleStrong ? (
+                                            <span className="d-block productDetailHero_title_strong">{titleStrong}</span>
+                                        ) : null}
+                                        {titleAccent ? (
+                                            <span className="d-block productDetailHero_title_accent">{titleAccent}</span>
+                                        ) : null}
                                     </h1>
                                 </Reveal>
 
-                                <Reveal animation="fade-up" trigger="load">
-                                    <p className="productDetailHero_description">{t("description")}</p>
-                                </Reveal>
+                                {description ? (
+                                    <Reveal animation="fade-up" trigger="load">
+                                        <p className="productDetailHero_description">{description}</p>
+                                    </Reveal>
+                                ) : null}
 
                                 <div className="productDetailHero_actions d-flex flex-wrap align-items-center">
                                     <Reveal animation="fade-up" trigger="load">
@@ -58,17 +73,19 @@ const ProductDetailHero = async ({ productId }: ProductDetailHeroProps) => {
                                         </a>
                                     </Reveal>
 
-                                    <Reveal animation="fade-up" trigger="load">
-                                        <a href="#" className="butn border">
-                                            <span>{t("secondaryCta")}</span>
-                                            <img
-                                                src="/images/icons/arrow-bl.svg"
-                                                alt=""
-                                                className="butn-icon"
-                                                aria-hidden="true"
-                                            />
-                                        </a>
-                                    </Reveal>
+                                    {secondaryLabel ? (
+                                        <Reveal animation="fade-up" trigger="load">
+                                            <a href="#" className="butn border">
+                                                <span>{secondaryLabel}</span>
+                                                <img
+                                                    src="/images/icons/arrow-bl.svg"
+                                                    alt=""
+                                                    className="butn-icon"
+                                                    aria-hidden="true"
+                                                />
+                                            </a>
+                                        </Reveal>
+                                    ) : null}
                                 </div>
 
                                 <ul className="productDetailHero_points list-unstyled mb-0">
@@ -85,11 +102,7 @@ const ProductDetailHero = async ({ productId }: ProductDetailHeroProps) => {
                         <div className="col-lg-6">
                             <Reveal animation="fade-up" trigger="load">
                                 <div className="productDetailHero_visual">
-                                    <img
-                                        src="/images/product-det/hero1.png"
-                                        alt={t("imageAlt")}
-                                        className="productDetailHero_img"
-                                    />
+                                    <img src={image} alt={badge || titleStrong} className="productDetailHero_img" />
                                 </div>
                             </Reveal>
                         </div>

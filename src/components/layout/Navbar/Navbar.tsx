@@ -10,6 +10,15 @@ type NavbarProps = {
     className?: string;
 };
 
+const navItems = [
+    { href: "/", key: "home" },
+    { href: "/about", key: "about" },
+    { href: "/solutions", key: "solutions" },
+    { href: "/products", key: "products" },
+    { href: "/ai-readiness", key: "aiReadiness" },
+    { href: "/contact", key: "contact" },
+] as const;
+
 export default function Navbar({ className = "" }: NavbarProps) {
     const t = useTranslations("navbar");
     const locale = useLocale();
@@ -71,28 +80,20 @@ export default function Navbar({ className = "" }: NavbarProps) {
 
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
-                        <li className="nav-item">
-                            <Link className={`nav-link${currentPath === "/" ? " active" : ""}`} href="/">
-                                {t("home")}
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">{t("studio")}</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">{t("cases")}</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">{t("news")}</a>
-                        </li>
-                        <li className="nav-item">
-                            <Link
-                                className={`nav-link${currentPath === "/contact" ? " active" : ""}`}
-                                href="/contact"
-                            >
-                                {t("contact")}
-                            </Link>
-                        </li>
+                        {navItems.map((item) => {
+                            const active =
+                                item.href === "/"
+                                    ? currentPath === "/"
+                                    : currentPath === item.href || currentPath.startsWith(`${item.href}/`);
+
+                            return (
+                                <li className="nav-item" key={item.href}>
+                                    <Link className={`nav-link${active ? " active" : ""}`} href={item.href}>
+                                        {t(item.key)}
+                                    </Link>
+                                </li>
+                            );
+                        })}
                     </ul>
 
                     <div className="nav-side">

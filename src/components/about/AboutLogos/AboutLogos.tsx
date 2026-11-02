@@ -22,21 +22,29 @@ function CmsLink({ href, className, children }: { href: string; className: strin
     );
 }
 
-const logos = [
-    { src: "/images/logos/8.png", name: "Railway" },
-    { src: "/images/logos/6.png", name: "Wordsmyth" },
-    { src: "/images/logos/4.png", name: "granola" },
-    { src: "/images/logos/2.png", name: "parallel" },
-    { src: "/images/logos/7.png", name: "taskrabbit" },
-    { src: "/images/logos/5.png", name: "Modal" },
-    { src: "/images/logos/3.png", name: "turbopuffer" },
-    { src: "/images/logos/1.png", name: "Listen" },
+const fallbackLogos = [
+    { id: "logo-1", src: "/images/logos/8.png", name: "Railway", url: "#" },
+    { id: "logo-2", src: "/images/logos/6.png", name: "Wordsmyth", url: "#" },
+    { id: "logo-3", src: "/images/logos/4.png", name: "granola", url: "#" },
+    { id: "logo-4", src: "/images/logos/2.png", name: "parallel", url: "#" },
+    { id: "logo-5", src: "/images/logos/7.png", name: "taskrabbit", url: "#" },
+    { id: "logo-6", src: "/images/logos/5.png", name: "Modal", url: "#" },
+    { id: "logo-7", src: "/images/logos/3.png", name: "turbopuffer", url: "#" },
+    { id: "logo-8", src: "/images/logos/1.png", name: "Listen", url: "#" },
 ] as const;
 
 const AboutLogos = async () => {
     const locale = await getLocale();
     const content = await getAboutLogosContent(locale);
     const ctaUrl = content?.ctaUrl || "#";
+    const logos = content?.logos.length
+        ? content.logos.map((logo, index) => ({
+              id: logo.id,
+              name: logo.name || fallbackLogos[index % fallbackLogos.length].name,
+              url: logo.url || "#",
+              src: logo.src || fallbackLogos[index % fallbackLogos.length].src,
+          }))
+        : fallbackLogos.map((logo) => ({ ...logo }));
 
     return (
         <section className="about_logos" id="about-logos">
@@ -93,9 +101,14 @@ const AboutLogos = async () => {
 
                 <div className="about_logos_grid row g-0">
                     {logos.map((logo) => (
-                        <div key={logo.src} className="col-6 col-lg-3">
+                        <div key={logo.id} className="col-6 col-lg-3">
                             <Reveal className="h-100" animation="fade-up" trigger="load">
-                                <a href="#0" className="about_logo d-flex align-items-center justify-content-center h-100">
+                                <a
+                                    href={logo.url}
+                                    className="about_logo d-flex align-items-center justify-content-center h-100"
+                                    target={/^https?:\/\//i.test(logo.url) ? "_blank" : undefined}
+                                    rel={/^https?:\/\//i.test(logo.url) ? "noreferrer" : undefined}
+                                >
                                     <img src={logo.src} alt={logo.name} />
                                     <span className="about_logo_arrow" aria-hidden="true">
                                         <i className="fal fa-arrow-right-long"></i>

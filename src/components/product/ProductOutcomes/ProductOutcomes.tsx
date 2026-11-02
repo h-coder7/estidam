@@ -1,5 +1,6 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import { getProductOutcomes } from "@/lib/api/productsPage";
 
 import "./_ProductOutcomes.scss";
 
@@ -10,10 +11,10 @@ const chipIcons = [
     "/images/product-det/outcomes-chip-check.svg",
 ] as const;
 
-const chipTones = ["", "is-dark", "", ""] as const;
-
-const ProductOutcomes = async () => {
+const ProductOutcomes = async ({ productId }: { productId: "hrh" | "mayar" | "maydan" }) => {
+    const locale = await getLocale();
     const t = await getTranslations("productsPage.detail.outcomes");
+    const outcomes = await getProductOutcomes(locale, productId);
     const chips = t.raw("chips") as string[];
 
     return (
@@ -34,12 +35,20 @@ const ProductOutcomes = async () => {
                                 </h2>
                                 <p className="products_outcomes_description">{t("description")}</p>
                                 <div className="products_outcomes_chips">
-                                    {chips.map((chip, index) => (
-                                        <span className={`products_outcomes_chip ${chipTones[index]}`} key={chip}>
-                                            <img src={chipIcons[index]} alt="" width={14} height={14} />
-                                            {chip}
-                                        </span>
-                                    ))}
+                                    {outcomes.length
+                                        ? outcomes.map((item, index) => (
+                                              <span className="products_outcomes_chip" key={`${item.value}-${item.label}`}>
+                                                  <img src={chipIcons[index % chipIcons.length]} alt="" width={14} height={14} />
+                                                  {item.value ? <strong>{item.value}</strong> : null}
+                                                  {item.label}
+                                              </span>
+                                          ))
+                                        : chips.map((chip, index) => (
+                                              <span className="products_outcomes_chip" key={chip}>
+                                                  <img src={chipIcons[index % chipIcons.length]} alt="" width={14} height={14} />
+                                                  {chip}
+                                              </span>
+                                          ))}
                                 </div>
                             </Reveal>
                         </div>

@@ -1,6 +1,6 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
-import { getProofContent, headingFromCms } from "@/lib/api/home";
+import { getProofCases, getProofContent, headingFromCms } from "@/lib/api/home";
 import ExperienceCases from "./ExperienceCases";
 
 import "./_ExperienceProof.scss";
@@ -9,6 +9,7 @@ const ExperienceProof = async () => {
     const locale = await getLocale();
     const t = await getTranslations("experienceProof");
     const content = await getProofContent(locale);
+    const cases = await getProofCases(locale);
     const heading = headingFromCms(content, t("titleStrong"), t("titleMuted"));
     const badge = content?.eyebrow || t("badge");
     const description = content?.description || t("description");
@@ -53,7 +54,7 @@ const ExperienceProof = async () => {
                         </div>
                     </div>
 
-                    <ExperienceCases />
+                    <ExperienceCases cases={cases} />
                 </div>
             </div>
 

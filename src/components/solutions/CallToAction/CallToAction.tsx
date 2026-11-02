@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
 import { getAboutCtaContent } from "@/lib/api/about";
+import { getContactCtaContent } from "@/lib/api/contact";
 import { Link } from "@/i18n/routing";
 
 import "./_CallToAction.scss";
@@ -22,14 +23,20 @@ function CmsLink({ href, className, children }: { href: string; className: strin
     );
 }
 
-const CallToAction = async ({ source }: { source?: "about" }) => {
+const CallToAction = async ({ source }: { source?: "about" | "contact" }) => {
     const locale = await getLocale();
     const t = await getTranslations("solutionsPage.callToAction");
-    const content = source === "about" ? await getAboutCtaContent(locale) : null;
+    const content =
+        source === "about"
+            ? await getAboutCtaContent(locale)
+            : source === "contact"
+              ? await getContactCtaContent(locale)
+              : null;
     const primaryLabel = content?.primaryLabel || t("primaryCta");
     const primaryHref = content?.primaryHref || "#";
-    const secondaryLabel = content?.secondaryLabel || t("secondaryCta");
+    const secondaryLabel = content?.secondaryLabel || (source === "contact" ? "" : t("secondaryCta"));
     const secondaryHref = content?.secondaryHref || "#";
+    const description = source === "contact" && content ? content.description : t("description");
 
     return (
         <section className="solutions_call_to_action" id="call-to-action">
@@ -58,7 +65,7 @@ const CallToAction = async ({ source }: { source?: "about" }) => {
                     </Reveal>
 
                     <Reveal animation="fade-up" trigger="load">
-                        <p className="call_to_action_description mb-0">{t("description")}</p>
+                        <p className="call_to_action_description mb-0">{description}</p>
                     </Reveal>
 
                     <div className="call_to_action_actions mt-5">
@@ -74,17 +81,19 @@ const CallToAction = async ({ source }: { source?: "about" }) => {
                             </CmsLink>
                         </Reveal>
 
-                        <Reveal animation="fade-up" trigger="load">
-                            <CmsLink href={secondaryHref} className="butn butn-ghost border-wh-2">
-                                <span>{secondaryLabel}</span>
-                                <img
-                                    src="/images/icons/arrow-bl.svg"
-                                    alt=""
-                                    className="butn-icon"
-                                    aria-hidden="true"
-                                />
-                            </CmsLink>
-                        </Reveal>
+                        {secondaryLabel ? (
+                            <Reveal animation="fade-up" trigger="load">
+                                <CmsLink href={secondaryHref} className="butn butn-ghost border-wh-2">
+                                    <span>{secondaryLabel}</span>
+                                    <img
+                                        src="/images/icons/arrow-bl.svg"
+                                        alt=""
+                                        className="butn-icon"
+                                        aria-hidden="true"
+                                    />
+                                </CmsLink>
+                            </Reveal>
+                        ) : null}
                     </div>
                 </div>
             </div>

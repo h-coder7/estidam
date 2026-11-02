@@ -23,9 +23,9 @@ function CmsLink({ href, className, children }: { href: string; className: strin
 }
 
 const cardFallbacks = [
-    { title: "card1Title", text: "card1Text", cta: "card1Cta", icon: "/images/icons/gr1.svg" },
-    { title: "card2Title", text: "card2Text", cta: "card2Cta", icon: "/images/icons/gr2.svg" },
-    { title: "card3Title", text: "card3Text", cta: "card3Cta", icon: "/images/icons/gr3.svg" },
+    { title: "card1Title", text: "card1Text", cta: "card1Cta", icon: "fa-regular fa-sprout" },
+    { title: "card2Title", text: "card2Text", cta: "card2Cta", icon: "fa-regular fa-diagram-project" },
+    { title: "card3Title", text: "card3Text", cta: "card3Cta", icon: "fa-regular fa-handshake" },
 ] as const;
 
 const GrowthEcosystem = async () => {
@@ -101,7 +101,7 @@ const GrowthEcosystem = async () => {
                             <Reveal animation="fade-up" trigger="load">
                                 <article className="ecosystem_card">
                                     <div className="ecosystem_card_icon">
-                                        <img src={card.icon} alt="" aria-hidden="true" />
+                                        <i className={card.icon} aria-hidden="true" />
                                     </div>
 
                                     <h3 className="ecosystem_card_title">{card.title}</h3>

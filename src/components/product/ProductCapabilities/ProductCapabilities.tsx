@@ -1,5 +1,6 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import { getProductCapabilities } from "@/lib/api/productsPage";
 
 import "./_ProductCapabilities.scss";
 
@@ -14,8 +15,39 @@ const itemIds = [
 
 const panelImage = "/images/product-det/capability-contracts.png";
 
-const ProductCapabilities = async () => {
+type CapabilityView = {
+    id: string;
+    title: string;
+    does: string;
+    value: string;
+    note: string;
+    image: string;
+    imageAlt: string;
+};
+
+const ProductCapabilities = async ({ productId }: { productId: "hrh" | "mayar" | "maydan" }) => {
+    const locale = await getLocale();
     const t = await getTranslations("productsPage.detail.capabilities");
+    const capabilities = await getProductCapabilities(locale, productId);
+    const items: CapabilityView[] = capabilities.length
+        ? capabilities.map((item, index) => ({
+              id: `cap-${index + 1}`,
+              title: item.title,
+              does: item.text,
+              value: t("items.contracts.value"),
+              note: t("items.contracts.interface"),
+              image: panelImage,
+              imageAlt: t("items.contracts.imageAlt"),
+          }))
+        : itemIds.map((id) => ({
+              id,
+              title: t(`items.${id}.title`),
+              does: id === "contracts" ? t("items.contracts.does") : "",
+              value: id === "contracts" ? t("items.contracts.value") : "",
+              note: id === "contracts" ? t("items.contracts.interface") : "",
+              image: id === "contracts" ? panelImage : "",
+              imageAlt: id === "contracts" ? t("items.contracts.imageAlt") : "",
+          }));
 
     return (
         <section className="products_capabilities" id="product-capabilities">
@@ -41,14 +73,14 @@ const ProductCapabilities = async () => {
             </div>
 
             <div className="container">
-                <div className="accordion products_capabilities_list" id="productCapabilitiesAccordion">
-                    {itemIds.map((id) => {
-                        const isDefault = id === "contracts";
-                        const buttonId = `product_capability_${id}`;
-                        const panelId = `product_capability_panel_${id}`;
+                <div className="accordion products_capabilities_list" id={`productCapabilitiesAccordion-${productId}`}>
+                    {items.map((item, index) => {
+                        const isDefault = index === 0;
+                        const buttonId = `product_capability_${productId}_${item.id}`;
+                        const panelId = `product_capability_panel_${productId}_${item.id}`;
 
                         return (
-                            <div className="accordion-item products_capabilities_item" key={id}>
+                            <div className="accordion-item products_capabilities_item" key={item.id}>
                                 <h3 className="accordion-header" id={buttonId}>
                                     <button
                                         className={`accordion-button products_capabilities_trigger${isDefault ? "" : " collapsed"}`}
@@ -74,9 +106,7 @@ const ProductCapabilities = async () => {
                                                 height={24}
                                             />
                                         </span>
-                                        <span className="products_capabilities_name fw-500">
-                                            {t(`items.${id}.title`)}
-                                        </span>
+                                        <span className="products_capabilities_name fw-500">{item.title}</span>
                                         <span className="products_capabilities_arrows">
                                             <img
                                                 className="products_capabilities_arrow is_next"
@@ -99,19 +129,29 @@ const ProductCapabilities = async () => {
                                     id={panelId}
                                     className={`accordion-collapse collapse${isDefault ? " show" : ""}`}
                                     aria-labelledby={buttonId}
-                                    data-bs-parent="#productCapabilitiesAccordion"
+                                    data-bs-parent={`#productCapabilitiesAccordion-${productId}`}
                                 >
                                     <div className="accordion-body products_capabilities_panel_grid">
                                         <div className="products_capabilities_copy">
-                                            <p className="products_capabilities_label fw-600">{t("doesLabel")}</p>
-                                            <p className="products_capabilities_text">{t("items.contracts.does")}</p>
-                                            <p className="products_capabilities_label fw-600">{t("valueLabel")}</p>
-                                            <p className="products_capabilities_text">{t("items.contracts.value")}</p>
-                                            <p className="products_capabilities_note">{t("items.contracts.interface")}</p>
+                                            {item.does ? (
+                                                <>
+                                                    <p className="products_capabilities_label fw-600">{t("doesLabel")}</p>
+                                                    <p className="products_capabilities_text">{item.does}</p>
+                                                </>
+                                            ) : null}
+                                            {item.value ? (
+                                                <>
+                                                    <p className="products_capabilities_label fw-600">{t("valueLabel")}</p>
+                                                    <p className="products_capabilities_text">{item.value}</p>
+                                                </>
+                                            ) : null}
+                                            {item.note ? <p className="products_capabilities_note">{item.note}</p> : null}
                                         </div>
-                                        <div className="products_capabilities_shot">
-                                            <img src={panelImage} alt={t("items.contracts.imageAlt")} />
-                                        </div>
+                                        {item.image ? (
+                                            <div className="products_capabilities_shot">
+                                                <img src={item.image} alt={item.imageAlt} />
+                                            </div>
+                                        ) : null}
                                     </div>
                                 </div>
                             </div>

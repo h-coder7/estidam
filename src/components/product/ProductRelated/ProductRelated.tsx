@@ -5,8 +5,8 @@ import { Link } from "@/i18n/routing";
 import "./_ProductRelated.scss";
 
 const cards = [
-    { id: "maydan", href: "/products/maydan", tone: "is-dark" },
-    { id: "mayar", href: "/products/mayar", tone: "" },
+    { id: "maydan", href: "/products/maydan" },
+    { id: "mayar", href: "/products/mayar" },
 ] as const;
 
 const glows = [
@@ -41,19 +41,17 @@ const ProductRelated = async () => {
                         {cards.map((card, index) => (
                             <div className="col-lg-6" key={card.id}>
                                 <Reveal animation="fade-up">
-                                    <article className={`products_related_card mt-lg-5 ${card.tone}`}>
-                                        {card.tone === "is-dark"
-                                            ? glows.map((glow) => (
-                                                <img
-                                                    key={glow.id}
-                                                    className={`products_related_glow is-${glow.id}`}
-                                                    src={glow.src}
-                                                    alt=""
-                                                    width={glow.width}
-                                                    height={glow.height}
-                                                />
-                                            ))
-                                            : null}
+                                    <article className="products_related_card mt-lg-5">
+                                        {glows.map((glow) => (
+                                            <img
+                                                key={glow.id}
+                                                className={`products_related_glow is-${glow.id}`}
+                                                src={glow.src}
+                                                alt=""
+                                                width={glow.width}
+                                                height={glow.height}
+                                            />
+                                        ))}
                                         <span className={`products_related_logo is-${card.id}`} aria-hidden="true" />
                                         <div className="products_related_copy">
                                             <h3 className="products_related_name fw-500">{items[index].title}</h3>

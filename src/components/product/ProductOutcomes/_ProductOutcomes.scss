@@ -94,6 +94,18 @@
         font-size: 10px;
         line-height: 1.4;
         letter-spacing: -0.2px;
+        transition:
+            background-color 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+            color 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+
+        &:hover {
+            background: #12263f;
+            color: #fff;
+
+            img[src*="outcomes-chip-lock"] {
+                filter: brightness(0) invert(1);
+            }
+        }
 
         img {
             display: block;
@@ -102,12 +114,13 @@
             height: 14px;
             max-width: none;
             max-height: none;
+            transition: filter 0.55s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        &.is-dark {
-            background: #12263f;
-            color: #fff;
+        strong {
+            font-weight: 600;
         }
+
     }
 
     .products_outcomes_card {

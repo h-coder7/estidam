@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
-import { getSolutionsContent, headingFromCms } from "@/lib/api/home";
+import { getSolutionCubeSlides, getSolutionsContent, headingFromCms } from "@/lib/api/home";
 import { Link } from "@/i18n/routing";
 import SolutionsCube from "./SolutionsCube";
 
@@ -27,6 +27,7 @@ const Solutions = async () => {
     const locale = await getLocale();
     const t = await getTranslations("solutions");
     const content = await getSolutionsContent(locale);
+    const cubeSlides = await getSolutionCubeSlides(locale);
     const heading = headingFromCms(content, t("titleStrong"), t("titleMuted"));
     const badge = content?.eyebrow || t("badge");
     const description = content?.description || t("description");
@@ -88,7 +89,7 @@ const Solutions = async () => {
                     </div>
                 </div>
 
-                <SolutionsCube />
+                <SolutionsCube slides={cubeSlides} />
             </div>
 
             <div className="sec-lines">

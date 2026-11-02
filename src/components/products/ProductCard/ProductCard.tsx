@@ -1,21 +1,37 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import "./_ProductCard.scss";
 
-type ProductCardItem = {
-    id: "hrh" | "mayar" | "maydan";
+export type ProductCardView = {
+    id: string;
     status: "available" | "soon";
     image: string;
-    reversed?: boolean;
-    notify?: boolean;
+    reversed: boolean;
+    notify: boolean;
+    name: string;
+    kicker: string;
+    headline: string;
+    problem: string;
+    users: string;
+    capabilities: string[];
+    primaryLabel: string;
+    primaryHref: string;
+    secondaryLabel: string;
+    secondaryHref: string;
 };
 
 type ProductCardProps = {
-    product: ProductCardItem;
+    product: ProductCardView;
     index: number;
-    items: readonly ProductCardItem[];
+    items: readonly { id: string }[];
+    labels: {
+        problem: string;
+        users: string;
+        capabilities: string;
+        statusAvailable: string;
+        statusSoon: string;
+    };
 };
 
 const BellIcon = () => (
@@ -31,95 +47,91 @@ const BellIcon = () => (
     </svg>
 );
 
-const ProductCard = ({ product, index, items }: ProductCardProps) => {
-    const t = useTranslations("productsPage.list");
-    const capabilities = t.raw(`items.${product.id}.capabilities`) as string[];
-    const kicker = t(`items.${product.id}.kicker`);
-    const notify = "notify" in product && product.notify;
-
+const ProductCard = ({ product, index, items, labels }: ProductCardProps) => {
     return (
-        <article className={`productCard${"reversed" in product && product.reversed ? " is-reversed" : ""}`}>
+        <article className={`productCard${product.reversed ? " is-reversed" : ""}`}>
             <div className="row g-0">
                 <div className="col-12 col-lg-auto order-1">
                     <div className="productCard_rail d-flex" aria-hidden="true">
                         {items.map((item, railIndex) => (
-                            <span
-                                key={item.id}
-                                className={railIndex === index ? "is-active" : undefined}
-                            >
+                            <span key={item.id} className={railIndex === index ? "is-active" : undefined}>
                                 {String(railIndex + 1).padStart(2, "0")}
                             </span>
                         ))}
                     </div>
                 </div>
 
-                <div className={`col-12 col-lg order-2 ${"reversed" in product && product.reversed ? "order-lg-3" : "order-lg-2"}`}>
+                <div className={`col-12 col-lg order-2 ${product.reversed ? "order-lg-3" : "order-lg-2"}`}>
                     <div className="productCard_media">
                         <span className={`productCard_status productCard_status_${product.status}`}>
-                            {product.status === "available" ? t("statusAvailable") : t("statusSoon")}
+                            {product.status === "available" ? labels.statusAvailable : labels.statusSoon}
                         </span>
-                        <img
-                            src={product.image}
-                            alt={t(`items.${product.id}.imageAlt`)}
-                            className="productCard_img"
-                        />
+                        <img src={product.image} alt={product.name} className="productCard_img" />
                     </div>
                 </div>
 
-                <div className={`col-12 col-lg order-3 ${"reversed" in product && product.reversed ? "order-lg-2" : "order-lg-3"}`}>
+                <div className={`col-12 col-lg order-3 ${product.reversed ? "order-lg-2" : "order-lg-3"}`}>
                     <div className="productCard_body">
-                        <h3 className="productCard_name fw-600">{t(`items.${product.id}.name`)}</h3>
-                        {kicker ? <p className="productCard_kicker mb-0">{kicker}</p> : null}
-                        <p className="productCard_headline fw-600">{t(`items.${product.id}.headline`)}</p>
+                        <h3 className="productCard_name fw-600">{product.name}</h3>
+                        {product.kicker ? <p className="productCard_kicker mb-0">{product.kicker}</p> : null}
+                        {product.headline ? <p className="productCard_headline fw-600">{product.headline}</p> : null}
 
                         <div className="row g-2 productCard_facts">
                             <div className="col-md-6">
                                 <div className="productCard_fact">
-                                    <p className="productCard_fact_label">{t("problem")}</p>
-                                    <p className="productCard_fact_text mb-0">{t(`items.${product.id}.problem`)}</p>
+                                    <p className="productCard_fact_label">{labels.problem}</p>
+                                    <p className="productCard_fact_text mb-0">{product.problem}</p>
                                 </div>
                             </div>
                             <div className="col-md-6">
                                 <div className="productCard_fact">
-                                    <p className="productCard_fact_label">{t("users")}</p>
-                                    <p className="productCard_fact_text mb-0">{t(`items.${product.id}.users`)}</p>
+                                    <p className="productCard_fact_label">{labels.users}</p>
+                                    <p className="productCard_fact_text mb-0">{product.users}</p>
                                 </div>
                             </div>
                         </div>
 
-                        <p className="productCard_caps_label mb-0">{t("capabilities")}</p>
-                        <div className="productCard_caps d-flex flex-wrap">
-                            {capabilities.map((capability) => (
-                                <span className="productCard_cap" key={capability}>
-                                    <i className="fal fa-check me-1 fsz-10 cr-blue"></i>
-                                    {capability}
-                                </span>
-                            ))}
-                        </div>
+                        {product.capabilities.length ? (
+                            <>
+                                <p className="productCard_caps_label mb-0">{labels.capabilities}</p>
+                                <div className="productCard_caps d-flex flex-wrap">
+                                    {product.capabilities.map((capability) => (
+                                        <span className="productCard_cap" key={capability}>
+                                            <i className="fal fa-check me-1 fsz-10 cr-blue"></i>
+                                            {capability}
+                                        </span>
+                                    ))}
+                                </div>
+                            </>
+                        ) : null}
 
                         <div className="productCard_actions d-flex flex-wrap align-items-center">
-                            <Link href={`/products/${product.id}`} className="butn productCard_btn productCard_btn_dark">
-                                <span>{t(`items.${product.id}.primary`)}</span>
-                                <img
-                                    src="/images/icons/arrow-wh.svg"
-                                    alt=""
-                                    className="butn-icon"
-                                    aria-hidden="true"
-                                />
-                            </Link>
-                            <a href="#" className="butn productCard_btn productCard_btn_light">
-                                <span>{t(`items.${product.id}.secondary`)}</span>
-                                {notify ? (
-                                    <BellIcon />
-                                ) : (
+                            {product.primaryLabel ? (
+                                <Link href={product.primaryHref} className="butn productCard_btn productCard_btn_dark">
+                                    <span>{product.primaryLabel}</span>
                                     <img
-                                        src="/images/icons/arrow-dr.svg"
+                                        src="/images/icons/arrow-wh.svg"
                                         alt=""
                                         className="butn-icon"
                                         aria-hidden="true"
                                     />
-                                )}
-                            </a>
+                                </Link>
+                            ) : null}
+                            {product.secondaryLabel ? (
+                                <a href={product.secondaryHref} className="butn productCard_btn productCard_btn_light">
+                                    <span>{product.secondaryLabel}</span>
+                                    {product.notify ? (
+                                        <BellIcon />
+                                    ) : (
+                                        <img
+                                            src="/images/icons/arrow-dr.svg"
+                                            alt=""
+                                            className="butn-icon"
+                                            aria-hidden="true"
+                                        />
+                                    )}
+                                </a>
+                            ) : null}
                         </div>
                     </div>
                 </div>

@@ -306,6 +306,11 @@
         line-height: 16px;
         cursor: pointer;
 
+        &:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
         img {
             display: block;
             flex: none;
@@ -318,6 +323,20 @@
 
         &:hover img {
             transform: translateX(3px);
+        }
+    }
+
+    .products_next_status {
+        margin: 16px 0 0;
+        font-size: 14px;
+        line-height: 1.4;
+
+        &.is-success {
+            color: #067647;
+        }
+
+        &.is-error {
+            color: #b42318;
         }
     }
 }

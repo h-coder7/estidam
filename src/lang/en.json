@@ -1,9 +1,10 @@
 {
   "navbar": {
     "home": "Home",
-    "studio": "Studio",
-    "cases": "Cases",
-    "news": "News",
+    "about": "About",
+    "solutions": "Solutions",
+    "products": "Products",
+    "aiReadiness": "AI Readiness",
     "contact": "Contact"
   },
   "hero": {
@@ -628,7 +629,8 @@
       "address": "Makkah, Saudi Arabia",
       "linkedin": "LinkedIn",
       "x": "X",
-      "instagram": "Instagram"
+      "instagram": "Instagram",
+      "facebook": "Facebook"
     },
     "faq": {
       "badge": "FAQ",
@@ -706,7 +708,8 @@
       "message": "Message (optional)",
       "consent": "I agree to be contacted by the Estidam team about this request.",
       "submit": "Send request",
-      "privacy": "Your data is used only to answer this request"
+      "privacy": "Your data is used only to answer this request",
+      "sendFailed": "Could not send your request. Please try again."
     },
     "detail": {
       "hrh": {
@@ -1032,6 +1035,7 @@
         },
         "consent": "I agree that Estidam may use my details only to contact me about this request, in line with the privacy policy.",
         "submit": "Send Request",
+        "sendFailed": "Could not send your request. Please try again.",
         "challenges": [
           "Scattered data",
           "High volume, short season",

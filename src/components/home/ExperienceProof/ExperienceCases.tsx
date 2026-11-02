@@ -5,47 +5,57 @@ import { useTranslations } from "next-intl";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLenis } from "@/components/LenisProvider";
+import type { ProofCaseCard } from "@/lib/api/home";
 
-const cases = [
-    {
-        id: "case-1",
-        eyebrowKey: "case1Eyebrow",
-        titleKey: "case1Title",
-        proofKey: "case1Proof",
-        challengeKey: "case1Challenge",
-        solutionKey: "case1Solution",
-        roleKey: "case1Role",
-        logo: "/images/exp-logo1.png",
-    },
-    {
-        id: "case-2",
-        eyebrowKey: "case2Eyebrow",
-        titleKey: "case2Title",
-        proofKey: "case2Proof",
-        challengeKey: "case2Challenge",
-        solutionKey: "case2Solution",
-        roleKey: "case2Role",
-        logo: "/images/exp-logo2.png",
-    },
-    {
-        id: "case-3",
-        eyebrowKey: "case3Eyebrow",
-        titleKey: "case3Title",
-        proofKey: "case3Proof",
-        challengeKey: "case3Challenge",
-        solutionKey: "case3Solution",
-        roleKey: "case3Role",
-        logo: "/images/exp-logo3.png",
-    },
-] as const;
+type ExperienceCasesProps = {
+    cases?: ProofCaseCard[];
+};
 
-const ExperienceCases = () => {
+const ExperienceCases = ({ cases }: ExperienceCasesProps) => {
     const t = useTranslations("experienceProof");
     const lenis = useLenis();
     const rootRef = useRef<HTMLDivElement>(null);
     const triggerRef = useRef<ScrollTrigger | null>(null);
     const scrollToIndexRef = useRef<(index: number) => void>(() => {});
-    const count = cases.length;
+
+    const fallbackCases: ProofCaseCard[] = [
+        {
+            id: "case-1",
+            eyebrow: t("case1Eyebrow"),
+            title: t("case1Title"),
+            proof: t("case1Proof"),
+            proofLabel: t("verifiedLabel"),
+            challenge: t("case1Challenge"),
+            solution: t("case1Solution"),
+            role: t("case1Role"),
+            logo: "/images/exp-logo1.png",
+        },
+        {
+            id: "case-2",
+            eyebrow: t("case2Eyebrow"),
+            title: t("case2Title"),
+            proof: t("case2Proof"),
+            proofLabel: t("verifiedLabel"),
+            challenge: t("case2Challenge"),
+            solution: t("case2Solution"),
+            role: t("case2Role"),
+            logo: "/images/exp-logo2.png",
+        },
+        {
+            id: "case-3",
+            eyebrow: t("case3Eyebrow"),
+            title: t("case3Title"),
+            proof: t("case3Proof"),
+            proofLabel: t("verifiedLabel"),
+            challenge: t("case3Challenge"),
+            solution: t("case3Solution"),
+            role: t("case3Role"),
+            logo: "/images/exp-logo3.png",
+        },
+    ];
+
+    const viewCases = cases?.length ? cases : fallbackCases;
+    const count = viewCases.length;
 
     useEffect(() => {
         const root = rootRef.current;
@@ -140,19 +150,19 @@ const ExperienceCases = () => {
         <div className="proof_cases" ref={rootRef}>
             <div className="proof_stack_wrap">
                 <div className="proof_card_dots" aria-label={t("casesLabel")}>
-                    {cases.map((item, index) => (
+                    {viewCases.map((item, index) => (
                         <button
                             key={item.id}
                             type="button"
                             className={`proof_card_dot${index === 0 ? " is_active" : ""}`}
-                            aria-label={t(item.eyebrowKey)}
+                            aria-label={item.eyebrow || item.title}
                             onClick={() => scrollToIndexRef.current(index)}
                         />
                     ))}
                 </div>
 
                 <div className="proof_stack">
-                    {cases.map((item, index) => (
+                    {viewCases.map((item, index) => (
                         <article
                             className="proof_card"
                             key={item.id}
@@ -166,7 +176,7 @@ const ExperienceCases = () => {
                             <div className="proof_card_motion">
                                 <div className="row align-items-start justify-content-between proof_card_top">
                                     <div className="col">
-                                        <p className="proof_card_eyebrow mb-0">{t(item.eyebrowKey)}</p>
+                                        <p className="proof_card_eyebrow mb-0">{item.eyebrow}</p>
                                     </div>
                                     <div className="col-auto">
                                         <span className="proof_card_dots_spacer" aria-hidden="true"></span>
@@ -175,7 +185,7 @@ const ExperienceCases = () => {
 
                                 <div className="row">
                                     <div className="col-lg-9">
-                                        <h3 className="proof_card_title">{t(item.titleKey)}</h3>
+                                        <h3 className="proof_card_title">{item.title}</h3>
                                     </div>
                                 </div>
 
@@ -184,26 +194,36 @@ const ExperienceCases = () => {
                                         <div className="proof_stat h-100">
                                             <img src={item.logo} alt="" className="proof_stat_logo" />
                                             <div className="btm-cont">
-                                                <p className="proof_stat_value">{t(item.proofKey)}</p>
-                                                <span className="proof_stat_label">{t("verifiedLabel")}</span>
+                                                {item.proof ? (
+                                                    <p className="proof_stat_value">{item.proof}</p>
+                                                ) : null}
+                                                <span className="proof_stat_label">
+                                                    {item.proofLabel || t("verifiedLabel")}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="col-lg-8">
                                         <div className="proof_details">
-                                            <div className="proof_detail">
-                                                <span className="proof_detail_label">{t("challengeLabel")}</span>
-                                                <p className="proof_detail_text">{t(item.challengeKey)}</p>
-                                            </div>
-                                            <div className="proof_detail">
-                                                <span className="proof_detail_label">{t("solutionLabel")}</span>
-                                                <p className="proof_detail_text">{t(item.solutionKey)}</p>
-                                            </div>
-                                            <div className="proof_detail">
-                                                <span className="proof_detail_label">{t("roleLabel")}</span>
-                                                <p className="proof_detail_text">{t(item.roleKey)}</p>
-                                            </div>
+                                            {item.challenge ? (
+                                                <div className="proof_detail">
+                                                    <span className="proof_detail_label">{t("challengeLabel")}</span>
+                                                    <p className="proof_detail_text">{item.challenge}</p>
+                                                </div>
+                                            ) : null}
+                                            {item.solution ? (
+                                                <div className="proof_detail">
+                                                    <span className="proof_detail_label">{t("solutionLabel")}</span>
+                                                    <p className="proof_detail_text">{item.solution}</p>
+                                                </div>
+                                            ) : null}
+                                            {item.role ? (
+                                                <div className="proof_detail">
+                                                    <span className="proof_detail_label">{t("roleLabel")}</span>
+                                                    <p className="proof_detail_text">{item.role}</p>
+                                                </div>
+                                            ) : null}
                                         </div>
                                     </div>
                                 </div>

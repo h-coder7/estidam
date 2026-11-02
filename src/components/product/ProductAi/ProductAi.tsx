@@ -1,5 +1,6 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import { getProductAi } from "@/lib/api/productsPage";
 
 import "./_ProductAi.scss";
 
@@ -15,9 +16,13 @@ type AiCard = {
     text: string;
 };
 
-const ProductAi = async () => {
+const ProductAi = async ({ productId }: { productId: "hrh" | "mayar" | "maydan" }) => {
+    const locale = await getLocale();
     const t = await getTranslations("productsPage.detail.ai");
-    const items = t.raw("cards") as AiCard[];
+    const capabilities = await getProductAi(locale, productId);
+    const fallback = t.raw("cards") as AiCard[];
+    const fromApi = capabilities.map((item) => ({ title: item.title, text: item.text }));
+    const items = fromApi.length ? [...fromApi, ...fallback.slice(fromApi.length)] : fallback;
 
     return (
         <section className="products_ai" id="product-ai">
@@ -44,8 +49,11 @@ const ProductAi = async () => {
                         <Reveal animation="fade-up">
                             <div className="products_ai_board">
                                 <div className="products_ai_grid">
-                                    {cards.map((card, index) => (
-                                        <article className="products_ai_card" key={card.icon}>
+                                    {items.map((item, index) => {
+                                        const card = cards[index % cards.length];
+
+                                        return (
+                                        <article className="products_ai_card" key={`${item.title}-${index}`}>
                                             <img
                                                 className="products_ai_card_shape"
                                                 src={card.shape}
@@ -57,11 +65,12 @@ const ProductAi = async () => {
                                                 <span className="products_ai_icon">
                                                     <img src={card.icon} alt="" width={24} height={24} />
                                                 </span>
-                                                <h3 className="products_ai_card_title fw-500">{items[index].title}</h3>
-                                                <p className="products_ai_card_text mb-0">{items[index].text}</p>
+                                                <h3 className="products_ai_card_title fw-500">{item.title}</h3>
+                                                <p className="products_ai_card_text mb-0">{item.text}</p>
                                             </div>
                                         </article>
-                                    ))}
+                                        );
+                                    })}
                                     <div className="products_ai_pill">
                                         <img src="/images/product-det/ai-icon-layers.svg" alt="" width={24} height={24} />
                                         <span>
