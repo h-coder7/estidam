@@ -18,43 +18,46 @@ const ExperienceProof = async () => {
         <section className="experience_proof" id="experience-proof">
             <div className="container">
                 <div className="content px-lg-4">
-                    <div className="section-head">
-                        <Reveal animation="fade-up" trigger="load">
-                            <span className="section-head-badge">{badge}</span>
-                        </Reveal>
+                    {/* Title + cards pin together — pinning cards alone left a growing gap under the title */}
+                    <div className="proof_pin">
+                        <div className="section-head">
+                            <Reveal animation="fade-up" trigger="load">
+                                <span className="section-head-badge">{badge}</span>
+                            </Reveal>
 
-                        <div className="row gx-0 justify-content-between">
-                            <div className="col-lg-6">
-                                <div className="section-head-left mt-3">
-                                    <Reveal animation="fade-up" trigger="load">
-                                        <h2 className="section-head-title fsz-40 fw-600 lh-2">
-                                            <span className="section-head-title-strong">{heading.titleStrong}</span>
-                                            {heading.titleMuted ? (
-                                                <>
-                                                    <br />
-                                                    <span className="section-head-title-muted cr-blue fw-500">
-                                                        {heading.titleMuted}
-                                                    </span>
-                                                </>
-                                            ) : null}
-                                        </h2>
-                                    </Reveal>
+                            <div className="row gx-0 justify-content-between">
+                                <div className="col-lg-6">
+                                    <div className="section-head-left mt-3">
+                                        <Reveal animation="fade-up" trigger="load">
+                                            <h2 className="section-head-title fsz-40 fw-600 lh-2">
+                                                <span className="section-head-title-strong">{heading.titleStrong}</span>
+                                                {heading.titleMuted ? (
+                                                    <>
+                                                        <br />
+                                                        <span className="section-head-title-muted cr-blue fw-500">
+                                                            {heading.titleMuted}
+                                                        </span>
+                                                    </>
+                                                ) : null}
+                                            </h2>
+                                        </Reveal>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div className="col-lg-5">
-                                <div className="section-head-right mt-3">
-                                    <Reveal animation="fade-up" trigger="load">
-                                        <p className="section-head-description mb-0">
-                                            {description}
-                                        </p>
-                                    </Reveal>
+                                <div className="col-lg-5">
+                                    <div className="section-head-right mt-3">
+                                        <Reveal animation="fade-up" trigger="load">
+                                            <p className="section-head-description mb-0">
+                                                {description}
+                                            </p>
+                                        </Reveal>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <ExperienceCases cases={cases} />
+                        <ExperienceCases cases={cases} />
+                    </div>
                 </div>
             </div>
 

@@ -257,5 +257,13 @@
 @media screen and (max-width: 991px) {
     .navbar.homeNav {
         position: relative;
+
+        // Below 992px the nav is in-flow. Switching it to `fixed` on scroll pulls
+        // it out of flow, shifts the whole page up by the nav height and leaves
+        // every ScrollTrigger start/pin position off by that amount. `sticky`
+        // keeps it in flow and pinned to the top without the layout jump.
+        &.scrolled {
+            position: sticky;
+        }
     }
 }

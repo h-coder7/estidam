@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useLenis } from "@/components/LenisProvider";
+import { getLenis, useLenis } from "@/components/LenisProvider";
 import type { ProofCaseCard } from "@/lib/api/home";
 
 type ExperienceCasesProps = {
@@ -71,16 +71,17 @@ const ExperienceCases = ({ cases }: ExperienceCasesProps) => {
         const paint = (progress: number) => {
             cards.forEach((card, index) => {
                 if (index === 0) {
-                    gsap.set(card, { y: 0, opacity: 1 });
+                    gsap.set(card, { y: 0, autoAlpha: 1 });
                     return;
                 }
 
                 const start = (index - 1) / (count - 1);
                 const end = index / (count - 1);
                 const local = gsap.utils.clamp(0, 1, (progress - start) / (end - start));
+                // Slide in fully opaque — fading let lower cards' text bleed through
                 gsap.set(card, {
                     y: (1 - local) * (card.offsetHeight + 48),
-                    opacity: local,
+                    autoAlpha: local > 0.001 ? 1 : 0,
                 });
             });
         };
@@ -92,8 +93,9 @@ const ExperienceCases = ({ cases }: ExperienceCasesProps) => {
             const next = Math.min(count - 1, Math.max(0, index));
             const target = trigger.start + ((trigger.end - trigger.start) * next) / (count - 1);
 
-            if (lenis) {
-                lenis.scrollTo(target, { duration: reduced ? 0.01 : 0.85 });
+            const scroller = lenis ?? getLenis();
+            if (scroller) {
+                scroller.scrollTo(target, { duration: reduced ? 0.01 : 0.85 });
                 return;
             }
 
@@ -102,15 +104,18 @@ const ExperienceCases = ({ cases }: ExperienceCasesProps) => {
 
         scrollToIndexRef.current = scrollToIndex;
 
+        // Pin title + cards as one block so the title never drifts away from the stack
+        const pinTarget = (root.closest(".proof_pin") as HTMLElement | null) ?? root;
+
         const trigger = ScrollTrigger.create({
-            trigger: root,
-            start: "top 120px",
+            trigger: pinTarget,
+            start: "top 96px",
             end: () => `+=${(count - 1) * window.innerHeight * 0.85}`,
             pin: true,
             pinSpacing: true,
             pinType: "transform",
             scrub: true,
-            anticipatePin: 1,
+            anticipatePin: 0,
             invalidateOnRefresh: true,
             snap: reduced
                 ? undefined
@@ -143,6 +148,8 @@ const ExperienceCases = ({ cases }: ExperienceCasesProps) => {
             window.cancelAnimationFrame(frame);
             triggerRef.current = null;
             trigger.kill();
+            gsap.set(pinTarget, { clearProps: "all" });
+            gsap.set(cards, { clearProps: "all" });
         };
     }, [count, lenis]);
 
