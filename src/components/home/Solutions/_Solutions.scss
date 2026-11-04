@@ -6,18 +6,17 @@
         display: flex;
         align-items: center;
         min-height: calc(100vh - 96px);
-        padding: 48px 0 80px;
+        // padding: 32px 0 48px;
 
-        > .row {
+        > .row,
+        .solutions_body_row {
             width: 100%;
         }
     }
 
     .solutions_content {
-        min-height: 280px;
-        padding: 20px 48px 20px 0;
+        padding: 12px 36px 12px 0;
         max-width: 480px;
-        animation: solutionsIn 0.55s ease;
     }
 
     .solutions_label {
@@ -27,6 +26,25 @@
         font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
+    }
+
+    .solutions_copy_viewport {
+        position: relative;
+        overflow: hidden;
+        min-height: 220px;
+    }
+
+    .solutions_copy {
+        position: absolute;
+        inset-inline: 0;
+        top: 0;
+        width: 100%;
+        will-change: transform, opacity;
+        pointer-events: none;
+
+        &.is_active {
+            pointer-events: auto;
+        }
     }
 
     .solutions_title {
@@ -66,93 +84,76 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding-block: 12px;
         padding-inline: 24px 0;
     }
 
-    .solutions_cube_stage {
+    .solutions_stack {
         position: relative;
-        width: min(100%, 460px);
-        aspect-ratio: 1;
+        width: 600px;
+        height: 650px;
         margin-inline-start: auto;
-    }
-
-    .solutions_cube_frame {
-        position: absolute;
-        inset: 0;
         overflow: hidden;
         isolation: isolate;
+        outline: none;
     }
 
-    .solutions_cube {
+    .solutions_stack_card {
         position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
+        top: 50%;
+        left: 0;
+        right: 0;
+        width: 84%;
+        margin-inline: auto;
+        transform-origin: center center;
+        will-change: transform, opacity, filter;
+        pointer-events: none;
+
+        &.is_active {
+            pointer-events: auto;
+        }
+    }
+
+    .solutions_stack_card_media {
         overflow: hidden;
-
-        &.swiper-cube {
-            overflow: hidden;
-        }
-
-        .swiper-slide {
-            background: transparent;
-            overflow: visible;
-        }
-
-        .solutions_cube_card {
-            position: absolute;
-            inset: 28px;
-            overflow: hidden;
-            border-radius: 20px;
-            background: transparent;
-        }
+        border-radius: 16px;
+        background: #dbe3ef;
+        aspect-ratio: 4 / 3;
+        transform-origin: center center;
+        box-shadow: 0 18px 40px rgba(17, 24, 39, 0.12);
+        cursor: pointer;
 
         img {
-            position: absolute;
-            inset: 0;
             display: block;
             width: 100%;
             height: 100%;
-            max-width: none;
-            max-height: none;
             object-fit: cover;
             user-select: none;
+            pointer-events: none;
         }
     }
-
 }
 
-@keyframes solutionsIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@media screen and (max-width: 991px) {
+@media screen and (max-width: 767px) {
     .solutions {
         .solutions_body {
-            padding: 36px 0 60px;
+            min-height: auto;
+            padding: 28px 0 40px;
         }
 
         .solutions_content {
             max-width: none;
-            padding: 0 0 32px;
+            padding: 0 0 20px;
         }
 
         .solutions_visual {
-            padding: 8px 0 0;
+            padding: 4px 0 0;
         }
 
-        .solutions_cube_stage {
+        .solutions_stack {
             width: min(100%, 420px);
+            height: min(48vh, 360px);
             margin-inline: auto;
+            overflow: hidden;
         }
     }
 }
@@ -165,6 +166,23 @@
 
         .solutions_highlight {
             font-size: 14px;
+        }
+
+        .solutions_stack {
+            height: min(44vh, 320px);
+        }
+
+        .solutions_stack_card {
+            width: 88%;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .solutions {
+        .solutions_stack_card,
+        .solutions_copy {
+            will-change: auto;
         }
     }
 }
