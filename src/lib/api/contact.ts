@@ -137,7 +137,7 @@ export async function getContactDirectContent(locale: string): Promise<ContactDi
     const section = payload?.data?.sections?.find((item) => item.key === "infoCard")?.data ?? null;
     if (!section) return null;
 
-    let settings: SettingsPayload["data"] = null;
+    let settings: SettingsPayload["data"] | null = null;
     try {
         const response = (await api.getSettings(locale)) as SettingsPayload;
         settings = response?.success ? response.data ?? null : null;

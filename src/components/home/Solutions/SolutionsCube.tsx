@@ -6,26 +6,29 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getLenis, useLenis } from "@/components/LenisProvider";
 import type { SolutionCubeSlide } from "@/lib/api/home";
+import { mountSolutionStack, type SolutionStackGl, type StackPose } from "./solutionStackGl";
 
 const fallbackImage = "/images/solution1.png";
 
 /** Tunable Verticalix-matched values (from live preview DevTools). */
 export const SOLUTIONS_STACK_CONFIG = {
-    inactiveScale: 0.9,
-    adjacentOpacity: 0.55,
+    inactiveScale: 0.88,
+    adjacentOpacity: 0.42,
     farOpacity: 0,
-    rotateDeg: 8,
-    inactiveTx: -16,
+    rotateDeg: 11,
+    /** Perspective tilt (deg) so neighbors sit back in the stack */
+    tiltDeg: 6,
+    inactiveTx: -24,
     /** Vertical distance between card centers as a fraction of card height */
     pitchRatio: 0.92,
     hoverScale: 1.03,
     hoverDuration: 0.25,
-    /** Vertical travel (px) for left copy while scrolling between slides */
-    textTravel: 40,
+    /** Incoming copy rises this far (px) while it fades in */
+    textTravel: 16,
     /** Card-to-card settle (Lenis tween) */
-    snapDuration: 0.6,
+    snapDuration: 0.7,
     /** Ignore extra wheel notches while a card is settling */
-    wheelLockMs: 640,
+    wheelLockMs: 760,
     scrollPerSlideVh: 0.9,
 };
 
@@ -36,6 +39,7 @@ type SolutionsCubeProps = {
 type Pose = {
     scale: number;
     rotate: number;
+    tilt: number;
     opacity: number;
     tx: number;
     y: number;
@@ -46,20 +50,22 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 /** Pose follows scroll distance at a constant rate */
 const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
 
-/** Lenis scroll — constant speed between cards */
-const snapEase = (t: number) => t;
+/** One decisive travel, then a short settle. Still lands on a whole card. */
+const snapEase = (t: number) => 1 - (1 - t) ** 3;
 
 // Blur lives in CSS as a discrete class state — animating `filter` per scroll frame was the hitch
 const poseAtDistance = (distance: number, pitch: number): Pose => {
     const sign = distance === 0 ? 1 : Math.sign(distance);
     const ad = Math.abs(distance);
-    const { inactiveScale, adjacentOpacity, farOpacity, rotateDeg, inactiveTx } =
+    const { inactiveScale, adjacentOpacity, farOpacity, rotateDeg, tiltDeg, inactiveTx } =
         SOLUTIONS_STACK_CONFIG;
+    const tilt = sign * tiltDeg * clamp01(Math.min(ad, 1));
 
     if (ad >= 2) {
         return {
             scale: inactiveScale,
             rotate: sign * rotateDeg,
+            tilt,
             opacity: farOpacity,
             tx: inactiveTx,
             y: sign * pitch * Math.min(ad, 2.35),
@@ -71,6 +77,7 @@ const poseAtDistance = (distance: number, pitch: number): Pose => {
         return {
             scale: lerp(1, inactiveScale, t),
             rotate: lerp(0, sign * rotateDeg, t),
+            tilt,
             opacity: lerp(1, adjacentOpacity, t),
             tx: lerp(0, inactiveTx, t),
             y: lerp(0, sign * pitch, t),
@@ -81,6 +88,7 @@ const poseAtDistance = (distance: number, pitch: number): Pose => {
     return {
         scale: inactiveScale,
         rotate: sign * rotateDeg,
+        tilt,
         opacity: lerp(adjacentOpacity, farOpacity, t),
         tx: inactiveTx,
         y: lerp(sign * pitch, sign * pitch * 2, t),
@@ -175,44 +183,52 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
         let pitch = measurePitch();
         measureCopyViewport();
 
+        if (copyViewport) {
+            copyViewport.style.setProperty("--copy-shift", `${SOLUTIONS_STACK_CONFIG.textTravel}px`);
+        }
+
+        let glStack: SolutionStackGl | null = null;
+        let glCancelled = false;
+        const disposeGl = () => {
+            glCancelled = true;
+            glStack?.dispose();
+            glStack = null;
+        };
+
         const paint = (progress: number) => {
             progressRef.current = progress;
             const position = count < 2 ? 0 : progress * (count - 1);
-            const textTravel = SOLUTIONS_STACK_CONFIG.textTravel;
+            const glPoses: StackPose[] = [];
 
             cards.forEach((card, index) => {
                 const pose = poseAtDistance(index - position, pitch);
                 const tx = pose.tx * (rtl ? -1 : 1);
+                const rot = reduced ? 0 : pose.rotate;
+                const tilt = reduced ? 0 : pose.tilt;
+                const depth = Math.abs(index - position);
 
-                gsap.set(card, {
-                    x: tx,
-                    yPercent: -50,
+                card.style.transform = `translate3d(${tx}px, calc(-50% + ${pose.y}px), 0) rotateX(${tilt}deg) rotate(${rot}deg) scale(${pose.scale})`;
+                card.style.opacity = stack.classList.contains("has_gl") ? "0" : String(pose.opacity);
+                card.style.zIndex = String(Math.round(100 - depth * 10));
+                card.setAttribute("aria-hidden", depth > 0.5 ? "true" : "false");
+                glPoses[index] = {
                     y: pose.y,
+                    tx,
+                    rotate: rot,
+                    tilt,
                     scale: pose.scale,
-                    rotation: reduced ? 0 : pose.rotate,
                     opacity: pose.opacity,
-                    zIndex: Math.round(100 - Math.abs(index - position) * 10),
-                    force3D: true,
-                });
-
-                card.setAttribute("aria-hidden", Math.abs(index - position) > 0.5 ? "true" : "false");
+                    depth,
+                };
             });
+            glStack?.setPoses(glPoses);
 
-            // Copy is discrete: only the nearest card's text is readable (no two-texts overlap)
+            // Copy motion is a CSS transition on .is_active — not a per-frame write.
             const nearestIndex = Math.min(count - 1, Math.max(0, Math.round(position)));
             copies.forEach((copy, index) => {
                 const on = index === nearestIndex;
-                const d = index - position;
-
-                // Opacity is intentionally not set here — the title fade is a CSS
-                // transition driven by the is_active class toggle below.
-                gsap.set(copy, {
-                    y: on || reduced ? 0 : d * textTravel,
-                    zIndex: on ? 2 : 0,
-                    pointerEvents: on ? "auto" : "none",
-                    force3D: true,
-                });
-
+                copy.style.zIndex = on ? "2" : "0";
+                copy.style.pointerEvents = on ? "auto" : "none";
                 copy.setAttribute("aria-hidden", on ? "false" : "true");
             });
 
@@ -252,9 +268,27 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
 
         paint(0);
 
+        if (!reduced) {
+            const sources = medias.map((media) => media.querySelector("img")?.getAttribute("src") || "");
+            void mountSolutionStack(stack, sources).then((handle) => {
+                if (!handle) return;
+                if (glCancelled) {
+                    handle.dispose();
+                    return;
+                }
+                glStack = handle;
+                paint(progressRef.current);
+            });
+        }
+
         if (count < 2) {
             return () => {
-                gsap.set(cards, { clearProps: "all" });
+                disposeGl();
+                cards.forEach((card) => {
+                    card.style.transform = "";
+                    card.style.opacity = "";
+                    card.style.zIndex = "";
+                });
             };
         }
 
@@ -455,6 +489,10 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
             const index = Number(media.dataset.index);
             // Cards sliding under a resting cursor fire pointerenter — no hover tween mid-step
             if (index !== activeIndexRef.current || reduced || programmaticScroll) return;
+            if (glStack) {
+                glStack.setHover(SOLUTIONS_STACK_CONFIG.hoverScale);
+                return;
+            }
             gsap.to(media, {
                 scale: SOLUTIONS_STACK_CONFIG.hoverScale,
                 duration: SOLUTIONS_STACK_CONFIG.hoverDuration,
@@ -465,6 +503,10 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
 
         const onLeave = (event: Event) => {
             const media = event.currentTarget as HTMLElement;
+            if (glStack) {
+                glStack.setHover(1);
+                return;
+            }
             gsap.to(media, {
                 scale: 1,
                 duration: SOLUTIONS_STACK_CONFIG.hoverDuration,
@@ -505,6 +547,7 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
         void Promise.all(imageLoads).then(refreshAfterImages);
 
         return () => {
+            disposeGl();
             window.cancelAnimationFrame(frame);
             window.clearTimeout(wheelUnlockTimer);
             window.clearTimeout(settleTimer);
@@ -518,9 +561,16 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
             stack?.removeEventListener("keydown", onKeyDown);
             trigger.kill();
             triggerRef.current = null;
-            gsap.set(cards, { clearProps: "all" });
+            cards.forEach((card) => {
+                card.style.transform = "";
+                card.style.opacity = "";
+                card.style.zIndex = "";
+            });
+            copies.forEach((copy) => {
+                copy.style.zIndex = "";
+                copy.style.pointerEvents = "";
+            });
             gsap.set(medias, { clearProps: "transform" });
-            gsap.set(copies, { clearProps: "all" });
         };
     }, [count, lenis]);
 
