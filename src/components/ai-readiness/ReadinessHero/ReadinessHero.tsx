@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import HeroOrb from "./HeroOrb";
 
 import "./_ReadinessHero.scss";
 
@@ -143,11 +144,7 @@ const ReadinessHero = async () => {
                     </div>
                 </div>
             </div>
-            <img
-                src="/images/readiness-hero.png"
-                alt={t("imageAlt")}
-                className="hero_readiness_visual"
-            />
+            <HeroOrb />
         </section>
     );
 };
