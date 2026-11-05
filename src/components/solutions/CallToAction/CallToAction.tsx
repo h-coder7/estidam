@@ -26,17 +26,14 @@ function CmsLink({ href, className, children }: { href: string; className: strin
 const CallToAction = async ({ source }: { source?: "about" | "contact" }) => {
     const locale = await getLocale();
     const t = await getTranslations("solutionsPage.callToAction");
-    const content =
-        source === "about"
-            ? await getAboutCtaContent(locale)
-            : source === "contact"
-              ? await getContactCtaContent(locale)
-              : null;
+    const aboutContent = source === "about" ? await getAboutCtaContent(locale) : null;
+    const contactContent = source === "contact" ? await getContactCtaContent(locale) : null;
+    const content = aboutContent ?? contactContent;
     const primaryLabel = content?.primaryLabel || t("primaryCta");
     const primaryHref = content?.primaryHref || "#";
     const secondaryLabel = content?.secondaryLabel || (source === "contact" ? "" : t("secondaryCta"));
     const secondaryHref = content?.secondaryHref || "#";
-    const description = source === "contact" && content ? content.description : t("description");
+    const description = contactContent ? contactContent.description : t("description");
 
     return (
         <section className="solutions_call_to_action" id="call-to-action">
