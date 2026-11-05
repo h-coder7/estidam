@@ -2,6 +2,10 @@
   "name": "estidam",
   "version": "0.1.0",
   "private": true,
+  "allowScripts": {
+    "@parcel/watcher": true,
+    "@swc/core": true
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",

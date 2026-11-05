@@ -9,23 +9,31 @@
     overflow: hidden;
     z-index: 2;
 
+    .aiHeroScene {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 600ms ease;
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        &.is_ready {
+            opacity: 1;
+        }
+    }
+
     .content {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         min-height: calc(100vh - 188px);
         gap: 48px;
-    }
-
-    .hero_readiness_visual {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        height: 100%;
-        z-index: 1;
-        object-fit: contain;
-        pointer-events: none;
     }
 
     .container {
@@ -208,13 +216,9 @@
     }
 }
 
-html[dir="rtl"] {
-    .hero_readiness {
-        .hero_readiness_visual {
-            right: auto;
-            left: 0;
-            transform: translateY(-50%);
-        }
+@media (prefers-reduced-motion: reduce) {
+    .hero_readiness .aiHeroScene {
+        transition: none;
     }
 }
 
@@ -232,19 +236,6 @@ html[dir="rtl"] {
         .txt_content {
             max-width: 100%;
             margin-bottom: 1.5rem;
-        }
-
-        .hero_readiness_visual {
-            position: relative;
-            right: auto;
-            top: auto;
-            transform: none;
-            display: block;
-            width: min(320px, 70%);
-            max-width: 100%;
-            height: auto;
-            margin: 0 auto 24px;
-            opacity: 0.9;
         }
     }
 }
