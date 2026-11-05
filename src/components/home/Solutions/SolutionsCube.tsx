@@ -26,7 +26,7 @@ export const SOLUTIONS_STACK_CONFIG = {
     snapDuration: 0.6,
     /** Ignore extra wheel notches while a card is settling */
     wheelLockMs: 640,
-    scrollPerSlideVh: 2,
+    scrollPerSlideVh: 0.9,
 };
 
 type SolutionsCubeProps = {
@@ -43,15 +43,11 @@ type Pose = {
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-/** Smoothstep — eases pose changes so mid-transition isn't linear/harsh */
-const smoothstep = (t: number) => {
-    const x = Math.min(1, Math.max(0, t));
-    return x * x * (3 - 2 * x);
-};
+/** Pose follows scroll distance at a constant rate */
+const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
 
-/** Lenis scroll easing — smooth ease-in-out so each card glides in and settles softly */
-const snapEase = (t: number) =>
-    t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+/** Lenis scroll — constant speed between cards */
+const snapEase = (t: number) => t;
 
 // Blur lives in CSS as a discrete class state — animating `filter` per scroll frame was the hitch
 const poseAtDistance = (distance: number, pitch: number): Pose => {
@@ -71,17 +67,17 @@ const poseAtDistance = (distance: number, pitch: number): Pose => {
     }
 
     if (ad <= 1) {
-        const t = smoothstep(ad);
+        const t = clamp01(ad);
         return {
             scale: lerp(1, inactiveScale, t),
             rotate: lerp(0, sign * rotateDeg, t),
-            opacity: lerp(1, adjacentOpacity, smoothstep(ad * 0.92)),
+            opacity: lerp(1, adjacentOpacity, t),
             tx: lerp(0, inactiveTx, t),
-            y: lerp(0, sign * pitch, smoothstep(ad)),
+            y: lerp(0, sign * pitch, t),
         };
     }
 
-    const t = smoothstep(ad - 1);
+    const t = clamp01(ad - 1);
     return {
         scale: inactiveScale,
         rotate: sign * rotateDeg,

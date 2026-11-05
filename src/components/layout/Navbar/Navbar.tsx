@@ -114,14 +114,14 @@ export default function Navbar({ className = "" }: NavbarProps) {
                             </button>
                         </div>
 
-                        <button type="button" className="nav-icon" aria-label="Search">
+                        {/* <button type="button" className="nav-icon" aria-label="Search">
                             <i className="fa-regular fa-magnifying-glass"></i>
-                        </button>
+                        </button> */}
 
-                        <button type="button" className="nav-menu-btn" aria-label="Menu">
+                        {/* <button type="button" className="nav-menu-btn" aria-label="Menu">
                             <span></span>
                             <span></span>
-                        </button>
+                        </button> */}
                     </div>
                 </div>
 

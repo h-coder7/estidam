@@ -49,9 +49,7 @@ export function useAiOperationsAnimation(rootRef: RefObject<HTMLElement | null>,
         const circ = Number(ringBar?.dataset.circ || 0);
         const counter = { v: 0 };
 
-        // Initial states
-        gsap.set(q('[data-ai="reveal"]'), { autoAlpha: 0, y: 24 });
-        gsap.set(q('[data-ai="glow"]'), { autoAlpha: 0 });
+        // Header, glow and outcome stay visible. Only the two cards start hidden.
         gsap.set(q('[data-ai="card"]'), { autoAlpha: 0, y: 32 });
         gsap.set(q('[data-ai="in-chip"]'), { autoAlpha: 0, x: -shift });
         gsap.set(q('[data-ai="out-chip"]'), { autoAlpha: 0, x: shift });
@@ -61,25 +59,19 @@ export function useAiOperationsAnimation(rootRef: RefObject<HTMLElement | null>,
         gsap.set(q('[data-ai="core-inner"]'), { autoAlpha: 0, y: 8 });
         gsap.set(q('[data-ai="ready-text"]'), { autoAlpha: 0, y: 14 });
         gsap.set(q('[data-ai="ready-chip"]'), { autoAlpha: 0, scale: 0.9 });
-        gsap.set(q('[data-ai="outcome-label"], [data-ai="outcome-chip"]'), { autoAlpha: 0, y: 12 });
-        gsap.set(q('[data-ai="outcome-arrow"]'), { autoAlpha: 0, x: -6 });
         if (ringBar) gsap.set(ringBar, { strokeDashoffset: circ });
         if (ringNum) ringNum.textContent = '0';
 
+        // Paused until the section actually enters the viewport. Attaching
+        // ScrollTrigger to an empty timeline let a bad first measurement play
+        // the whole sequence during page load, before the section was visible.
         const tl = gsap.timeline({
+          paused: true,
           defaults: { ease: 'power3.out', duration: 0.6 },
-          scrollTrigger: {
-            trigger: root,
-            start: 'top 70%',
-            // play forward on entry, reverse only when scrolled fully back above
-            toggleActions: 'play none none reverse',
-          },
         });
 
-        // A — intro
-        tl.to(q('[data-ai="glow"]'), { autoAlpha: 1, duration: 1.2 }, 0)
-          .to(q('[data-ai="reveal"]'), { autoAlpha: 1, y: 0, stagger: 0.12 }, 0)
-          .to(q('[data-ai="card"]'), { autoAlpha: 1, y: 0, stagger: 0.15, duration: 0.8 }, 0.25);
+        // A — cards only. Header and outcome are not part of this timeline.
+        tl.to(q('[data-ai="card"]'), { autoAlpha: 1, y: 0, stagger: 0.15, duration: 0.8 }, 0.25);
 
         // B — inputs → lines
         tl.to(q('[data-ai="in-chip"]'), { autoAlpha: 1, x: 0, stagger: 0.1, duration: 0.45 }, 0.7)
@@ -124,16 +116,6 @@ export function useAiOperationsAnimation(rootRef: RefObject<HTMLElement | null>,
           );
         }
 
-        // F — outcome flow
-        const flowChips = q('[data-ai="outcome-chip"]');
-        const arrows = q('[data-ai="outcome-arrow"]');
-        tl.to(q('[data-ai="outcome-label"]'), { autoAlpha: 1, y: 0, duration: 0.4 }, 3.4);
-        flowChips.forEach((chip, i) => {
-          const at = 3.5 + i * 0.22;
-          if (i > 0) tl.to(arrows[i - 1], { autoAlpha: 1, x: 0, duration: 0.3 }, at - 0.1);
-          tl.to(chip, { autoAlpha: 1, y: 0, duration: 0.4 }, at);
-        });
-
         // Ambient loops (desktop only, transform/opacity only, paused off-screen)
         const loops: gsap.core.Tween[] = [];
         if (!mobile) {
@@ -150,6 +132,26 @@ export function useAiOperationsAnimation(rootRef: RefObject<HTMLElement | null>,
           tl.call(() => loops.forEach((l) => l.play()), undefined, 2.4);
         }
 
+        // Reveal from the section's real on-screen box, not from a ScrollTrigger
+        // start/end. The pinned card sections above change page height after this
+        // trigger is created, so its cached range no longer matches the section
+        // and the cards stay at visibility:hidden while you are looking at it.
+        const syncCards = () => {
+          const rect = root.getBoundingClientRect();
+          if (rect.bottom <= 0) {
+            tl.progress(1);
+            return;
+          }
+          if (rect.top < window.innerHeight * 0.9 && tl.progress() < 1) tl.play();
+        };
+
+        const tick = () => {
+          syncCards();
+          if (tl.progress() === 1) gsap.ticker.remove(tick);
+        };
+        gsap.ticker.add(tick);
+        window.addEventListener('scroll', syncCards, { passive: true });
+
         const visibility = ScrollTrigger.create({
           trigger: root,
           start: 'top bottom',
@@ -159,6 +161,8 @@ export function useAiOperationsAnimation(rootRef: RefObject<HTMLElement | null>,
 
         return () => {
           loops.forEach((l) => l.kill());
+          gsap.ticker.remove(tick);
+          window.removeEventListener('scroll', syncCards);
           visibility.kill();
         };
       },

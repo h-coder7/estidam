@@ -25,8 +25,8 @@ export default function Home() {
                 <Solutions />
                 <AiOperations />
                 <Products />
-                <HowWeDeliver />
-                <ExperienceProof />
+                {/* <HowWeDeliver /> */}
+                {/* <ExperienceProof /> */}
                 <GrowthEcosystem />
                 <GetInTouch />
             </main>
