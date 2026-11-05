@@ -1,36 +1,32 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useLenis } from "@/components/LenisProvider";
+import { getLenis, useLenis } from "@/components/LenisProvider";
 import type { SolutionCubeSlide } from "@/lib/api/home";
 
 const fallbackImage = "/images/solution1.png";
 
 /** Tunable Verticalix-matched values (from live preview DevTools). */
 export const SOLUTIONS_STACK_CONFIG = {
-    inactiveScale: 0.88,
-    adjacentOpacity: 0.62,
+    inactiveScale: 0.9,
+    adjacentOpacity: 0.55,
     farOpacity: 0,
-    inactiveBlur: 16,
-    rotateDeg: 10,
-    inactiveTx: -20,
+    rotateDeg: 8,
+    inactiveTx: -16,
     /** Vertical distance between card centers as a fraction of card height */
     pitchRatio: 0.92,
-    hoverScale: 1.04,
-    hoverDuration: 0.35,
-    textDuration: 0.7,
+    hoverScale: 1.03,
+    hoverDuration: 0.25,
     /** Vertical travel (px) for left copy while scrolling between slides */
-    textTravel: 64,
-    /** Longer settle = creamier card-to-card motion */
-    snapDuration: 1.15,
-    /** Lock wheel stepping until the card settle finishes */
-    wheelLockMs: 1200,
-    scrollPerSlideVh: 1.15,
-    /** Scrub lag (seconds) softens pose updates behind scroll */
-    scrubLag: 0.75,
+    textTravel: 40,
+    /** Card-to-card settle (Lenis tween) */
+    snapDuration: 0.6,
+    /** Ignore extra wheel notches while a card is settling */
+    wheelLockMs: 640,
+    scrollPerSlideVh: 0.9,
 };
 
 type SolutionsCubeProps = {
@@ -41,32 +37,23 @@ type Pose = {
     scale: number;
     rotate: number;
     opacity: number;
-    blur: number;
     tx: number;
     y: number;
 };
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-/** Smoothstep — eases pose changes so mid-transition isn't linear/harsh */
-const smoothstep = (t: number) => {
-    const x = Math.min(1, Math.max(0, t));
-    return x * x * (3 - 2 * x);
-};
+/** Pose follows scroll distance at a constant rate */
+const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
 
-/** Softer ease-out for blur / opacity (stays clear longer, softens near edges) */
-const easeOutCubic = (t: number) => {
-    const x = Math.min(1, Math.max(0, t));
-    return 1 - Math.pow(1 - x, 3);
-};
+/** Lenis scroll — constant speed between cards */
+const snapEase = (t: number) => t;
 
-/** Lenis scroll easing — slow settle into the active card */
-const snapEase = (t: number) => 1 - Math.pow(1 - t, 3.2);
-
+// Blur lives in CSS as a discrete class state — animating `filter` per scroll frame was the hitch
 const poseAtDistance = (distance: number, pitch: number): Pose => {
     const sign = distance === 0 ? 1 : Math.sign(distance);
     const ad = Math.abs(distance);
-    const { inactiveScale, adjacentOpacity, farOpacity, inactiveBlur, rotateDeg, inactiveTx } =
+    const { inactiveScale, adjacentOpacity, farOpacity, rotateDeg, inactiveTx } =
         SOLUTIONS_STACK_CONFIG;
 
     if (ad >= 2) {
@@ -74,31 +61,27 @@ const poseAtDistance = (distance: number, pitch: number): Pose => {
             scale: inactiveScale,
             rotate: sign * rotateDeg,
             opacity: farOpacity,
-            blur: inactiveBlur,
             tx: inactiveTx,
             y: sign * pitch * Math.min(ad, 2.35),
         };
     }
 
     if (ad <= 1) {
-        const t = smoothstep(ad);
-        const blurT = easeOutCubic(ad);
+        const t = clamp01(ad);
         return {
             scale: lerp(1, inactiveScale, t),
             rotate: lerp(0, sign * rotateDeg, t),
-            opacity: lerp(1, adjacentOpacity, smoothstep(ad * 0.92)),
-            blur: lerp(0, inactiveBlur, blurT),
+            opacity: lerp(1, adjacentOpacity, t),
             tx: lerp(0, inactiveTx, t),
-            y: lerp(0, sign * pitch, smoothstep(ad)),
+            y: lerp(0, sign * pitch, t),
         };
     }
 
-    const t = smoothstep(ad - 1);
+    const t = clamp01(ad - 1);
     return {
         scale: inactiveScale,
         rotate: sign * rotateDeg,
         opacity: lerp(adjacentOpacity, farOpacity, t),
-        blur: inactiveBlur,
         tx: inactiveTx,
         y: lerp(sign * pitch, sign * pitch * 2, t),
     };
@@ -116,7 +99,6 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
     const triggerRef = useRef<ScrollTrigger | null>(null);
     const progressRef = useRef(0);
     const activeIndexRef = useRef(0);
-    const [activeIndex, setActiveIndex] = useState(0);
 
     const fallbackSlides: SolutionCubeSlide[] = (() => {
         const items = t.raw("items") as
@@ -209,7 +191,6 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
                     scale: pose.scale,
                     rotation: reduced ? 0 : pose.rotate,
                     opacity: pose.opacity,
-                    filter: reduced ? "none" : `blur(${pose.blur}px)`,
                     zIndex: Math.round(100 - Math.abs(index - position) * 10),
                     force3D: true,
                 });
@@ -217,41 +198,33 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
                 card.setAttribute("aria-hidden", Math.abs(index - position) > 0.5 ? "true" : "false");
             });
 
-            // Left copy rides the same scroll progress as the cards (Verticalix-style)
+            // Copy is discrete: only the nearest card's text is readable (no two-texts overlap)
+            const nearestIndex = Math.min(count - 1, Math.max(0, Math.round(position)));
             copies.forEach((copy, index) => {
+                const on = index === nearestIndex;
                 const d = index - position;
-                const ad = Math.abs(d);
 
-                if (reduced) {
-                    const on = ad < 0.5;
-                    gsap.set(copy, {
-                        y: 0,
-                        opacity: on ? 1 : 0,
-                        zIndex: on ? 2 : 0,
-                        pointerEvents: on ? "auto" : "none",
-                    });
-                    copy.setAttribute("aria-hidden", on ? "false" : "true");
-                    return;
-                }
-
-                const visibility = ad >= 1 ? 0 : 1 - smoothstep(ad);
-                const y = d * textTravel;
-
+                // Opacity is intentionally not set here — the title fade is a CSS
+                // transition driven by the is_active class toggle below.
                 gsap.set(copy, {
-                    y,
-                    opacity: visibility,
-                    zIndex: Math.round(20 - ad * 10),
-                    pointerEvents: ad < 0.5 ? "auto" : "none",
+                    y: on || reduced ? 0 : d * textTravel,
+                    zIndex: on ? 2 : 0,
+                    pointerEvents: on ? "auto" : "none",
                     force3D: true,
                 });
 
-                copy.setAttribute("aria-hidden", ad > 0.5 ? "true" : "false");
+                copy.setAttribute("aria-hidden", on ? "false" : "true");
             });
 
-            const nextIndex = Math.min(count - 1, Math.max(0, Math.round(position)));
-            if (nextIndex !== activeIndexRef.current) {
-                activeIndexRef.current = nextIndex;
-                setActiveIndex(nextIndex);
+            // Class toggle on DOM only — React re-render per frame caused the start lag
+            if (nearestIndex !== activeIndexRef.current) {
+                activeIndexRef.current = nearestIndex;
+                cards.forEach((card, index) => {
+                    card.classList.toggle("is_active", index === nearestIndex);
+                });
+                copies.forEach((copy, index) => {
+                    copy.classList.toggle("is_active", index === nearestIndex);
+                });
             }
         };
 
@@ -288,45 +261,98 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
         let wheelLocked = false;
         let wheelUnlockTimer = 0;
         let settleTimer = 0;
-        let pinActive = false;
+        let watchdogTimer = 0;
+        let programmaticScroll = false;
+        let wheelAccum = 0;
+        let wheelAccumTimer = 0;
 
-        const scrollToIndex = (index: number) => {
-            const trigger = triggerRef.current;
-            if (!trigger || count < 2) return;
-
-            const next = Math.min(count - 1, Math.max(0, index));
-            const target = trigger.start + ((trigger.end - trigger.start) * next) / (count - 1);
-            const duration = reduced ? 0.01 : SOLUTIONS_STACK_CONFIG.snapDuration;
-
+        const lockWheel = (ms: number) => {
             wheelLocked = true;
             window.clearTimeout(wheelUnlockTimer);
             wheelUnlockTimer = window.setTimeout(() => {
                 wheelLocked = false;
-            }, reduced ? 50 : SOLUTIONS_STACK_CONFIG.wheelLockMs);
+            }, ms);
+        };
 
-            if (lenis) {
-                lenis.scrollTo(target, {
+        // Inclusive bounds — ST's isActive flips false when resting exactly on start/end,
+        // which let wheel notches leak to Lenis and bounce back to the same card.
+        const isInPin = () => {
+            const trigger = triggerRef.current;
+            if (!trigger) return false;
+            const sc = trigger.scroll();
+            return sc >= trigger.start - 0.5 && sc <= trigger.end + 0.5;
+        };
+
+        const scrollToIndex = (index: number, force = false, retry = false) => {
+            const trigger = triggerRef.current;
+            if (!trigger || count < 2) return;
+
+            const next = Math.min(count - 1, Math.max(0, index));
+            const currentPos = trigger.progress * (count - 1);
+            if (!force && Math.abs(currentPos - next) < 0.015) return;
+
+            // Edge cards rest 1px inside the pin range so the pin never flaps at the boundary
+            const span = trigger.end - trigger.start;
+            const raw = trigger.start + (span * next) / (count - 1);
+            const target = next === 0 ? raw + 1 : next === count - 1 ? raw - 1 : raw;
+            const duration = reduced ? 0.01 : SOLUTIONS_STACK_CONFIG.snapDuration;
+
+            programmaticScroll = true;
+            wheelAccum = 0;
+            lockWheel(reduced ? 40 : SOLUTIONS_STACK_CONFIG.wheelLockMs);
+
+            const done = () => {
+                window.clearTimeout(watchdogTimer);
+                programmaticScroll = false;
+                wheelLocked = false;
+                window.clearTimeout(wheelUnlockTimer);
+                // Land exactly on the card — never rest mid-stack
+                paint(next / (count - 1));
+            };
+
+            // If anything interrupts the Lenis tween (a leaked wheel/touch event replaces
+            // Lenis' animation and onComplete never fires) the flags would stay stuck and
+            // the stack would rest between two cards. Watchdog: finish the intended step
+            // once, then fall back to the nearest card.
+            window.clearTimeout(watchdogTimer);
+            watchdogTimer = window.setTimeout(() => {
+                if (!programmaticScroll) return;
+                programmaticScroll = false;
+                wheelLocked = false;
+                window.clearTimeout(wheelUnlockTimer);
+                const pos = trigger.progress * (count - 1);
+                if (Math.abs(pos - next) < 0.015) {
+                    paint(next / (count - 1));
+                    return;
+                }
+                if (!retry) {
+                    scrollToIndex(next, true, true);
+                    return;
+                }
+                snapToNearest();
+            }, duration * 1000 + 400);
+
+            // Always go through Lenis — native smooth scroll fights it (lag + mid-card stops)
+            const scroller = lenis ?? getLenis();
+            if (scroller) {
+                scroller.scrollTo(target, {
                     duration,
                     easing: snapEase,
-                    force: true,
-                    lock: true,
-                    onComplete: () => {
-                        wheelLocked = false;
-                        window.clearTimeout(wheelUnlockTimer);
-                    },
+                    onComplete: done,
                 });
                 return;
             }
 
             window.scrollTo({ top: target, behavior: reduced ? "auto" : "smooth" });
+            window.setTimeout(done, duration * 1000);
         };
 
         const snapToNearest = () => {
             const trigger = triggerRef.current;
-            if (!trigger || !pinActive || count < 2 || wheelLocked) return;
+            if (!trigger || !isInPin() || count < 2 || wheelLocked || programmaticScroll) return;
             const position = trigger.progress * (count - 1);
             const nearest = Math.round(position);
-            if (Math.abs(position - nearest) < 0.03) return;
+            if (Math.abs(position - nearest) < 0.015) return;
             scrollToIndex(nearest);
         };
 
@@ -337,24 +363,34 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
                 `+=${(count - 1) * window.innerHeight * SOLUTIONS_STACK_CONFIG.scrollPerSlideVh}`,
             pin: true,
             pinSpacing: true,
-            scrub: reduced ? true : SOLUTIONS_STACK_CONFIG.scrubLag,
-            anticipatePin: 1,
+            // Immediate scrub — lagged scrub + Lenis = sticky start
+            scrub: true,
+            anticipatePin: 0,
             invalidateOnRefresh: true,
             onToggle: (self) => {
-                pinActive = self.isActive;
                 if (!self.isActive) {
+                    // Leaving (or boundary flap mid-tween): don't drop an in-flight step
+                    if (programmaticScroll) return;
                     wheelLocked = false;
                     window.clearTimeout(wheelUnlockTimer);
                     window.clearTimeout(settleTimer);
+                    return;
                 }
+                if (reduced || programmaticScroll) return;
+                // Entering with scroll momentum: always issue a programmatic Lenis scroll to
+                // the edge card. This cancels the momentum immediately and absorbs the rest
+                // of the gesture, so the first card is always seen fully settled.
+                window.clearTimeout(settleTimer);
+                const edge = self.direction >= 0 ? 0 : count - 1;
+                scrollToIndex(edge, true);
             },
             onUpdate: (self) => {
                 paint(self.progress);
 
-                // Fallback settle-snap for trackpad inertia / touch that lands between cards
-                if (reduced || wheelLocked) return;
+                // Inertia / touch fallback — settle on nearest card
+                if (reduced || wheelLocked || programmaticScroll) return;
                 window.clearTimeout(settleTimer);
-                settleTimer = window.setTimeout(snapToNearest, 180);
+                settleTimer = window.setTimeout(snapToNearest, 110);
             },
             onRefresh: () => {
                 pitch = measurePitch();
@@ -363,38 +399,62 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
         });
 
         triggerRef.current = trigger;
-        pinActive = trigger.isActive;
 
-        const stepFromWheel = (deltaY: number) => {
-            if (!pinActive || reduced) return false;
-            if (Math.abs(deltaY) < 8) return false;
-            if (wheelLocked) return true;
+        // Firefox reports lines (deltaMode 1), some mice/trackpads report many tiny pixel
+        // deltas. Normalize to pixels so no notch is ever dropped.
+        const wheelDeltaPx = (event: WheelEvent) => {
+            if (event.deltaMode === 1) return event.deltaY * 16;
+            if (event.deltaMode === 2) return event.deltaY * window.innerHeight;
+            return event.deltaY;
+        };
 
-            const dir = deltaY > 0 ? 1 : -1;
+        const consume = (event: WheelEvent) => {
+            event.preventDefault();
+            event.stopPropagation();
+        };
+
+        // One wheel gesture → exactly one card. Nothing inside the pin may reach Lenis:
+        // a single leaked event replaces the settle tween and leaves the stack mid-card.
+        const onWheel = (event: WheelEvent) => {
+            if (reduced || !isInPin()) return;
+
+            const dy = wheelDeltaPx(event);
+            if (dy === 0) return;
+
+            if (wheelLocked) {
+                consume(event);
+                return;
+            }
+
+            const dir = dy > 0 ? 1 : -1;
             const next = activeIndexRef.current + dir;
             if (next < 0 || next > count - 1) {
                 // At ends: release page scroll so user can leave the section
-                return false;
+                wheelAccum = 0;
+                return;
             }
 
+            consume(event);
+
+            // Accumulate sub-notch deltas (trackpads / high-res wheels) into one step
+            if (Math.sign(wheelAccum) !== dir) wheelAccum = 0;
+            wheelAccum += dy;
+            window.clearTimeout(wheelAccumTimer);
+            wheelAccumTimer = window.setTimeout(() => {
+                wheelAccum = 0;
+            }, 160);
+            if (Math.abs(wheelAccum) < 12) return;
+
+            wheelAccum = 0;
+            window.clearTimeout(settleTimer);
             scrollToIndex(next);
-            return true;
-        };
-
-        const onWheel = (event: WheelEvent) => {
-            if (!pinActive || reduced) return;
-            // Only hijack while pinned so one notch = one card
-            const handled = stepFromWheel(event.deltaY);
-            if (handled) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
         };
 
         const onEnter = (event: Event) => {
             const media = event.currentTarget as HTMLElement;
             const index = Number(media.dataset.index);
-            if (index !== activeIndexRef.current || reduced) return;
+            // Cards sliding under a resting cursor fire pointerenter — no hover tween mid-step
+            if (index !== activeIndexRef.current || reduced || programmaticScroll) return;
             gsap.to(media, {
                 scale: SOLUTIONS_STACK_CONFIG.hoverScale,
                 duration: SOLUTIONS_STACK_CONFIG.hoverDuration,
@@ -434,7 +494,7 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
             media.addEventListener("pointerleave", onLeave);
         });
         stack?.addEventListener("keydown", onKeyDown);
-        // Capture on window so Lenis doesn't smooth-scroll past mid-card states
+        // Capture on window so our step runs before Lenis' wheel handler
         window.addEventListener("wheel", onWheel, { passive: false, capture: true });
 
         const frame = window.requestAnimationFrame(() => {
@@ -448,6 +508,8 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
             window.cancelAnimationFrame(frame);
             window.clearTimeout(wheelUnlockTimer);
             window.clearTimeout(settleTimer);
+            window.clearTimeout(watchdogTimer);
+            window.clearTimeout(wheelAccumTimer);
             window.removeEventListener("wheel", onWheel, true);
             medias.forEach((media) => {
                 media.removeEventListener("pointerenter", onEnter);
@@ -472,7 +534,7 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
                         <div className="solutions_copy_viewport" ref={copyViewportRef}>
                             {viewSlides.map((slide, index) => (
                                 <div
-                                    className={`solutions_copy${index === activeIndex ? " is_active" : ""}`}
+                                    className={`solutions_copy${index === 0 ? " is_active" : ""}`}
                                     key={`copy-${slide.id}-${index}`}
                                     ref={(node) => {
                                         if (node) copyRef.current[index] = node;
@@ -516,7 +578,7 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
                         >
                             {viewSlides.map((slide, index) => (
                                 <article
-                                    className={`solutions_stack_card${index === activeIndex ? " is_active" : ""}`}
+                                    className={`solutions_stack_card${index === 0 ? " is_active" : ""}`}
                                     key={`${slide.id}-${index}`}
                                     ref={(node) => {
                                         if (node) cardsRef.current[index] = node;
@@ -532,6 +594,14 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
                                         <img
                                             src={slide.image || fallbackImage}
                                             alt={slide.title}
+                                            draggable={false}
+                                        />
+                                        {/* Pre-blurred copy: constant filter, only opacity animates */}
+                                        <img
+                                            className="solutions_stack_card_blur"
+                                            src={slide.image || fallbackImage}
+                                            alt=""
+                                            aria-hidden="true"
                                             draggable={false}
                                         />
                                     </div>

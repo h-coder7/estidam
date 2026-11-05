@@ -789,84 +789,6 @@ html[dir="rtl"] {
 }
 
 // =========================================================
-// Page Loader
-// =========================================================
-.page_loader {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .loader_wrapper {
-        text-align: center;
-    }
-
-    .loader_animation {
-        width: 180px;
-        height: 180px;
-        position: relative;
-        margin: 0 auto;
-    }
-
-    .loader_logo {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 5;
-        font-size: 28px;
-        font-weight: 700;
-        color: var(--primary);
-        display: flex;
-        align-items: center;
-
-        .icon {
-            width: 50px;
-            object-fit: contain;
-        }
-    }
-
-    .ring {
-        position: absolute;
-        border-radius: 50%;
-        border: 3px solid transparent;
-    }
-
-    .ring1 {
-        width: 180px;
-        height: 180px;
-        top: 0;
-        left: 0;
-        border-top-color: #1691D0;
-        animation: loaderRotate 1.2s linear infinite;
-    }
-
-    .ring2 {
-        width: 145px;
-        height: 145px;
-        top: 17.5px;
-        left: 17.5px;
-        border-right-color: #CEDCF8;
-        animation: loaderRotateReverse 1.8s linear infinite;
-    }
-
-    .ring3 {
-        width: 110px;
-        height: 110px;
-        top: 35px;
-        left: 35px;
-        border-bottom-color: #0b215c;
-        animation: loaderRotate 2.5s linear infinite;
-    }
-
-    .loader_text {
-        margin-top: 30px;
-        color: #7b8497;
-        animation: loaderPulse 1.5s ease-in-out infinite;
-    }
-}
-
-// =========================================================
 // Animations
 // =========================================================
 .rotate-center {
@@ -888,24 +810,6 @@ html[dir="rtl"] {
     100% {
         -webkit-transform: rotate(360deg);
         transform: rotate(360deg);
-    }
-}
-
-@keyframes loaderRotate {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes loaderRotateReverse {
-    to {
-        transform: rotate(-360deg);
-    }
-}
-
-@keyframes loaderPulse {
-    50% {
-        opacity: 0.5;
     }
 }
 

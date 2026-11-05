@@ -6,12 +6,18 @@
     background-size: cover;
     background-position: top;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    // `fixed` attachment + transform pin renders wrong; scroll is correct here
+    background-attachment: scroll;
     color: #fff;
 
+    // Pinned block (title + cards)
+    .proof_pin {
+        position: relative;
+    }
+
     .section-head {
-        padding-top: 100px;
-        padding-bottom: 48px;
+        padding-top: 72px;
+        padding-bottom: 28px;
     }
 
     .section-head-badge {
@@ -30,13 +36,12 @@
 
     .proof_cases {
         position: relative;
-        min-height: calc(100vh - 120px);
-        padding: 20px 0 110px;
+        padding: 0 0 80px;
     }
 
     .proof_stack_wrap {
         position: relative;
-        padding-top: 56px;
+        padding-top: 12px;
         padding-inline-start: 56px;
     }
 
@@ -58,19 +63,32 @@
 
         .proof_card_motion {
             position: relative;
+            isolation: isolate;
+            overflow: hidden;
             height: 100%;
             padding: 50px 30px 30px 30px;
+            // Solid fill so stacked cards never show text through each other
+            border-radius: 4px;
         }
 
         .card-bg {
             position: absolute;
-            left: 0;
-            top: 0;
+            inset: 0;
             width: 100%;
-            height: auto;
+            height: 100%;
             max-width: none;
             max-height: none;
-            z-index: -1;
+            object-fit: cover;
+            object-position: top left;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .proof_card_top,
+        .proof_card_title,
+        .proof_card_body {
+            position: relative;
+            z-index: 1;
         }
     }
 
@@ -97,7 +115,7 @@
     .proof_card_dots {
         z-index: 6;
         position: absolute !important;
-        top: 120px;
+        top: 48px;
         height: max-content;
         right: 100px !important;
         bottom: auto;
@@ -227,16 +245,16 @@
 @media screen and (max-width: 991px) {
     .experience_proof {
         .section-head {
-            padding-top: 80px;
-            padding-bottom: 36px;
+            padding-top: 56px;
+            padding-bottom: 12px;
         }
 
         .proof_cases {
-            padding-bottom: 80px;
+            padding-bottom: 64px;
         }
 
         .proof_stack_wrap {
-            padding-top: 32px;
+            padding-top: 8px;
             padding-inline-start: 32px;
         }
 
@@ -263,7 +281,7 @@
 @media screen and (max-width: 575px) {
     .experience_proof {
         .proof_stack_wrap {
-            padding-top: 20px;
+            padding-top: 4px;
             padding-inline-start: 16px;
         }
 

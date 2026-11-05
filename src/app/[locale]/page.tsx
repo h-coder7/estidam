@@ -2,7 +2,7 @@ import Hero from "@/components/home/Hero/Hero";
 import WhyEstidam from "@/components/home/WhyEstidam/WhyEstidam";
 import HajjJourney from "@/components/home/HajjJourney/HajjJourney";
 import Solutions from "@/components/home/Solutions/Solutions";
-import Operations from "@/components/home/Operations/Operations";
+import AiOperations from "@/components/home/AiOperations/AiOperations";
 import Products from "@/components/home/Products/Products";
 import HowWeDeliver from "@/components/home/HowWeDeliver/HowWeDeliver";
 import ExperienceProof from "@/components/home/ExperienceProof/ExperienceProof";
@@ -23,10 +23,10 @@ export default function Home() {
                 <WhyEstidam />
                 <HajjJourney />
                 <Solutions />
-                <Operations />
+                <AiOperations />
                 <Products />
-                <HowWeDeliver />
-                <ExperienceProof />
+                {/* <HowWeDeliver /> */}
+                {/* <ExperienceProof /> */}
                 <GrowthEcosystem />
                 <GetInTouch />
             </main>

@@ -1,9 +1,10 @@
 import { ReactNode } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
-import ParticleHalo from "@/components/effects/ParticleHalo/ParticleHalo";
 import { getHeroContent } from "@/lib/api/home";
 import { Link } from "@/i18n/routing";
+
+import WaveGalaxy from "./WaveGalaxy";
 
 import "./_Hero.scss";
 
@@ -39,7 +40,7 @@ const Hero = async () => {
 
     return (
         <section className="hero_section">
-            <ParticleHalo placement="side" variant="hero" />
+            <WaveGalaxy />
             <div className="container">
                 <div className="content px-lg-4">
                     <div className="row align-items-center">

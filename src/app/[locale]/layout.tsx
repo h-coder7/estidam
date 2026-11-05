@@ -18,6 +18,9 @@ export function generateStaticParams() {
 export const metadata: Metadata = {
     title: "Estidam",
     description: "Estidam",
+    icons: {
+        icon: "/images/fav-icon.png",
+    },
 };
 
 export default async function RootLayout({
