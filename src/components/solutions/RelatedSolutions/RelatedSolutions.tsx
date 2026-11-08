@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import { Link } from "@/i18n/routing";
 
 import "./_RelatedSolutions.scss";
 
@@ -56,7 +57,7 @@ const RelatedSolutions = async () => {
                                             {t(`${card.key}Text`)}
                                         </p>
 
-                                        <a href="#" className="related_card_link">
+                                        <Link href="/solutions" className="related_card_link">
                                             <span>{t("cta")}</span>
                                             <img
                                                 src="/images/icons/arrow-bl.svg"
@@ -64,7 +65,7 @@ const RelatedSolutions = async () => {
                                                 className="related_card_arrow"
                                                 aria-hidden="true"
                                             />
-                                        </a>
+                                        </Link>
                                     </article>
                                 </Reveal>
                             </div>

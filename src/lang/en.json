@@ -450,6 +450,16 @@
       }
     ]
   },
+  "solutionsIndex": {
+    "primaryCta": "Browse solutions",
+    "secondaryCta": "Discuss your challenge",
+    "catalogBadge": "The catalog",
+    "catalogTitleStrong": "Start with the challenge",
+    "catalogTitleMuted": "that matters now",
+    "explore": "Explore solution",
+    "discuss": "Discuss this challenge",
+    "outcome": "Outcome"
+  },
   "operations": {
     "badge": "AI Operations + AI Readiness",
     "titleStrong": "AI Embedded in Operations",

@@ -4,6 +4,12 @@
 // Root
 // =========================================================
 :root {
+    --font-sans: var(--font-lama), system-ui, sans-serif;
+    --font-heading: var(--font-lama-bold), var(--font-sans);
+    --font-weight-body: 500;
+    --font-weight-heading: 700;
+    --bs-body-font-family: var(--font-sans);
+    --bs-body-font-weight: var(--font-weight-body);
     --blue: #295CC7;
     --dark: #0b1a33;
     --secondary: #1691D0;
@@ -46,19 +52,27 @@ html {
 }
 
 body {
-    font-family: var(--font-inter), Inter, system-ui, -apple-system, sans-serif;
+    font-family: var(--font-sans);
+    font-weight: var(--font-weight-body);
     overflow-x: hidden;
     background-color: #f7f8fa;
     color: #1C1D1F;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+    font-weight: var(--font-weight-heading);
 }
 
 .bg-light-gray {
     background-color: var(--light-gray);
 }
 
-html[dir="rtl"] body {
-    font-family: var(--font-inter), Inter, "Segoe UI", Tahoma, sans-serif;
-}
 
 div::-webkit-scrollbar,
 ul::-webkit-scrollbar,
@@ -298,7 +312,7 @@ button:not(:disabled):not(.disabled):active {
 }
 
 .prata-font {
-    font-family: var(--font-inter), Inter, sans-serif;
+    font-family: var(--font-sans);
 }
 
 .sec-lines {

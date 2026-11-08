@@ -1,16 +1,13 @@
 import { gsap } from "gsap";
 import {
     ACESFilmicToneMapping,
-    AdditiveBlending,
     AmbientLight,
     AnimationMixer,
     BackSide,
     Box3,
     BoxGeometry,
-    BufferGeometry,
     CircleGeometry,
     DirectionalLight,
-    Float32BufferAttribute,
     Group,
     HemisphereLight,
     InstancedBufferAttribute,
@@ -21,7 +18,6 @@ import {
     PerspectiveCamera,
     Plane,
     PMREMGenerator,
-    Points,
     Quaternion,
     Raycaster,
     Scene,
@@ -40,12 +36,6 @@ import {
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
-import { FilmPass } from "three/addons/postprocessing/FilmPass.js";
-import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
-import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
-import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
-import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 
 const ROBOT_URL = "/models/contact-hero-astronaut.glb";
 
@@ -66,10 +56,9 @@ float noise(vec2 p) {
 }
 
 float pylonHeight(vec2 xz) {
-    float n1 = noise(xz * 0.42 + vec2(uTime * 0.045, -uTime * 0.03));
-    float n2 = noise(xz * 0.18 + vec2(-uTime * 0.02, uTime * 0.025));
+    float n = noise(xz * 0.28 + vec2(uTime * 0.04, -uTime * 0.025));
     float wave = sin(xz.x * 0.62 + xz.y * 0.18 + uTime * 0.85) * 0.5 + 0.5;
-    float h = 0.16 + n1 * 1.08 + n2 * 0.7 + wave * 0.26;
+    float h = 0.22 + n * 1.45 + wave * 0.28;
 
     vec2 delta = xz - uPointer;
     h += exp(-dot(delta, delta) * 1.85) * 0.95 * uPointerAmt;
@@ -146,11 +135,11 @@ void main() {
     float ndl = dot(normal, lightDir) * 0.5 + 0.5;
     float fresnel = pow(1.0 - max(dot(normal, viewDir), 0.0), 2.6);
     vec3 color = metal * (0.94 + 0.1 * ndl);
-    color += vec3(0.55, 0.72, 1.0) * fresnel * 0.12;
+    color += vec3(0.16, 0.36, 0.72) * fresnel * 0.2;
     float spec = pow(max(dot(reflect(-lightDir, normal), viewDir), 0.0), 40.0);
-    color += vec3(1.0, 1.0, 1.0) * spec * 0.18;
+    color += vec3(1.0, 1.0, 1.0) * spec * 0.16;
     float tip = smoothstep(0.82, 1.0, vTip);
-    color = mix(color, vec3(0.48, 0.68, 1.0), tip);
+    color = mix(color, vec3(0.16, 0.36, 0.78), tip);
     float dist = distance(cameraPosition, vWorld);
     float fog = smoothstep(10.0, 28.0, dist);
     color = mix(color, vec3(0.96, 0.97, 0.99), fog * 0.55);
@@ -165,10 +154,10 @@ varying float vTip;
 varying float vSeed;
 
 void main() {
-    vec3 color = vec3(0.62, 0.78, 1.05);
+    vec3 color = vec3(0.22, 0.45, 0.78);
     float dist = distance(cameraPosition, vWorld);
     float fog = smoothstep(9.0, 24.0, dist);
-    color = mix(color, vec3(0.82, 0.90, 1.0), fog);
+    color = mix(color, vec3(0.55, 0.72, 0.9), fog);
     gl_FragColor = vec4(color, 1.0);
 }
 `;
@@ -186,10 +175,10 @@ varying vec3 vDir;
 void main() {
     vec3 dir = normalize(vDir);
     float height = dir.y;
-    vec3 zenith = vec3(0.90, 0.94, 0.99);
-    vec3 mid = vec3(0.90, 0.94, 0.99);
-    vec3 horizon = vec3(0.97, 0.98, 0.99);
-    vec3 sunColor = vec3(0.55, 0.72, 1.0);
+    vec3 zenith = vec3(0.86, 0.91, 0.97);
+    vec3 mid = vec3(0.93, 0.95, 0.98);
+    vec3 horizon = vec3(0.969, 0.973, 0.980);
+    vec3 sunColor = vec3(0.16, 0.42, 0.75);
     vec3 color = mix(mid, zenith, smoothstep(0.05, 0.75, height));
     color = mix(color, horizon, smoothstep(0.18, -0.08, height));
     vec3 sunDir = normalize(vec3(-0.75, 0.28, -1.0));
@@ -215,73 +204,17 @@ void main() {
     float dist = length(vWorld.xz);
     // --light-gray ground with soft brand blue fade
     vec3 nearColor = vec3(0.945, 0.953, 0.965);
-    vec3 farColor = vec3(0.82, 0.88, 0.96);
+    vec3 farColor = vec3(0.74, 0.83, 0.93);
     vec3 color = mix(nearColor, farColor, smoothstep(2.0, 16.0, dist));
     gl_FragColor = vec4(color, 1.0);
 }
 `;
-
-const dustVertex = /* glsl */ `
-uniform float uTime;
-uniform float uPixelRatio;
-attribute float aSeed;
-varying float vSeed;
-void main() {
-    vSeed = aSeed;
-    vec3 pos = position;
-    pos.y += sin(uTime * 0.4 + aSeed * 6.283) * 0.22;
-    pos.x += cos(uTime * 0.25 + aSeed * 4.0) * 0.16;
-    vec4 mv = modelViewMatrix * vec4(pos, 1.0);
-    gl_Position = projectionMatrix * mv;
-    gl_PointSize = (3.0 * uPixelRatio) / max(-mv.z, 0.2);
-}
-`;
-
-const dustFragment = /* glsl */ `
-varying float vSeed;
-void main() {
-    vec2 coord = gl_PointCoord - 0.5;
-    float dist = dot(coord, coord);
-    if (dist > 0.25) discard;
-    float alpha = smoothstep(0.25, 0.02, dist) * mix(0.12, 0.32, vSeed);
-    gl_FragColor = vec4(0.35, 0.55, 0.92, alpha);
-}
-`;
-
-const vignetteShader = {
-    uniforms: {
-        tDiffuse: { value: null },
-        uStrength: { value: 0.06 },
-    },
-    vertexShader: /* glsl */ `
-        varying vec2 vUv;
-        void main() {
-            vUv = uv;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-    `,
-    fragmentShader: /* glsl */ `
-        uniform sampler2D tDiffuse;
-        uniform float uStrength;
-        varying vec2 vUv;
-        void main() {
-            vec4 color = texture2D(tDiffuse, vUv);
-            vec2 p = vUv * (1.0 - vUv.yx);
-            float vig = pow(clamp(p.x * p.y * 18.0, 0.0, 1.0), 0.42);
-            color.rgb *= mix(1.0 - uStrength, 1.0, vig);
-            color.rgb = mix(color.rgb, color.rgb * vec3(0.97, 0.98, 1.02), 0.12);
-            gl_FragColor = color;
-        }
-    `,
-};
 
 type Tier = {
     cols: number;
     rows: number;
     spacing: number;
     pixelCap: number;
-    post: boolean;
-    dust: number;
 };
 
 type Layout = {
@@ -304,12 +237,12 @@ const canUseWebGL = () => {
 
 const tierFor = (width: number): Tier => {
     if (width < 768) {
-        return { cols: 26, rows: 18, spacing: 0.62, pixelCap: 1.15, post: false, dust: 0 };
+        return { cols: 18, rows: 12, spacing: 0.9, pixelCap: 1 };
     }
     if (width < 1100) {
-        return { cols: 46, rows: 32, spacing: 0.5, pixelCap: 1.35, post: true, dust: 80 };
+        return { cols: 28, rows: 18, spacing: 0.82, pixelCap: 1 };
     }
-    return { cols: 70, rows: 46, spacing: 0.44, pixelCap: 1.5, post: true, dust: 140 };
+    return { cols: 36, rows: 22, spacing: 0.86, pixelCap: 1 };
 };
 
 const buildGrid = (tier: Tier) => {
@@ -354,7 +287,7 @@ export const mountContactHeroScene = (container: HTMLElement) => {
         renderer = new WebGLRenderer({
             antialias: false,
             alpha: false,
-            powerPreference: "high-performance",
+            powerPreference: "default",
         });
     } catch {
         return () => {};
@@ -436,34 +369,6 @@ export const mountContactHeroScene = (container: HTMLElement) => {
     caps.frustumCulled = false;
     scene.add(shafts, caps);
 
-    let dust: Points | null = null;
-    let dustMat: ShaderMaterial | null = null;
-    const uPixelRatio = { value: 1 };
-    if (tier.dust > 0 && !reduced) {
-        const dustGeo = new BufferGeometry();
-        const dustPositions = new Float32Array(tier.dust * 3);
-        const dustSeeds = new Float32Array(tier.dust);
-        for (let index = 0; index < tier.dust; index += 1) {
-            dustPositions[index * 3] = (Math.random() - 0.5) * 14;
-            dustPositions[index * 3 + 1] = Math.random() * 2.2 + 0.15;
-            dustPositions[index * 3 + 2] = 2 - Math.random() * 14;
-            dustSeeds[index] = Math.random();
-        }
-        dustGeo.setAttribute("position", new Float32BufferAttribute(dustPositions, 3));
-        dustGeo.setAttribute("aSeed", new Float32BufferAttribute(dustSeeds, 1));
-        dustMat = new ShaderMaterial({
-            uniforms: { uTime, uPixelRatio },
-            vertexShader: dustVertex,
-            fragmentShader: dustFragment,
-            transparent: true,
-            depthWrite: false,
-            blending: AdditiveBlending,
-        });
-        dust = new Points(dustGeo, dustMat);
-        dust.frustumCulled = false;
-        scene.add(dust);
-    }
-
     scene.add(new HemisphereLight(0xffffff, 0xc5d4ea, 0.22));
     scene.add(new AmbientLight(0xd5deea, 0.08));
     const sun = new DirectionalLight(0xffffff, 1.9);
@@ -491,21 +396,6 @@ export const mountContactHeroScene = (container: HTMLElement) => {
     shadow.rotation.x = -Math.PI / 2;
     shadow.position.y = 0.02;
     scene.add(shadow);
-
-    let composer: EffectComposer | null = null;
-    if (tier.post) {
-        try {
-            composer = new EffectComposer(renderer);
-            composer.addPass(new RenderPass(scene, camera));
-            const bloom = new UnrealBloomPass(new Vector2(1, 1), 0.04, 0.3, 1.2);
-            composer.addPass(bloom);
-            composer.addPass(new FilmPass(0.045, false));
-            composer.addPass(new ShaderPass(vignetteShader));
-            composer.addPass(new OutputPass());
-        } catch {
-            composer = null;
-        }
-    }
 
     const draco = new DRACOLoader();
     draco.setDecoderPath("/draco/");
@@ -601,12 +491,17 @@ export const mountContactHeroScene = (container: HTMLElement) => {
                             standard.metalness = 0.9;
                             standard.color.setRGB(0.02, 0.03, 0.05);
                         } else if (matName === "M_Eye_Glow" || matName === "M_Glow_Orange") {
-                            standard.envMapIntensity = 0.2;
-                            standard.emissiveIntensity = 1.4;
+                            standard.color.setHex(0x1691d0);
+                            standard.emissive.setHex(0x1691d0);
+                            standard.envMapIntensity = 0.25;
+                            standard.emissiveIntensity = 0.9;
                         } else if (matName === "M_Copper") {
-                            standard.envMapIntensity = 1.15;
-                            standard.roughness = 0.22;
-                            standard.metalness = 1;
+                            standard.color.setHex(0x295cc7);
+                            standard.emissive.setHex(0x0b1a33);
+                            standard.emissiveIntensity = 0.12;
+                            standard.envMapIntensity = 0.8;
+                            standard.roughness = 0.28;
+                            standard.metalness = 0.85;
                         } else if (matName === "M_Plastic_White") {
                             standard.envMapIntensity = 0.5;
                             standard.roughness = 0.36;
@@ -714,9 +609,6 @@ export const mountContactHeroScene = (container: HTMLElement) => {
         camera.updateProjectionMatrix();
         renderer.setPixelRatio(ratio);
         renderer.setSize(width, height, false);
-        uPixelRatio.value = ratio;
-        composer?.setPixelRatio(ratio);
-        composer?.setSize(width, height);
         placeRig();
         render();
     };
@@ -758,17 +650,21 @@ export const mountContactHeroScene = (container: HTMLElement) => {
 
     function render() {
         if (disposed) return;
-        if (composer) composer.render();
-        else renderer.render(scene, camera);
+        renderer.render(scene, camera);
     }
+
+    let lastRender = 0;
 
     const onTick = () => {
         if (disposed || reduced) return;
         if (!visible || document.visibilityState === "hidden") return;
 
         const now = performance.now();
+        if (now - lastRender < 32) return;
+
         const delta = Math.min(0.05, (now - last) / 1000);
         last = now;
+        lastRender = now;
         elapsed += delta;
         uTime.value = elapsed;
 
@@ -848,11 +744,15 @@ export const mountContactHeroScene = (container: HTMLElement) => {
     };
 
     const observer = new IntersectionObserver(([entry]) => {
-        visible = entry?.isIntersecting ?? true;
-        if (visible) {
-            last = performance.now();
-            if (reduced) render();
+        visible = entry?.isIntersecting ?? false;
+        if (!visible) {
+            stop();
+            return;
         }
+        last = performance.now();
+        lastRender = 0;
+        if (reduced) render();
+        else start();
     });
 
     const resizeObserver = new ResizeObserver(() => resize());
@@ -903,11 +803,8 @@ export const mountContactHeroScene = (container: HTMLElement) => {
         (ground.material as ShaderMaterial).dispose();
         shadow.geometry.dispose();
         (shadow.material as MeshBasicMaterial).dispose();
-        dust?.geometry.dispose();
-        dustMat?.dispose();
         disposeObject(rig);
         scene.environment?.dispose();
-        composer?.dispose();
         draco.dispose();
         renderer.dispose();
         renderer.forceContextLoss();

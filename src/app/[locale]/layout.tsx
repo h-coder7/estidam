@@ -9,7 +9,7 @@ import { routing } from "@/i18n/routing";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import MotionProvider from "@/components/MotionProvider";
-import { inter } from "@/app/fonts";
+import { lamaSans, lamaSansBold } from "@/app/fonts";
 
 export function generateStaticParams() {
     return routing.locales.map((locale) => ({ locale }));
@@ -44,7 +44,7 @@ export default async function RootLayout({
         <html
             lang={locale}
             dir={dir}
-            className={inter.variable}
+            className={`${lamaSans.variable} ${lamaSansBold.variable}`}
         >
             <body suppressHydrationWarning>
                 <NextIntlClientProvider messages={messages}>

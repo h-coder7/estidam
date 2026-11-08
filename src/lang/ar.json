@@ -450,6 +450,16 @@
       }
     ]
   },
+  "solutionsIndex": {
+    "primaryCta": "تصفح الحلول",
+    "secondaryCta": "ناقش تحديك",
+    "catalogBadge": "دليل الحلول",
+    "catalogTitleStrong": "ابدأ بالتحدي",
+    "catalogTitleMuted": "الأهم الآن",
+    "explore": "استكشف الحل",
+    "discuss": "ناقش هذا التحدي",
+    "outcome": "النتيجة"
+  },
   "operations": {
     "badge": "عمليات الذكاء الاصطناعي + الجاهزية",
     "titleStrong": "ذكاء اصطناعي مدمج في العمليات",
