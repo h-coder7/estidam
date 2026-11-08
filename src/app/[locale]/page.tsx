@@ -16,7 +16,7 @@ export const revalidate = 0;
 export default function Home() {
     return (
         <>
-            <Navbar />
+            <Navbar className="inner-nav" />
 
             <main>
                 <Hero />
