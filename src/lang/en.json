@@ -365,7 +365,12 @@
     "card3Text": "Embed AI into processes, data and decision support.",
     "card4Title": "We Measure and",
     "card4TitleRest": "Improve",
-    "card4Text": "Track performance, learn from delivery, and continuously improve outcomes."
+    "card4Text": "Track performance, learn from delivery, and continuously improve outcomes.",
+    "conceptLabel": "Concept workflow",
+    "card1Label": "Sector",
+    "card2Label": "Operations",
+    "card3Label": "Practical AI",
+    "card4Label": "Impact"
   },
   "hajjJourney": {
     "badge": "Hajj Operations Journey",

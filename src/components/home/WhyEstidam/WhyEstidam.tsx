@@ -4,6 +4,8 @@ import Reveal from "@/components/animations/Reveal";
 import { getWhyContent } from "@/lib/api/home";
 import { Link } from "@/i18n/routing";
 
+import WhyEstidamBento from "./WhyEstidamBento";
+
 import "./_WhyEstidam.scss";
 
 function CmsLink({ href, className, children }: { href: string; className: string; children: ReactNode }) {
@@ -24,28 +26,28 @@ function CmsLink({ href, className, children }: { href: string; className: strin
 
 const cards = [
     {
+        labelKey: "card1Label",
         titleKey: "card1Title",
         titleRestKey: "card1TitleRest",
         textKey: "card1Text",
-        icon: "fa-regular fa-kaaba",
     },
     {
+        labelKey: "card2Label",
         titleKey: "card2Title",
         titleRestKey: "card2TitleRest",
         textKey: "card2Text",
-        icon: "fa-regular fa-file-lines",
     },
     {
+        labelKey: "card3Label",
         titleKey: "card3Title",
         titleRestKey: "card3TitleRest",
         textKey: "card3Text",
-        icon: "fa-regular fa-share-nodes",
     },
     {
+        labelKey: "card4Label",
         titleKey: "card4Title",
         titleRestKey: "card4TitleRest",
         textKey: "card4Text",
-        icon: "fa-regular fa-chart-column",
     },
 ] as const;
 
@@ -66,18 +68,18 @@ const WhyEstidam = async () => {
 
               return {
                   key: `why-card-${index}`,
+                  label: fallback ? t(fallback.labelKey) : "",
                   title: card.title || (fallback ? t(fallback.titleKey) : ""),
                   titleRest: card.title ? card.titleRest : fallback ? t(fallback.titleRestKey) : card.titleRest,
                   text: card.text || (fallback ? t(fallback.textKey) : ""),
-                  icon: card.icon || fallback?.icon || cards[0].icon,
               };
           })
         : cards.map((card) => ({
               key: card.titleKey,
+              label: t(card.labelKey),
               title: t(card.titleKey),
               titleRest: t(card.titleRestKey),
               text: t(card.textKey),
-              icon: card.icon,
           }));
 
     return (
@@ -131,31 +133,7 @@ const WhyEstidam = async () => {
                 </div>
             </div>
 
-                <div className="why_grid row gx-0">
-                    {viewCards.map((card) => (
-                        <div key={card.key} className="col-lg-3 col-md-6">
-                            <article className="why_card">
-                                <Reveal animation="fade-up" trigger="load">
-                                    <div className="why_card_inner">
-                                        <h3 className="why_card_title">
-                                            <span>{card.title}</span>
-                                            {card.titleRest ? (
-                                                <span className="why_card_title_muted">{card.titleRest}</span>
-                                            ) : null}
-                                        </h3>
-
-                                        <div className="why_card_body">
-                                            <div className="why_card_icon">
-                                                <i className={card.icon} aria-hidden="true" />
-                                            </div>
-                                            <p className="why_card_text">{card.text}</p>
-                                        </div>
-                                    </div>
-                                </Reveal>
-                            </article>
-                        </div>
-                    ))}
-                </div>
+                <WhyEstidamBento cards={viewCards} conceptLabel={t("conceptLabel")} />
 
             </div>
             <div className="sec-lines">
