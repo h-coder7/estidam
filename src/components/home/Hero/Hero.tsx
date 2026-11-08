@@ -103,7 +103,7 @@ const Hero = async () => {
                 </div>
             </div>
             {/* <img src="/images/hero-dots.png" alt="Hero Pattern" className="hero-dots" /> */}
-            <div className="sec-lines lines-light">
+            <div className="sec-lines">
                 <span></span>
                 <span></span>
             </div>

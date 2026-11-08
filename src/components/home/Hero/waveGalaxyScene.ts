@@ -1,6 +1,5 @@
 import { gsap } from "gsap";
 import {
-    AdditiveBlending,
     BufferGeometry,
     Color,
     Float32BufferAttribute,
@@ -24,10 +23,10 @@ import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js"
 import { CopyShader } from "three/addons/shaders/CopyShader.js";
 import { GammaCorrectionShader } from "three/addons/shaders/GammaCorrectionShader.js";
 
-const WAVE_COUNT = 7_000;
+const WAVE_COUNT = 40_000;
 const YAW = (40 * Math.PI) / 180;
-const CORE_COUNT = 220;
-const MOTE_COUNT = 900;
+const CORE_COUNT = 1_600;
+const MOTE_COUNT = 5_500;
 const WAVE_RADIUS = 2.2;
 const WAVE_HEIGHT = 0.1;
 const POINTER_RADIUS = 0.35;
@@ -38,11 +37,11 @@ function linearVec(hex: number) {
     return new Vector3(color.r, color.g, color.b);
 }
 
-const WAVE_COOL = linearVec(0x02132e);
-const WAVE_WARM = linearVec(0x1f6bff);
-const WAVE_LIGHT = linearVec(0x8ef0ff);
-const CORE_COLOR = linearVec(0xbfe6ff);
-const MOTE_COLOR = linearVec(0x9fd0ff);
+const WAVE_COOL = linearVec(0xc5eeff);
+const WAVE_WARM = linearVec(0x1496d4);
+const WAVE_LIGHT = linearVec(0x7fd4f8);
+const MOTE_COLOR = linearVec(0x5ec8f2);
+const MOTE_EDGE = linearVec(0xa6e4fb);
 const CORNER_BLUE = linearVec(0x10204a);
 const CORNER_DEEP = linearVec(0x0a2e6b);
 
@@ -115,12 +114,14 @@ void main() {
 
     float glow = exp(-d * 4.4);
     float sparkle = step(0.94, fract(vSeed * 13.7));
-    vec3 color = mix(uWarm, uLight, sparkle);
+    float span = smoothstep(0.12, 1.0, vRadius / 2.2);
+    vec3 color = mix(uWarm, uLight, span);
+    color = mix(color, uCool, sparkle * 0.55);
     color = mix(color, uLight, uCore);
     float spark = 0.82 + 0.18 * fract(vSeed * 41.7);
     float alpha = glow * uOpacity * spark * uGain;
 
-    gl_FragColor = vec4(color * alpha, alpha);
+    gl_FragColor = vec4(color, alpha);
 }
 `;
 
@@ -150,6 +151,7 @@ void main() {
 
 const moteFragment = /* glsl */ `
 uniform vec3 uColor;
+uniform vec3 uColorEdge;
 uniform float uOpacity;
 
 varying float vSeed;
@@ -160,7 +162,8 @@ void main() {
     if (d > 1.0) discard;
     float glow = exp(-d * 2.6);
     float alpha = glow * uOpacity * (0.35 + 0.65 * fract(vSeed * 19.0));
-    gl_FragColor = vec4(uColor * alpha, alpha);
+    vec3 color = mix(uColor, uColorEdge, fract(vSeed * 7.0));
+    gl_FragColor = vec4(color, alpha);
 }
 `;
 
@@ -189,15 +192,12 @@ const finalShader = {
         varying vec2 vUv;
 
         void main() {
-            vec3 disc = texture2D(tTorus, vUv).rgb;
-            vec3 glow = texture2D(tBloom, vUv).rgb;
+            vec4 disc = texture2D(tTorus, vUv);
+            vec4 glow = texture2D(tBloom, vUv);
+            vec3 color = vec3(1.0) * (1.0 - disc.a) + disc.rgb;
+            color += glow.rgb * 0.22;
 
-            vec2 p = vUv - 0.5;
-            float corner = smoothstep(0.2, 0.92, length(p));
-            float cornerMix = smoothstep(-0.25, 0.55, p.x * 0.7 + p.y);
-            vec3 atmosphere = mix(uAtmosphere, mix(uCornerBlue, uCornerDeep, cornerMix), corner);
-
-            gl_FragColor = vec4(atmosphere + disc + glow * 0.18, 1.0);
+            gl_FragColor = vec4(min(color, vec3(1.0)), 1.0);
         }
     `,
 };
@@ -217,13 +217,13 @@ function tierFor(width: number, rtl: boolean): Tier {
     const side = rtl ? -1 : 1;
     if (width < 768) {
         return {
-            wave: 2_600,
-            core: 110,
-            motes: 220,
+            wave: 16_000,
+            core: 700,
+            motes: 1_600,
             pixelCap: 1.15,
             dual: false,
             side,
-            camera: new Vector3(0, 4.35, 1.15),
+            camera: new Vector3(0, 3.85, 1.05),
             look: new Vector3(0, 0, 0),
         };
     }
@@ -234,7 +234,7 @@ function tierFor(width: number, rtl: boolean): Tier {
         pixelCap: 1.5,
         dual: true,
         side,
-        camera: new Vector3(side * 0.05, 3.85, 2.35),
+        camera: new Vector3(side * 0.05, 3.45, 2.2),
         look: new Vector3(side * 0.05, 0, 0),
     };
 }
@@ -283,7 +283,7 @@ function fillMotes(count: number) {
         positions[i3 + 1] = (Math.random() - 0.5) * 0.06;
         positions[i3 + 2] = Math.sin(angle) * r;
         aSeed[i] = Math.random();
-        aSize[i] = 3.2 + Math.random() * 4.5;
+        aSize[i] = 3.4 + Math.random() * 4.2;
     }
     const geometry = new BufferGeometry();
     geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
@@ -302,7 +302,7 @@ export function mountWaveGalaxy(container: HTMLElement) {
     try {
         renderer = new WebGLRenderer({
             antialias: false,
-            alpha: false,
+            alpha: true,
             powerPreference: "high-performance",
         });
     } catch {
@@ -311,7 +311,7 @@ export function mountWaveGalaxy(container: HTMLElement) {
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, tier.pixelCap));
     renderer.setSize(container.clientWidth, container.clientHeight, false);
-    renderer.setClearColor(0x000000, 1);
+    renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = LinearSRGBColorSpace;
     renderer.toneMapping = NoToneMapping;
     renderer.domElement.className = "wave_galaxy_canvas";
@@ -325,16 +325,17 @@ export function mountWaveGalaxy(container: HTMLElement) {
     const group = new Group();
     group.rotation.x = 0.18;
     group.rotation.y = YAW;
-    group.scale.setScalar(1.12);
+    group.scale.setScalar(1.32);
     group.position.set(0, -0.05, reduced ? 0 : -20);
     const viewDir = new Vector3();
     const placeDisc = () => {
         camera.getWorldDirection(viewDir);
+        if (viewDir.z >= -0.05) return;
         const depth =
             (group.position.y - camera.position.y) * viewDir.y + (0 - camera.position.z) * viewDir.z;
         if (depth < 0.5) return;
         const halfH = Math.tan((camera.fov * Math.PI) / 360) * Math.max(camera.aspect, 0.5);
-        const centerNdc = 0.64;
+        const centerNdc = 0.54;
         group.position.x = tier.look.x + centerNdc * halfH * depth;
     };
     scene.add(group);
@@ -377,23 +378,21 @@ export function mountWaveGalaxy(container: HTMLElement) {
         fragmentShader: waveFragment,
         transparent: true,
         depthWrite: false,
-        blending: AdditiveBlending,
     });
 
     const coreMaterial = new ShaderMaterial({
         uniforms: {
             ...shared,
-            uCool: { value: CORE_COLOR },
-            uWarm: { value: CORE_COLOR },
-            uLight: { value: CORE_COLOR },
-            uCore: { value: 0.85 },
+            uCool: { value: WAVE_COOL },
+            uWarm: { value: WAVE_WARM },
+            uLight: { value: WAVE_LIGHT },
+            uCore: { value: 0 },
             uGain: { value: 0.7 },
         },
         vertexShader: waveVertex,
         fragmentShader: waveFragment,
         transparent: true,
         depthWrite: false,
-        blending: AdditiveBlending,
     });
 
     const bindDisc = (material: ShaderMaterial) => {
@@ -412,8 +411,8 @@ export function mountWaveGalaxy(container: HTMLElement) {
     bindDisc(waveMaterial);
     bindDisc(coreMaterial);
 
-    const wavePoints = new Points(fillDisc(tier.wave, WAVE_RADIUS, WAVE_HEIGHT, 2.4, 4.4), waveMaterial);
-    const corePoints = new Points(fillDisc(tier.core, WAVE_RADIUS * 0.96, WAVE_HEIGHT, 3.4, 6.2), coreMaterial);
+    const wavePoints = new Points(fillDisc(tier.wave, WAVE_RADIUS, WAVE_HEIGHT, 2.6, 4.6), waveMaterial);
+    const corePoints = new Points(fillDisc(tier.core, WAVE_RADIUS * 0.96, WAVE_HEIGHT, 3.4, 5.8), coreMaterial);
     wavePoints.frustumCulled = false;
     corePoints.frustumCulled = false;
     group.add(wavePoints, corePoints);
@@ -424,12 +423,12 @@ export function mountWaveGalaxy(container: HTMLElement) {
             uOpacity: opacity,
             uPixelRatio: shared.uPixelRatio,
             uColor: { value: MOTE_COLOR },
+            uColorEdge: { value: MOTE_EDGE },
         },
         vertexShader: moteVertex,
         fragmentShader: moteFragment,
         transparent: true,
         depthWrite: false,
-        blending: AdditiveBlending,
     });
     const motes = new Points(fillMotes(tier.motes), moteMaterial);
     motes.frustumCulled = false;
@@ -550,9 +549,10 @@ export function mountWaveGalaxy(container: HTMLElement) {
         const progress = rect.height > 0 ? traveled / rect.height : 0;
         amplitude.value = 1 + 5 * progress;
         expand.value = 0.55 * progress;
-        spin.value = 1 + 5 * progress;
+        spin.value = 1 + 1.15 * progress;
         chaos.value = 0.35 * progress;
-        camera.position.z = tier.camera.z - progress * 4;
+        const zTravel = Math.max(tier.camera.z - 1.15, 0);
+        camera.position.z = tier.camera.z - zTravel * progress;
         camera.position.y = tier.camera.y - progress * 0.35;
         camera.lookAt(tier.look);
         placeDisc();
