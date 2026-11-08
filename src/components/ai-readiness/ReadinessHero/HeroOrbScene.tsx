@@ -267,6 +267,7 @@ export default function HeroOrbScene() {
         let lastX = 0;
         let lastY = 0;
         let logoFit = 1;
+        let iconTexture: THREE.Texture | null = null;
         let logo: THREE.Object3D | null = null;
         let handsRoot: THREE.Object3D | null = null;
         const hands: HandPart[] = [];
@@ -415,11 +416,18 @@ export default function HeroOrbScene() {
         };
 
         void (async () => {
-            const [handsGltf, iconGltf] = await Promise.all([
-                loadModel("/models/hands.glb"),
-                loadModel("/models/icon.glb"),
-            ]);
-            if (disposed) return;
+            const handsGltf = await loadModel("/models/hands.glb");
+            if (!disposed) {
+                try {
+                    iconTexture = await new THREE.TextureLoader().loadAsync("/images/icon.png");
+                } catch {
+                    iconTexture = null;
+                }
+            }
+            if (disposed) {
+                iconTexture?.dispose();
+                return;
+            }
 
             if (handsGltf) {
                 const root = handsGltf.scene;
@@ -455,27 +463,26 @@ export default function HeroOrbScene() {
                 handsRoot = root;
             }
 
-            if (iconGltf) {
-                const mark = iconGltf.scene;
-                const logoMaterial = new THREE.MeshStandardMaterial({
-                    color: 0xffffff,
-                    metalness: 1,
-                    roughness: 1,
-                    emissive: 0xffffff,
-                    emissiveIntensity: 0.55,
-                    envMap: cubeRT.texture,
-                    envMapIntensity: 1.2,
-                });
-                paintMeshes(mark, logoMaterial);
-                const box = new THREE.Box3().setFromObject(mark);
-                const center = box.getCenter(new THREE.Vector3());
-                const size = box.getSize(new THREE.Vector3());
-                mark.position.sub(center);
-                const maxSize = Math.max(size.x, size.y, size.z);
-                logoFit = maxSize > 0 ? 1 / maxSize : 1;
+            if (iconTexture) {
+                iconTexture.colorSpace = THREE.SRGBColorSpace;
+                iconTexture.magFilter = THREE.LinearFilter;
+                iconTexture.minFilter = THREE.LinearFilter;
+                iconTexture.generateMipmaps = false;
+                const image = iconTexture.image as { width?: number; height?: number };
+                const aspect = (image.width || 1) / (image.height || 1);
+                const mark = new THREE.Mesh(
+                    new THREE.PlaneGeometry(aspect, 1),
+                    new THREE.MeshBasicMaterial({
+                        map: iconTexture,
+                        transparent: true,
+                        depthWrite: false,
+                        toneMapped: false,
+                    }),
+                );
+                logoFit = 1;
                 const group = new THREE.Group();
                 group.add(mark);
-                group.scale.setScalar(0.49 * logoFit);
+                group.scale.setScalar(0.49);
                 rig.add(group);
                 logo = group;
             }
@@ -519,6 +526,7 @@ export default function HeroOrbScene() {
                 const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
                 materials.forEach((material) => material?.dispose());
             });
+            iconTexture?.dispose();
             cubeRT.dispose();
             composer.dispose();
             renderer.dispose();
