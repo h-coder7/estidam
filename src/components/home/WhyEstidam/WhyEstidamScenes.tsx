@@ -51,6 +51,17 @@ export const SEASON_LABELS = {
     } as Record<number, Record<number, string>>,
 };
 
+const SEASON_LABELS_AR: typeof SEASON_LABELS = {
+    phases: ["الوصول", "منى", "عرفات", "مزدلفة", "العودة"],
+    lanes: ["النقل", "المخيمات", "الإعاشة", "الرعاية"],
+    blocks: {
+        0: { 0: "تنقل", 1: "حافلات", 2: "حركة", 3: "ليلي", 4: "مغادرة" },
+        1: { 0: "توزيع", 1: "خيام", 2: "مخيم" },
+        2: { 1: "وجبات", 2: "تقديم", 3: "إمداد" },
+        3: { 0: "استقبال", 1: "إرشاد", 2: "رعاية", 4: "وداع" },
+    },
+};
+
 /** Handoffs between lanes: [fromLane, toLane, phase] */
 export const SEASON_HANDOFFS: [number, number, number][] = [
     [0, 1, 1],
@@ -62,11 +73,16 @@ export const SEASON_X0 = 94;
 export const SEASON_CW = 84;
 const laneY = (i: number) => 34 + i * 48;
 
-export function SeasonBoardScene({ labels = SEASON_LABELS }: { labels?: typeof SEASON_LABELS }) {
+function svgClass(locale?: string) {
+    return locale === "ar" ? "we-svg is-ar" : "we-svg";
+}
+
+export function SeasonBoardScene({ locale = "en" }: { locale?: string }) {
+    const labels = locale === "ar" ? SEASON_LABELS_AR : SEASON_LABELS;
     const x0 = SEASON_X0;
     const cw = SEASON_CW;
     return (
-        <svg viewBox="0 0 520 240" className="we-svg" role="img" aria-label="Conceptual season board: service lanes across Hajj phases">
+        <svg viewBox="0 0 520 240" className={svgClass(locale)} role="img" aria-label={locale === "ar" ? "لوحة الموسم: مسارات الخدمة عبر مراحل الحج" : "Conceptual season board: service lanes across Hajj phases"}>
             <rect data-we="col" x={x0} y={22} width={cw} height={206} rx={6} fill="#295CC7" opacity={0.06} transform={`translate(${2 * cw} 0)`} />
             {labels.phases.map((p, j) => (
                 <text key={p} data-we="ph" className={`we-m7 we-f3${j === 2 ? " is-on" : ""}`} x={x0 + j * cw + cw / 2} y={15} textAnchor="middle">
@@ -122,9 +138,21 @@ export const OPERATIONS_LABELS = {
     selected: "SELECTED TO FIT THE OUTCOME",
 };
 
-export function OperationsFlowScene({ labels = OPERATIONS_LABELS }: { labels?: typeof OPERATIONS_LABELS }) {
+const OPERATIONS_LABELS_AR: typeof OPERATIONS_LABELS = {
+    challenge: "التحدي التشغيلي",
+    defined: "محدد",
+    outcome: "النتيجة المطلوبة",
+    draft: "مسودة",
+    agreed: "معتمد",
+    options: ["تغيير", "تكامل", "منصة"],
+    optionsTitle: "خيارات التقنية",
+    selected: "المختار للنتيجة",
+};
+
+export function OperationsFlowScene({ locale = "en" }: { locale?: string }) {
+    const labels = locale === "ar" ? OPERATIONS_LABELS_AR : OPERATIONS_LABELS;
     return (
-        <svg viewBox="0 0 300 240" className="we-svg" role="img" aria-label="Conceptual flow: challenge, agreed outcome, then technology selection">
+        <svg viewBox="0 0 300 240" className={svgClass(locale)} role="img" aria-label={locale === "ar" ? "مسار تصوري: التحدي، ثم النتيجة، ثم اختيار التقنية" : "Conceptual flow: challenge, agreed outcome, then technology selection"}>
             <Card x={10} y={8} w={280} h={44} title={labels.challenge} hook="c1" />
             <rect x={20} y={31} width={150} height={4} rx={2} fill="#e2e2e2" />
             <rect x={20} y={40} width={100} height={4} rx={2} fill="#e2e2e2" />
@@ -186,9 +214,21 @@ export const ANALYSIS_LABELS = {
     decided: "TEAM DECISION",
 };
 
-export function AnalysisFlowScene({ labels = ANALYSIS_LABELS }: { labels?: typeof ANALYSIS_LABELS }) {
+const ANALYSIS_LABELS_AR: typeof ANALYSIS_LABELS = {
+    sources: ["عمليات", "بيانات", "ميدان"],
+    title: "تحليل · مرحلي",
+    steps: ["توحيد المدخلات", "رصد الأنماط", "مقارنة بالخطة"],
+    decision: "دعم القرار",
+    recommendation: "التوصية جاهزة",
+    context: "مع السياق الداعم",
+    awaiting: "قيد المراجعة",
+    decided: "قرار الفريق",
+};
+
+export function AnalysisFlowScene({ locale = "en" }: { locale?: string }) {
+    const labels = locale === "ar" ? ANALYSIS_LABELS_AR : ANALYSIS_LABELS;
     return (
-        <svg viewBox="0 0 300 240" className="we-svg" role="img" aria-label="Conceptual flow: data sources, staged analysis, decision support with human review">
+        <svg viewBox="0 0 300 240" className={svgClass(locale)} role="img" aria-label={locale === "ar" ? "مسار تصوري: مصادر البيانات، تحليل مرحلي، ودعم قرار بمراجعة الفريق" : "Conceptual flow: data sources, staged analysis, decision support with human review"}>
             {labels.sources.map((s, i) => {
                 const y = 18 + i * 44;
                 const d = `M98 ${y + 14}H106V${46 + i * 30}H118`;
@@ -260,9 +300,20 @@ export const IMPROVEMENT_LABELS = {
     logTitle: "IMPROVEMENT LOG · CONCEPT",
 };
 
-export function ImprovementLoopScene({ labels = IMPROVEMENT_LABELS }: { labels?: typeof IMPROVEMENT_LABELS }) {
+const IMPROVEMENT_LABELS_AR: typeof IMPROVEMENT_LABELS = {
+    stages: ["قياس", "مراجعة", "تعلّم", "تحسين"],
+    log: ["تسجيل ملاحظة", "مراجعة النتائج", "توثيق الدرس", "تحسين الإجراء"],
+    feedsBack: "يعود للتشغيل",
+    operations: "التشغيل",
+    current: "الإجراءات الحالية",
+    refined: "إجراءات محدّثة — ",
+    logTitle: "سجل التحسين",
+};
+
+export function ImprovementLoopScene({ locale = "en" }: { locale?: string }) {
+    const labels = locale === "ar" ? IMPROVEMENT_LABELS_AR : IMPROVEMENT_LABELS;
     return (
-        <svg viewBox="0 0 520 240" className="we-svg" role="img" aria-label="Conceptual improvement loop: measure, review, learn, refine, feeding back into operations">
+        <svg viewBox="0 0 520 240" className={svgClass(locale)} role="img" aria-label={locale === "ar" ? "حلقة تحسين: قياس ومراجعة وتعلّم ثم تحسين يعود للتشغيل" : "Conceptual improvement loop: measure, review, learn, refine, feeding back into operations"}>
             {labels.stages.map((s, i) => {
                 const x = 6 + i * 128;
                 return (

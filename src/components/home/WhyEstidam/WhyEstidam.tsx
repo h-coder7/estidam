@@ -133,7 +133,7 @@ const WhyEstidam = async () => {
                 </div>
             </div>
 
-                <WhyEstidamBento cards={viewCards} conceptLabel={t("conceptLabel")} />
+                <WhyEstidamBento cards={viewCards} conceptLabel={t("conceptLabel")} locale={locale} />
 
             </div>
             <div className="sec-lines">
