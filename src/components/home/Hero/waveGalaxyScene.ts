@@ -335,7 +335,7 @@ export function mountWaveGalaxy(container: HTMLElement) {
             (group.position.y - camera.position.y) * viewDir.y + (0 - camera.position.z) * viewDir.z;
         if (depth < 0.5) return;
         const halfH = Math.tan((camera.fov * Math.PI) / 360) * Math.max(camera.aspect, 0.5);
-        const centerNdc = 0.54;
+        const centerNdc = 0.54 * tier.side;
         group.position.x = tier.look.x + centerNdc * halfH * depth;
     };
     scene.add(group);
