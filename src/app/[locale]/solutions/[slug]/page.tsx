@@ -12,6 +12,8 @@ import RelatedSolutions from "@/components/solutions/RelatedSolutions/RelatedSol
 import CallToAction from "@/components/solutions/CallToAction/CallToAction";
 import { SOLUTION_DETAIL_SLUG } from "@/components/solutions/solutionRoutes";
 
+export const revalidate = 300;
+
 export function generateStaticParams() {
     return [{ slug: SOLUTION_DETAIL_SLUG }];
 }

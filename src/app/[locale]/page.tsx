@@ -12,7 +12,7 @@ import GetInTouch from "@/components/home/GetInTouch/GetInTouch";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar/Navbar";
 
-export const revalidate = 0;
+export const revalidate = 300;
 
 export default function Home() {
     return (

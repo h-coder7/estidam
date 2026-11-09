@@ -13,7 +13,7 @@ import ProductChallenges from "@/components/product/ProductChallenges/ProductCha
 import ProductDetailHero from "@/components/product/ProductDetailHero/ProductDetailHero";
 import { productItems } from "@/components/products/ProductsList/ProductsList";
 
-export const revalidate = 0;
+export const revalidate = 300;
 
 export function generateStaticParams() {
     return productItems.map((product) => ({ slug: product.id }));

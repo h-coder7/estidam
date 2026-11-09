@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { api } from "@/lib/api";
+import { createSwrCache } from "@/lib/api/swrCache";
 
 export type AboutHeroContent = {
     eyebrow: string;
@@ -509,7 +510,9 @@ function partnerRecords(value: unknown) {
     return [];
 }
 
-export async function getAboutPartnerLogos(locale: string): Promise<AboutPartnerLogo[]> {
+const readPartnerLogos = createSwrCache<AboutPartnerLogo[]>([]);
+
+async function fetchPartnerLogos(locale: string): Promise<AboutPartnerLogo[] | null> {
     try {
         const payload = await api.getPartners(locale);
         return partnerRecords((payload as { data?: unknown })?.data ?? payload).flatMap((item, index) => {
@@ -528,8 +531,12 @@ export async function getAboutPartnerLogos(locale: string): Promise<AboutPartner
             ];
         });
     } catch {
-        return [];
+        return null;
     }
+}
+
+export async function getAboutPartnerLogos(locale: string): Promise<AboutPartnerLogo[]> {
+    return readPartnerLogos(locale, () => fetchPartnerLogos(locale));
 }
 
 export async function getAboutLogosContent(locale: string): Promise<AboutLogosContent | null> {
