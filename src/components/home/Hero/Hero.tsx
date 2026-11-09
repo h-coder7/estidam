@@ -80,7 +80,7 @@ const Hero = async () => {
                                     </Reveal>
 
                                     <Reveal animation="fade-up" trigger="load">
-                                        <HeroLink href={secondaryUrl} className="butn butn-ghost">
+                                        <HeroLink href={secondaryUrl} className="butn butn-outline">
                                             <span>{secondaryCta}</span>
                                             <img
                                                 src="/images/icons/arrow-bl.svg"
@@ -103,10 +103,10 @@ const Hero = async () => {
                 </div>
             </div>
             {/* <img src="/images/hero-dots.png" alt="Hero Pattern" className="hero-dots" /> */}
-            <div className="sec-lines">
+            {/* <div className="sec-lines">
                 <span></span>
                 <span></span>
-            </div>
+            </div> */}
         </section>
     );
 };
