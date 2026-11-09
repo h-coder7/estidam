@@ -34,15 +34,16 @@
         justify-content: center;
         height: 100%;
         min-height: 280px;
-        padding: 100px 50px 50px;
-        background: linear-gradient(159.34deg, #EAF1FF 0%, #F7FAFF 100%);
+        // padding: 100px 50px 50px;
+        background: linear-gradient(20deg, #CFDCEF 0%, #E7F0FB 100%);
+        // background-color: #CFDCEF;
     }
 
     .productCard_img {
         display: block;
         width: 100%;
-        max-width: 460px;
-        height: auto;
+        height: 100%;
+        object-fit: contain;
     }
 
     .productCard_status {

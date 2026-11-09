@@ -38,7 +38,7 @@ const BellIcon = () => (
     <svg className="butn-icon" viewBox="0 0 35 35" aria-hidden="true">
         <path
             d="M35 20.4289C35 21.755 34.4732 23.0268 33.5355 23.9645L23.9645 33.5355C23.0268 34.4732 21.755 35 20.4289 35H5C2.23858 35 0 32.7614 0 30V5C0 2.23858 2.23858 0 5 0H30C32.7614 0 35 2.23858 35 5V20.4289Z"
-            fill="#151d2e"
+            fill="var(--blue)"
         />
         <path
             d="M17.5 10.1a.75.75 0 0 1 .75.75v.55a4.35 4.35 0 0 1 3.45 4.25v1.85l.85 1.45a.75.75 0 0 1-.64 1.15h-8.82a.75.75 0 0 1-.64-1.15l.85-1.45v-1.85a4.35 4.35 0 0 1 3.45-4.25v-.55a.75.75 0 0 1 .75-.75Zm-1.35 11.15a1.45 1.45 0 0 0 2.7 0h-2.7Z"
@@ -107,7 +107,7 @@ const ProductCard = ({ product, index, items, labels }: ProductCardProps) => {
 
                         <div className="productCard_actions d-flex flex-wrap align-items-center">
                             {product.primaryLabel ? (
-                                <Link href={product.primaryHref} className="butn productCard_btn productCard_btn_dark">
+                                <Link href={product.primaryHref} className="butn butn-blue">
                                     <span>{product.primaryLabel}</span>
                                     <img
                                         src="/images/icons/arrow-wh.svg"
@@ -124,7 +124,7 @@ const ProductCard = ({ product, index, items, labels }: ProductCardProps) => {
                                         <BellIcon />
                                     ) : (
                                         <img
-                                            src="/images/icons/arrow-dr.svg"
+                                            src="/images/icons/arrow-bl.svg"
                                             alt=""
                                             className="butn-icon"
                                             aria-hidden="true"

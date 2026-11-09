@@ -23,7 +23,7 @@ export default function AboutPage() {
                 <AboutJourney />
                 <AboutDelivery />
                 <AboutStudio />
-                <AboutLogos />
+                {/* <AboutLogos /> */}
                 <CallToAction source="about" />
             </main>
 
