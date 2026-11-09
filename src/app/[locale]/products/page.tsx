@@ -7,7 +7,7 @@ import ProductDemo from "@/components/products/ProductDemo/ProductDemo";
 import ProductsList from "@/components/products/ProductsList/ProductsList";
 import CallToAction from "@/components/solutions/CallToAction/CallToAction";
 
-export const revalidate = 0;
+export const revalidate = 300;
 
 export default function ProductsPage() {
     return (

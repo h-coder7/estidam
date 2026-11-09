@@ -63,13 +63,56 @@ function markedTitle(data: Record<string, unknown>) {
     };
 }
 
-const loadProductsPage = cache(async (locale: string) => {
+const PRODUCTS_PAGE_REVALIDATE_MS = 300_000;
+
+type ProductsPageCacheEntry = {
+    payload: ProductsPagePayload | null;
+    freshUntil: number;
+    refreshing?: Promise<void>;
+};
+
+const productsPageCache = new Map<string, ProductsPageCacheEntry>();
+
+async function fetchProductsPage(locale: string) {
     try {
         const payload = (await api.getProductsPage(locale)) as ProductsPagePayload;
         return payload?.success ? payload : null;
     } catch {
         return null;
     }
+}
+
+function storeProductsPage(locale: string, payload: ProductsPagePayload | null, previous?: ProductsPagePayload | null) {
+    productsPageCache.set(locale, {
+        payload: payload ?? previous ?? null,
+        freshUntil: Date.now() + PRODUCTS_PAGE_REVALIDATE_MS,
+    });
+}
+
+const loadProductsPage = cache(async (locale: string) => {
+    const hit = productsPageCache.get(locale);
+    const now = Date.now();
+
+    if (hit && now < hit.freshUntil) return hit.payload;
+
+    if (hit) {
+        if (!hit.refreshing) {
+            hit.refreshing = fetchProductsPage(locale)
+                .then((payload) => {
+                    storeProductsPage(locale, payload, hit.payload);
+                })
+                .finally(() => {
+                    const current = productsPageCache.get(locale);
+                    if (current) delete current.refreshing;
+                });
+        }
+
+        return hit.payload;
+    }
+
+    const payload = await fetchProductsPage(locale);
+    storeProductsPage(locale, payload);
+    return payload;
 });
 
 export async function getProductsHeroContent(locale: string): Promise<ProductsHeroContent | null> {
@@ -286,7 +329,15 @@ export async function getProductsListContent(locale: string): Promise<ProductsLi
     };
 }
 
-export async function getProductsListCards(locale: string): Promise<ProductsListCard[]> {
+type ProductsCardsCacheEntry = {
+    cards: ProductsListCard[];
+    freshUntil: number;
+    refreshing?: Promise<void>;
+};
+
+const productsCardsCache = new Map<string, ProductsCardsCacheEntry>();
+
+async function fetchProductsListCards(locale: string): Promise<ProductsListCard[] | null> {
     try {
         const payload = await api.getProducts(locale);
         const items = records((payload as { data?: unknown })?.data ?? payload).filter(
@@ -330,8 +381,45 @@ export async function getProductsListCards(locale: string): Promise<ProductsList
 
         return cards.filter((card) => card.name);
     } catch {
-        return [];
+        return null;
     }
+}
+
+function storeProductsCards(locale: string, cards: ProductsListCard[] | null, previous?: ProductsListCard[]) {
+    productsCardsCache.set(locale, {
+        cards: cards ?? previous ?? [],
+        freshUntil: Date.now() + PRODUCTS_PAGE_REVALIDATE_MS,
+    });
+}
+
+const loadProductsListCards = cache(async (locale: string) => {
+    const hit = productsCardsCache.get(locale);
+    const now = Date.now();
+
+    if (hit && now < hit.freshUntil) return hit.cards;
+
+    if (hit) {
+        if (!hit.refreshing) {
+            hit.refreshing = fetchProductsListCards(locale)
+                .then((cards) => {
+                    storeProductsCards(locale, cards, hit.cards);
+                })
+                .finally(() => {
+                    const current = productsCardsCache.get(locale);
+                    if (current) delete current.refreshing;
+                });
+        }
+
+        return hit.cards;
+    }
+
+    const cards = await fetchProductsListCards(locale);
+    storeProductsCards(locale, cards);
+    return cards ?? [];
+});
+
+export async function getProductsListCards(locale: string): Promise<ProductsListCard[]> {
+    return loadProductsListCards(locale);
 }
 
 export type ProductHeroContent = {
