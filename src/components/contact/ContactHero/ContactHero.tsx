@@ -1,6 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { getContactHeroContent } from "@/lib/api/contact";
-import ContactHeroExperience from "./ContactHeroExperience";
+
+import RingGalaxy from "./RingGalaxy";
 
 import "./_ContactHero.scss";
 
@@ -15,13 +16,28 @@ const ContactHero = async () => {
 
     return (
         <section className="contact_hero">
-            <ContactHeroExperience
-                badge={badge}
-                titleStrong={titleStrong}
-                titleMuted={titleMuted}
-                description={description}
-                reply={t("reply")}
-            />
+            <RingGalaxy />
+            <div className="container">
+                <div className="contact_hero_content text-center mx-auto">
+                    {badge ? <span className="contact_hero_badge">{badge}</span> : null}
+
+                    {titleStrong || titleMuted ? (
+                        <h1 className="contact_hero_title">
+                            {titleStrong ? <span className="contact_hero_title_strong">{titleStrong}</span> : null}
+                            {titleMuted ? <span className="contact_hero_title_muted">{titleMuted}</span> : null}
+                        </h1>
+                    ) : null}
+
+                    {description ? <p className="contact_hero_description">{description}</p> : null}
+
+                    {t("reply") ? (
+                        <p className="contact_hero_reply">
+                            <span className="contact_hero_dot" aria-hidden="true" />
+                            {t("reply")}
+                        </p>
+                    ) : null}
+                </div>
+            </div>
         </section>
     );
 };
