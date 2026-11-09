@@ -467,7 +467,6 @@ export function mountWaveGalaxy(container: HTMLElement) {
     const inverseMatrix = new Matrix4();
     let hovering = false;
     let disposed = false;
-    let visible = true;
     let ticking = false;
     let last = performance.now();
 
@@ -537,8 +536,21 @@ export function mountWaveGalaxy(container: HTMLElement) {
         finalComposer.render();
     };
 
+    const heroOffScreen = () => {
+        const rect = section.getBoundingClientRect();
+        return rect.bottom <= 0 || rect.top >= window.innerHeight;
+    };
+
     const onTick = () => {
         if (disposed) return;
+        // The galaxy is a full-screen WebGL pass. Once the hero has left the
+        // viewport, drop the ticker the same frame so later scrolling is not
+        // paying for it.
+        if (heroOffScreen()) {
+            stop();
+            return;
+        }
+
         const now = performance.now();
         const delta = Math.min(0.05, (now - last) / 1000);
         last = now;
@@ -576,16 +588,27 @@ export function mountWaveGalaxy(container: HTMLElement) {
     };
 
     const start = () => {
-        if (ticking || disposed || reduced) return;
+        if (ticking || disposed || reduced || document.visibilityState === "hidden") return;
+        if (heroOffScreen()) return;
+        renderer.domElement.style.visibility = "";
         ticking = true;
         last = performance.now();
         gsap.ticker.add(onTick);
     };
 
     const stop = () => {
-        if (!ticking) return;
-        ticking = false;
-        gsap.ticker.remove(onTick);
+        if (ticking) {
+            ticking = false;
+            gsap.ticker.remove(onTick);
+        }
+        // A live WebGL canvas stays a compositor layer even after drawing
+        // stops, and that layer is what keeps scrolling heavy.
+        if (!disposed && heroOffScreen()) renderer.domElement.style.visibility = "hidden";
+    };
+
+    const syncVisibility = () => {
+        if (!heroOffScreen() && document.visibilityState !== "hidden") start();
+        else stop();
     };
 
     resize();
@@ -595,21 +618,19 @@ export function mountWaveGalaxy(container: HTMLElement) {
         gsap.to(animate, { value: 1, duration: 2, ease: "power4.out" });
     }
 
-    const observer = new IntersectionObserver((entries) => {
-        visible = entries.some((entry) => entry.isIntersecting);
-        if (visible && document.visibilityState !== "hidden") start();
-        else stop();
+    const observer = new IntersectionObserver(() => {
+        syncVisibility();
     });
     observer.observe(section);
 
     const onVisibility = () => {
-        if (document.visibilityState === "hidden" || !visible) stop();
-        else start();
+        syncVisibility();
     };
 
     section.addEventListener("pointermove", onPointer);
     section.addEventListener("pointerleave", onPointerLeave);
     window.addEventListener("resize", resize);
+    window.addEventListener("scroll", syncVisibility, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
     const onContextLost = (event: Event) => {
         event.preventDefault();
@@ -629,6 +650,7 @@ export function mountWaveGalaxy(container: HTMLElement) {
         section.removeEventListener("pointermove", onPointer);
         section.removeEventListener("pointerleave", onPointerLeave);
         window.removeEventListener("resize", resize);
+        window.removeEventListener("scroll", syncVisibility);
         document.removeEventListener("visibilitychange", onVisibility);
         renderer.domElement.removeEventListener("webglcontextlost", onContextLost);
         gsap.killTweensOf([group.position, opacity, animate]);
