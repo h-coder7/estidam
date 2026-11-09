@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { api } from "@/lib/api";
+import { createSwrCache } from "@/lib/api/swrCache";
 import homeAr from "@/mock-api/home.ar.json";
 import homeEn from "@/mock-api/home.en.json";
 
@@ -73,14 +74,18 @@ function mediaUrl(value: string) {
     return `${origin}${value.startsWith("/") ? value : `/${value}`}`;
 }
 
-const loadHomePage = cache(async (locale: string) => {
+const readHomePage = createSwrCache<HomePagePayload | null>(null);
+
+async function fetchHomePage(locale: string) {
     try {
         const payload = (await api.getHome(locale)) as HomePagePayload;
         return payload?.success ? payload : null;
     } catch {
         return null;
     }
-});
+}
+
+const loadHomePage = cache((locale: string) => readHomePage(locale, () => fetchHomePage(locale)));
 
 function sectionData(payload: HomePagePayload | null, key: string) {
     return payload?.data?.sections?.find((item) => item.key === key)?.data ?? null;
@@ -396,7 +401,9 @@ function solutionTitleParts(title: string) {
     return headingParts({ title });
 }
 
-export async function getSolutionCubeSlides(locale: string): Promise<SolutionCubeSlide[]> {
+const readSolutionSlides = createSwrCache<SolutionCubeSlide[]>([]);
+
+async function fetchSolutionSlides(locale: string): Promise<SolutionCubeSlide[] | null> {
     const section = sectionData(await loadHomePage(locale), "solutions");
     const limitRaw = Number(section?.limit);
     const limit = Number.isFinite(limitRaw) && limitRaw > 0 ? Math.floor(limitRaw) : 6;
@@ -426,8 +433,12 @@ export async function getSolutionCubeSlides(locale: string): Promise<SolutionCub
             ];
         });
     } catch {
-        return [];
+        return null;
     }
+}
+
+export async function getSolutionCubeSlides(locale: string): Promise<SolutionCubeSlide[]> {
+    return readSolutionSlides(locale, () => fetchSolutionSlides(locale));
 }
 
 export type OperationsContent = HomeSectionContent & {
@@ -499,11 +510,13 @@ function records(value: unknown) {
     return [];
 }
 
-export async function getCatalogProducts(
+const readCatalogProducts = createSwrCache<CatalogProduct[]>([]);
+
+async function fetchCatalogProducts(
     locale: string,
     labels: { available: string; soon: string; problem: string; users: string },
     onlyAvailable = false,
-): Promise<CatalogProduct[]> {
+): Promise<CatalogProduct[] | null> {
     try {
         const payload = await api.getProducts(locale);
         const items = records((payload as { data?: unknown })?.data ?? payload).filter((item) => {
@@ -548,8 +561,17 @@ export async function getCatalogProducts(
 
         return cards.filter((card) => card.title);
     } catch {
-        return [];
+        return null;
     }
+}
+
+export async function getCatalogProducts(
+    locale: string,
+    labels: { available: string; soon: string; problem: string; users: string },
+    onlyAvailable = false,
+): Promise<CatalogProduct[]> {
+    const key = `${locale}:${onlyAvailable ? "available" : "all"}`;
+    return readCatalogProducts(key, () => fetchCatalogProducts(locale, labels, onlyAvailable));
 }
 
 export type DeliveryContent = HomeSectionContent & {

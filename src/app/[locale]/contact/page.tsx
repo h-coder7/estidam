@@ -6,7 +6,7 @@ import ContactDirect from "@/components/contact/ContactDirect/ContactDirect";
 import ContactFaq from "@/components/contact/ContactFaq/ContactFaq";
 import CallToAction from "@/components/solutions/CallToAction/CallToAction";
 
-export const revalidate = 0;
+export const revalidate = 300;
 
 export default function ContactPage() {
     return (

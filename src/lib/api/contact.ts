@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { api } from "@/lib/api";
+import { createSwrCache } from "@/lib/api/swrCache";
 
 export type ContactHeroContent = {
     eyebrow: string;
@@ -41,14 +42,18 @@ function markedTitle(data: Record<string, unknown>) {
     };
 }
 
-const loadContactPage = cache(async (locale: string) => {
+const readContactPage = createSwrCache<ContactPagePayload | null>(null);
+
+async function fetchContactPage(locale: string) {
     try {
         const payload = (await api.getContactPage(locale)) as ContactPagePayload;
         return payload?.success ? payload : null;
     } catch {
         return null;
     }
-});
+}
+
+const loadContactPage = cache((locale: string) => readContactPage(locale, () => fetchContactPage(locale)));
 
 export async function getContactHeroContent(locale: string): Promise<ContactHeroContent | null> {
     const payload = await loadContactPage(locale);
@@ -122,6 +127,17 @@ type SettingsPayload = {
     };
 };
 
+const readSettings = createSwrCache<SettingsPayload["data"] | null>(null);
+
+async function fetchSettings(locale: string) {
+    try {
+        const response = (await api.getSettings(locale)) as SettingsPayload;
+        return response?.success ? response.data ?? null : null;
+    } catch {
+        return null;
+    }
+}
+
 function shown(value: unknown) {
     return !(value === false || value === 0 || value === "0" || value === "false");
 }
@@ -139,8 +155,7 @@ export async function getContactDirectContent(locale: string): Promise<ContactDi
 
     let settings: SettingsPayload["data"] | null = null;
     try {
-        const response = (await api.getSettings(locale)) as SettingsPayload;
-        settings = response?.success ? response.data ?? null : null;
+        settings = await readSettings(locale, () => fetchSettings(locale));
     } catch {
         settings = null;
     }
@@ -190,6 +205,29 @@ type FaqPayload = {
     data?: unknown;
 };
 
+const readContactFaqs = createSwrCache<ContactFaqItem[]>([]);
+
+async function fetchContactFaqs(locale: string): Promise<ContactFaqItem[] | null> {
+    try {
+        const response = (await api.getFaqs(locale)) as FaqPayload;
+        const rows = Array.isArray(response?.data) ? response.data : [];
+        return rows.flatMap((item) => {
+            if (!item || typeof item !== "object") return [];
+            const row = item as Record<string, unknown>;
+            if (text(row.page).toLowerCase() !== "contact") return [];
+            if (row.visible === false || row.visible === 0 || row.visible === "0") return [];
+
+            const question = text(row.question);
+            const answer = text(row.answer);
+            if (!question && !answer) return [];
+
+            return [{ question, answer }];
+        });
+    } catch {
+        return null;
+    }
+}
+
 function faqTitle(title: string) {
     const marked = markedTitle({ title });
     if (marked.titleMuted) return marked;
@@ -210,20 +248,7 @@ export async function getContactFaqContent(locale: string): Promise<ContactFaqCo
 
     let items: ContactFaqItem[] = [];
     try {
-        const response = (await api.getFaqs(locale)) as FaqPayload;
-        const rows = Array.isArray(response?.data) ? response.data : [];
-        items = rows.flatMap((item) => {
-            if (!item || typeof item !== "object") return [];
-            const row = item as Record<string, unknown>;
-            if (text(row.page).toLowerCase() !== "contact") return [];
-            if (row.visible === false || row.visible === 0 || row.visible === "0") return [];
-
-            const question = text(row.question);
-            const answer = text(row.answer);
-            if (!question && !answer) return [];
-
-            return [{ question, answer }];
-        });
+        items = await readContactFaqs(locale, () => fetchContactFaqs(locale));
     } catch {
         items = [];
     }

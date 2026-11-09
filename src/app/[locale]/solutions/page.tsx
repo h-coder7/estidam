@@ -3,7 +3,7 @@ import Navbar from "@/components/layout/Navbar/Navbar";
 import CallToAction from "@/components/solutions/CallToAction/CallToAction";
 import SolutionsIndex from "@/components/solutions/SolutionsIndex/SolutionsIndex";
 
-export const revalidate = 0;
+export const revalidate = 300;
 
 export default function SolutionsPage() {
     return (

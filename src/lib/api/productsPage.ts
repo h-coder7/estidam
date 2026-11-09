@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { api } from "@/lib/api";
+import { createSwrCache } from "@/lib/api/swrCache";
 
 export type ProductsHeroContent = {
     eyebrow: string;
@@ -434,7 +435,9 @@ const apiSlugs: Record<string, string> = {
     mayar: "miyar",
 };
 
-const loadProduct = cache(async (locale: string, pageSlug: string) => {
+const readProduct = createSwrCache<Record<string, unknown> | null>(null);
+
+async function fetchProduct(locale: string, pageSlug: string) {
     try {
         const response = await api.getProduct(apiSlugs[pageSlug] || pageSlug, locale);
         const data = (response as { data?: unknown })?.data;
@@ -443,7 +446,11 @@ const loadProduct = cache(async (locale: string, pageSlug: string) => {
     } catch {
         return null;
     }
-});
+}
+
+const loadProduct = cache((locale: string, pageSlug: string) =>
+    readProduct(`${locale}:${pageSlug}`, () => fetchProduct(locale, pageSlug)),
+);
 
 export async function getProductHeroContent(locale: string, pageSlug: string): Promise<ProductHeroContent | null> {
     const product = await loadProduct(locale, pageSlug);

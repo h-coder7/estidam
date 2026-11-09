@@ -6,6 +6,8 @@ import ConnectedDimensions from "@/components/ai-readiness/ConnectedDimensions/C
 import HowItWorks from "@/components/ai-readiness/HowItWorks/HowItWorks";
 import CallToAction from "@/components/solutions/CallToAction/CallToAction";
 
+export const revalidate = 300;
+
 export default function AiReadinessPage() {
     return (
         <>
