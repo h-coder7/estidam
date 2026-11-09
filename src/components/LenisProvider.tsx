@@ -1,9 +1,10 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useState } from "react";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { usePathname } from "@/i18n/routing";
 
 let lenisInstance: Lenis | null = null;
 
@@ -29,6 +30,25 @@ export default function LenisProvider({
   children: React.ReactNode;
 }) {
   const [lenis, setLenis] = useState<Lenis | null>(null);
+  const pathname = usePathname();
+
+  useLayoutEffect(() => {
+    const instance = lenisInstance ?? lenis;
+    if (!instance) return;
+
+    const hash = window.location.hash;
+    if (hash.length > 1) {
+      const target = document.getElementById(decodeURIComponent(hash.slice(1)));
+      if (target) {
+        instance.scrollTo(target, { immediate: true, force: true });
+        ScrollTrigger.refresh();
+        return;
+      }
+    }
+
+    instance.scrollTo(0, { immediate: true, force: true });
+    ScrollTrigger.refresh();
+  }, [pathname, lenis]);
 
   useEffect(() => {
     // 1. Register ScrollTrigger plugin with GSAP
@@ -61,8 +81,12 @@ export default function LenisProvider({
     // Disable lag smoothing in GSAP to avoid discrepancies
     gsap.ticker.lagSmoothing(0);
 
+    const previousRestoration = history.scrollRestoration;
+    history.scrollRestoration = "manual";
+
     // Clean up on component unmount
     return () => {
+      history.scrollRestoration = previousRestoration;
       gsap.ticker.remove(update);
       instance.destroy();
       lenisInstance = null;

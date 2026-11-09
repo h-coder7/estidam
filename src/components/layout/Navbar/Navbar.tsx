@@ -105,13 +105,13 @@ export default function Navbar({ className = "" }: NavbarProps) {
                             >
                                 EN
                             </button>
-                            <button
+                            {/* <button
                                 type="button"
                                 className={locale === "ar" ? "active" : ""}
                                 onClick={() => changeLanguage("ar")}
                             >
                                 AR
-                            </button>
+                            </button> */}
                         </div>
 
                         {/* <button type="button" className="nav-icon" aria-label="Search">

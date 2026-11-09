@@ -6,94 +6,38 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getLenis, useLenis } from "@/components/LenisProvider";
 import type { SolutionCubeSlide } from "@/lib/api/home";
-import { mountSolutionStack, type SolutionStackGl, type StackPose } from "./solutionStackGl";
 
 const fallbackImage = "/images/solution1.png";
 
-/** Tunable Verticalix-matched values (from live preview DevTools). */
+/** Cinematic mask reveal — tunable values. */
 export const SOLUTIONS_STACK_CONFIG = {
-    inactiveScale: 0.88,
-    adjacentOpacity: 0.42,
-    farOpacity: 0,
-    rotateDeg: 11,
-    /** Perspective tilt (deg) so neighbors sit back in the stack */
-    tiltDeg: 6,
-    inactiveTx: -24,
-    /** Vertical distance between card centers as a fraction of card height */
-    pitchRatio: 0.92,
-    hoverScale: 1.03,
-    hoverDuration: 0.25,
+    /** Mask reveal duration (s) */
+    revealDuration: 1,
+    /** Incoming image starts this much larger and settles to 1 */
+    revealScale: 1.03,
+    /** Internal parallax travel (% of image height) during the reveal */
+    parallax: 4,
+    hoverScale: 1.02,
+    hoverDuration: 0.4,
     /** Incoming copy rises this far (px) while it fades in */
     textTravel: 16,
     /** Card-to-card settle (Lenis tween) */
     snapDuration: 0.7,
     /** Ignore extra wheel notches while a card is settling */
     wheelLockMs: 760,
-    scrollPerSlideVh: 0.9,
+    scrollPerSlideVh: 0.75,
 };
+
+const SHOWN = "inset(0% 0% 0% 0% round 16px)";
+const HIDE_TOP = "inset(0% 0% 100% 0% round 16px)";
+const HIDE_BOTTOM = "inset(100% 0% 0% 0% round 16px)";
 
 type SolutionsCubeProps = {
     slides?: SolutionCubeSlide[];
 };
 
-type Pose = {
-    scale: number;
-    rotate: number;
-    tilt: number;
-    opacity: number;
-    tx: number;
-    y: number;
-};
-
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-
-/** Pose follows scroll distance at a constant rate */
-const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
-
 /** One decisive travel, then a short settle. Still lands on a whole card. */
 const snapEase = (t: number) => 1 - (1 - t) ** 3;
-
-// Blur lives in CSS as a discrete class state — animating `filter` per scroll frame was the hitch
-const poseAtDistance = (distance: number, pitch: number): Pose => {
-    const sign = distance === 0 ? 1 : Math.sign(distance);
-    const ad = Math.abs(distance);
-    const { inactiveScale, adjacentOpacity, farOpacity, rotateDeg, tiltDeg, inactiveTx } =
-        SOLUTIONS_STACK_CONFIG;
-    const tilt = sign * tiltDeg * clamp01(Math.min(ad, 1));
-
-    if (ad >= 2) {
-        return {
-            scale: inactiveScale,
-            rotate: sign * rotateDeg,
-            tilt,
-            opacity: farOpacity,
-            tx: inactiveTx,
-            y: sign * pitch * Math.min(ad, 2.35),
-        };
-    }
-
-    if (ad <= 1) {
-        const t = clamp01(ad);
-        return {
-            scale: lerp(1, inactiveScale, t),
-            rotate: lerp(0, sign * rotateDeg, t),
-            tilt,
-            opacity: lerp(1, adjacentOpacity, t),
-            tx: lerp(0, inactiveTx, t),
-            y: lerp(0, sign * pitch, t),
-        };
-    }
-
-    const t = clamp01(ad - 1);
-    return {
-        scale: inactiveScale,
-        rotate: sign * rotateDeg,
-        tilt,
-        opacity: lerp(adjacentOpacity, farOpacity, t),
-        tx: inactiveTx,
-        y: lerp(sign * pitch, sign * pitch * 2, t),
-    };
-};
 
 const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
     const t = useTranslations("solutions");
@@ -155,19 +99,12 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
         gsap.registerPlugin(ScrollTrigger);
 
         const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const rtl = document.documentElement.dir === "rtl";
         cardsRef.current = cardsRef.current.slice(0, count);
         mediaRef.current = mediaRef.current.slice(0, count);
         copyRef.current = copyRef.current.slice(0, count);
         const cards = cardsRef.current.filter(Boolean);
         const medias = mediaRef.current.filter(Boolean);
         const copies = copyRef.current.filter(Boolean);
-
-        const measurePitch = () => {
-            const card = cards[0];
-            const height = card?.offsetHeight || stack.clientHeight * 0.55;
-            return height * SOLUTIONS_STACK_CONFIG.pitchRatio;
-        };
 
         const measureCopyViewport = () => {
             if (!copyViewport || !copies.length) return;
@@ -180,48 +117,72 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
             }
         };
 
-        let pitch = measurePitch();
         measureCopyViewport();
 
         if (copyViewport) {
             copyViewport.style.setProperty("--copy-shift", `${SOLUTIONS_STACK_CONFIG.textTravel}px`);
         }
 
-        let glStack: SolutionStackGl | null = null;
-        let glCancelled = false;
-        const disposeGl = () => {
-            glCancelled = true;
-            glStack?.dispose();
-            glStack = null;
+        const imgOf = (index: number) => medias[index]?.querySelector("img") ?? null;
+        const { revealDuration, revealScale, parallax } = SOLUTIONS_STACK_CONFIG;
+        let reveal: gsap.core.Timeline | null = null;
+
+        // Resting state: only the active image is visible — no neighbours, no ghost layers.
+        const settle = (active: number) => {
+            cards.forEach((card, index) => {
+                const on = index === active;
+                gsap.set(card, {
+                    clipPath: on ? SHOWN : HIDE_BOTTOM,
+                    autoAlpha: on ? 1 : 0,
+                    zIndex: on ? 2 : 0,
+                });
+                card.setAttribute("aria-hidden", on ? "false" : "true");
+                const img = imgOf(index);
+                if (img) gsap.set(img, { yPercent: 0, scale: 1 });
+            });
+        };
+
+        // Mask reveal between two images. Images are never filtered or deformed:
+        // only clip-path, a few % of translate and a 1.03 → 1 scale.
+        const transition = (from: number, to: number) => {
+            reveal?.kill();
+            const dir = to > from ? 1 : -1;
+            const outgoing = cards[from];
+            const incoming = cards[to];
+            const inImg = imgOf(to);
+            const outImg = imgOf(from);
+
+            cards.forEach((card, index) => {
+                if (index === from || index === to) return;
+                gsap.set(card, { autoAlpha: 0, zIndex: 0, clipPath: HIDE_BOTTOM });
+                card.setAttribute("aria-hidden", "true");
+            });
+            outgoing?.setAttribute("aria-hidden", "true");
+            incoming?.setAttribute("aria-hidden", "false");
+
+            if (reduced || !outgoing || !incoming) {
+                settle(to);
+                return;
+            }
+
+            gsap.set(outgoing, { zIndex: 1, autoAlpha: 1, clipPath: SHOWN });
+            gsap.set(incoming, { zIndex: 2, autoAlpha: 1, clipPath: dir > 0 ? HIDE_BOTTOM : HIDE_TOP });
+            if (inImg) gsap.set(inImg, { yPercent: dir * parallax, scale: revealScale });
+
+            reveal = gsap
+                .timeline({
+                    defaults: { ease: "power3.inOut", duration: revealDuration },
+                    onComplete: () => settle(to),
+                })
+                .to(incoming, { clipPath: SHOWN }, 0)
+                .to(inImg, { yPercent: 0, scale: 1, ease: "power2.out", duration: revealDuration * 1.15 }, 0)
+                .to(outImg, { yPercent: -dir * parallax * 0.6, ease: "power2.inOut" }, 0)
+                .to(outgoing, { autoAlpha: 0.55, duration: revealDuration * 0.9 }, 0);
         };
 
         const paint = (progress: number) => {
             progressRef.current = progress;
             const position = count < 2 ? 0 : progress * (count - 1);
-            const glPoses: StackPose[] = [];
-
-            cards.forEach((card, index) => {
-                const pose = poseAtDistance(index - position, pitch);
-                const tx = pose.tx * (rtl ? -1 : 1);
-                const rot = reduced ? 0 : pose.rotate;
-                const tilt = reduced ? 0 : pose.tilt;
-                const depth = Math.abs(index - position);
-
-                card.style.transform = `translate3d(${tx}px, calc(-50% + ${pose.y}px), 0) rotateX(${tilt}deg) rotate(${rot}deg) scale(${pose.scale})`;
-                card.style.opacity = stack.classList.contains("has_gl") ? "0" : String(pose.opacity);
-                card.style.zIndex = String(Math.round(100 - depth * 10));
-                card.setAttribute("aria-hidden", depth > 0.5 ? "true" : "false");
-                glPoses[index] = {
-                    y: pose.y,
-                    tx,
-                    rotate: rot,
-                    tilt,
-                    scale: pose.scale,
-                    opacity: pose.opacity,
-                    depth,
-                };
-            });
-            glStack?.setPoses(glPoses);
 
             // Copy motion is a CSS transition on .is_active — not a per-frame write.
             const nearestIndex = Math.min(count - 1, Math.max(0, Math.round(position)));
@@ -232,8 +193,8 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
                 copy.setAttribute("aria-hidden", on ? "false" : "true");
             });
 
-            // Class toggle on DOM only — React re-render per frame caused the start lag
             if (nearestIndex !== activeIndexRef.current) {
+                const previous = activeIndexRef.current;
                 activeIndexRef.current = nearestIndex;
                 cards.forEach((card, index) => {
                     card.classList.toggle("is_active", index === nearestIndex);
@@ -241,11 +202,11 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
                 copies.forEach((copy, index) => {
                     copy.classList.toggle("is_active", index === nearestIndex);
                 });
+                transition(previous, nearestIndex);
             }
         };
 
         const refreshAfterImages = () => {
-            pitch = measurePitch();
             measureCopyViewport();
             ScrollTrigger.refresh();
             paint(progressRef.current);
@@ -266,30 +227,21 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
                     }),
             );
 
+        activeIndexRef.current = 0;
+        settle(0);
         paint(0);
 
-        if (!reduced) {
-            const sources = medias.map((media) => media.querySelector("img")?.getAttribute("src") || "");
-            void mountSolutionStack(stack, sources).then((handle) => {
-                if (!handle) return;
-                if (glCancelled) {
-                    handle.dispose();
-                    return;
-                }
-                glStack = handle;
-                paint(progressRef.current);
+        const resetStyles = () => {
+            reveal?.kill();
+            gsap.set(cards, { clearProps: "clipPath,opacity,visibility,zIndex" });
+            medias.forEach((_, index) => {
+                const img = imgOf(index);
+                if (img) gsap.set(img, { clearProps: "transform" });
             });
-        }
+        };
 
         if (count < 2) {
-            return () => {
-                disposeGl();
-                cards.forEach((card) => {
-                    card.style.transform = "";
-                    card.style.opacity = "";
-                    card.style.zIndex = "";
-                });
-            };
+            return resetStyles;
         }
 
         let wheelLocked = false;
@@ -392,7 +344,7 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
 
         const trigger = ScrollTrigger.create({
             trigger: root,
-            start: "top 96px",
+            start: () => `top ${Math.max(96, (window.innerHeight + 96 - root.offsetHeight) / 2)}px`,
             end: () =>
                 `+=${(count - 1) * window.innerHeight * SOLUTIONS_STACK_CONFIG.scrollPerSlideVh}`,
             pin: true,
@@ -427,7 +379,6 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
                 settleTimer = window.setTimeout(snapToNearest, 110);
             },
             onRefresh: () => {
-                pitch = measurePitch();
                 paint(progressRef.current);
             },
         });
@@ -489,10 +440,6 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
             const index = Number(media.dataset.index);
             // Cards sliding under a resting cursor fire pointerenter — no hover tween mid-step
             if (index !== activeIndexRef.current || reduced || programmaticScroll) return;
-            if (glStack) {
-                glStack.setHover(SOLUTIONS_STACK_CONFIG.hoverScale);
-                return;
-            }
             gsap.to(media, {
                 scale: SOLUTIONS_STACK_CONFIG.hoverScale,
                 duration: SOLUTIONS_STACK_CONFIG.hoverDuration,
@@ -503,10 +450,6 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
 
         const onLeave = (event: Event) => {
             const media = event.currentTarget as HTMLElement;
-            if (glStack) {
-                glStack.setHover(1);
-                return;
-            }
             gsap.to(media, {
                 scale: 1,
                 duration: SOLUTIONS_STACK_CONFIG.hoverDuration,
@@ -547,7 +490,7 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
         void Promise.all(imageLoads).then(refreshAfterImages);
 
         return () => {
-            disposeGl();
+            resetStyles();
             window.cancelAnimationFrame(frame);
             window.clearTimeout(wheelUnlockTimer);
             window.clearTimeout(settleTimer);
@@ -561,11 +504,6 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
             stack?.removeEventListener("keydown", onKeyDown);
             trigger.kill();
             triggerRef.current = null;
-            cards.forEach((card) => {
-                card.style.transform = "";
-                card.style.opacity = "";
-                card.style.zIndex = "";
-            });
             copies.forEach((copy) => {
                 copy.style.zIndex = "";
                 copy.style.pointerEvents = "";
@@ -644,14 +582,6 @@ const SolutionsCube = ({ slides }: SolutionsCubeProps) => {
                                         <img
                                             src={slide.image || fallbackImage}
                                             alt={slide.title}
-                                            draggable={false}
-                                        />
-                                        {/* Pre-blurred copy: constant filter, only opacity animates */}
-                                        <img
-                                            className="solutions_stack_card_blur"
-                                            src={slide.image || fallbackImage}
-                                            alt=""
-                                            aria-hidden="true"
                                             draggable={false}
                                         />
                                     </div>

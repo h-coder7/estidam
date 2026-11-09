@@ -2,11 +2,16 @@
     position: relative;
     background-color: #f7f8fa;
 
+    // Intro → first solution: one intentional gap (head 48 + body 48) instead of a
+    // viewport-tall centred box. The pin centres the block, so no min-height is needed.
+    .section-head {
+        padding-bottom: 48px;
+    }
+
     .solutions_body {
         display: flex;
         align-items: center;
-        min-height: calc(100vh - 96px);
-        // padding: 32px 0 48px;
+        padding: 48px 0;
 
         > .row,
         .solutions_body_row {
@@ -92,50 +97,41 @@
     .solutions_visual {
         display: flex;
         align-items: center;
-        justify-content: center;
-        padding-inline: 24px 0;
+        justify-content: flex-end;
+        padding-inline-start: 24px;
     }
 
+    // One frame; every image sits in it and only the active one is visible.
     .solutions_stack {
         position: relative;
-        width: 600px;
-        height: 650px;
+        width: 100%;
+        max-width: 580px;
+        aspect-ratio: 4 / 3;
+        max-height: calc(100vh - 220px);
         margin-inline-start: auto;
-        overflow: hidden;
+        border-radius: 16px;
         isolation: isolate;
         outline: none;
-        perspective: 1400px;
+        box-shadow: 0 26px 50px rgba(17, 24, 39, 0.14);
+        background: #dbe3ef;
 
-        .solutions_stack_gl {
-            position: absolute;
-            inset: 0;
-            z-index: 4;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        &.has_gl .solutions_stack_card_media {
-            background: transparent;
-            box-shadow: none;
-        }
-
-        &.has_gl .solutions_stack_card_media img {
-            opacity: 0;
+        &:focus-visible {
+            outline: 2px solid var(--blue);
+            outline-offset: 4px;
         }
     }
 
     .solutions_stack_card {
         position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        width: 84%;
-        margin-inline: auto;
-        transform-origin: center center;
-        transform-style: preserve-3d;
-        will-change: transform, opacity;
+        inset: 0;
+        clip-path: inset(100% 0% 0% 0% round 16px);
+        visibility: hidden;
         pointer-events: none;
+
+        &:first-child {
+            clip-path: inset(0% 0% 0% 0% round 16px);
+            visibility: visible;
+        }
 
         &.is_active {
             pointer-events: auto;
@@ -143,64 +139,38 @@
     }
 
     .solutions_stack_card_media {
-        position: relative;
+        position: absolute;
+        inset: 0;
         overflow: hidden;
         border-radius: 16px;
-        background: #dbe3ef;
-        aspect-ratio: 4 / 3;
-        transform-origin: center center;
-        box-shadow: 0 14px 28px rgba(17, 24, 39, 0.08);
-        transition: box-shadow 0.5s ease;
         cursor: pointer;
 
-        img,
-        .solutions_stack_card_gl {
+        // 8% taller than the frame so the parallax never exposes an edge
+        img {
+            position: absolute;
+            top: -4%;
+            left: 0;
             display: block;
             width: 100%;
-            height: 100%;
+            max-width: none;
+            height: 108%;
+            max-height: none;
             object-fit: cover;
             user-select: none;
             pointer-events: none;
+            will-change: transform;
         }
-
-        .solutions_stack_card_gl {
-            position: absolute;
-            inset: 0;
-        }
-
-        &.has_webgl img {
-            opacity: 0;
-        }
-
-        // Blur is never animated (animating `filter` was the scroll hitch). A second copy
-        // of the image is blurred once with a constant filter and only its opacity
-        // crossfades — opacity is compositor-only, so stepping cards stays smooth.
-        .solutions_stack_card_blur {
-            position: absolute;
-            inset: 0;
-            // Slight scale hides the soft transparent fringe blur leaves at the edges
-            transform: scale(1.06);
-            filter: blur(5px);
-            opacity: 0;
-            transition: opacity 0.35s ease;
-            will-change: opacity;
-        }
-    }
-
-    .solutions_stack_card.is_active .solutions_stack_card_media {
-        box-shadow: 0 26px 50px rgba(17, 24, 39, 0.16);
-    }
-
-    .solutions_stack_card:not(.is_active) .solutions_stack_card_blur {
-        opacity: 1;
     }
 }
 
 @media screen and (max-width: 767px) {
     .solutions {
+        .section-head {
+            padding-bottom: 32px;
+        }
+
         .solutions_body {
-            min-height: auto;
-            padding: 28px 0 40px;
+            padding: 32px 0 40px;
         }
 
         .solutions_content {
@@ -209,14 +179,13 @@
         }
 
         .solutions_visual {
-            padding: 4px 0 0;
+            padding: 0;
         }
 
         .solutions_stack {
-            width: min(100%, 420px);
-            height: min(48vh, 360px);
+            max-width: 520px;
+            max-height: none;
             margin-inline: auto;
-            overflow: hidden;
         }
     }
 }
@@ -230,31 +199,19 @@
         .solutions_highlight {
             font-size: 14px;
         }
-
-        .solutions_stack {
-            height: min(44vh, 320px);
-        }
-
-        .solutions_stack_card {
-            width: 88%;
-        }
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .solutions {
-        .solutions_stack_card,
         .solutions_copy {
             will-change: auto;
-        }
-
-        .solutions_copy,
-        .solutions_stack_card_media {
             transition: none;
+            transform: none;
         }
 
-        .solutions_copy {
-            transform: none;
+        .solutions_stack_card_media img {
+            will-change: auto;
         }
     }
 }

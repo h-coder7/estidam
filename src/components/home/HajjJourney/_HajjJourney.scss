@@ -1,286 +1,300 @@
+$hj-blue: var(--blue, #295cc7);
+$hj-ink: #171717;
+$hj-ink-2: #5f6570;
+$hj-ink-4: #b5b5b5;
+$hj-hair: #eaeaea;
+$hj-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
 .hajj_journey {
     position: relative;
 
-    .journey_body {
-        position: relative;
-        background-color: #f7f8fa;
-        z-index: 3;
+    .hj-tabs {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        border-top: 1px solid $hj-hair;
+        border-bottom: 1px solid $hj-hair;
+        background: #fff;
     }
 
-    .journey_body > [class*="col"] {
-        border-inline-end: 1px solid rgba(17, 24, 39, 0.08);
+    .hj-tab {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 26px 36px;
+        border: 0;
+        border-inline-end: 1px solid $hj-hair;
+        background: none;
+        text-align: start;
+        cursor: pointer;
 
         &:last-child {
             border-inline-end: 0;
         }
-    }
 
-    .journey_nav {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        padding: 36px 28px 36px 0;
-    }
-
-    .journey_nav_item {
-        position: relative;
-        display: flex;
-        align-items: flex-start;
-        gap: 16px;
-        width: 100%;
-        padding: 18px 16px 18px 20px;
-        border: 0;
-        border-radius: 0;
-        background: transparent;
-        text-align: start;
-        cursor: pointer;
-        opacity: 0.42;
-        transition:
-            opacity 0.3s ease,
-            background-color 0.3s ease;
-
-        &::before {
-            content: "";
-            position: absolute;
-            inset-inline-start: 0;
-            top: 14px;
-            bottom: 14px;
-            width: 3px;
-            border-radius: 999px;
-            background-color: transparent;
-            transition: background-color 0.3s ease;
+        small {
+            color: $hj-ink-4;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
         }
 
-        &:hover {
-            opacity: 0.8;
+        b {
+            color: $hj-ink-4;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            transition: color 0.3s ease;
         }
 
-        &.is_active {
-            opacity: 1;
+        &:hover b {
+            color: $hj-ink;
+        }
 
-            &::before {
-                background-color: var(--blue);
+        &[aria-selected="true"] {
+            small {
+                color: $hj-blue;
             }
 
-            .journey_nav_number {
-                background-color: #e8f0fe;
-                color: var(--blue);
-                border-color: #d6e4ff;
+            b {
+                color: $hj-ink;
             }
 
-            .journey_nav_phase {
-                color: var(--blue);
+            .hj-tab-bar {
+                transform: scaleX(1);
             }
+        }
 
-            .journey_nav_title {
-                color: #111827;
-            }
+        &:focus-visible {
+            outline: 2px solid $hj-blue;
+            outline-offset: -2px;
         }
     }
 
-    .journey_nav_number {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 42px;
-        height: 42px;
-        flex-shrink: 0;
-        border-radius: 50%;
-        border: 1px solid #e5e7eb;
-        background-color: #fff;
-        color: #9ca3af;
-        font-size: 13px;
-        font-weight: 600;
-        transition:
-            background-color 0.3s ease,
-            color 0.3s ease,
-            border-color 0.3s ease;
+    .hj-tab-bar {
+        position: absolute;
+        inset-inline: 0;
+        top: -1px;
+        height: 2px;
+        background: $hj-blue;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.7s $hj-ease;
+
+        [dir="rtl"] & {
+            transform-origin: right;
+        }
     }
 
-    .journey_nav_copy {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        padding-top: 2px;
+    .hj-body {
+        display: grid;
+        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+        border-bottom: 1px solid $hj-hair;
+        background: #fff;
     }
 
-    .journey_nav_phase {
-        color: #9ca3af;
+    .hj-info {
+        padding: 56px 44px;
+        border-inline-end: 1px solid $hj-hair;
+
+        > * {
+            animation: hj-in 0.6s $hj-ease both;
+        }
+    }
+
+    .hj-label {
+        color: $hj-blue;
         font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        transition: color 0.3s ease;
-    }
-
-    .journey_nav_title {
-        color: #9ca3af;
-        font-size: 18px;
-        font-weight: 600;
-        line-height: 1.3;
-        transition: color 0.3s ease;
-    }
-
-    .journey_detail {
-        position: relative;
-        padding: 40px 36px;
-        animation: journeyFade 0.35s ease;
-        border-left: 1px solid #9993;
-        border-right: 1px solid #9993;
-    }
-
-    .journey_detail_phase {
-        margin: 0 0 10px;
-        color: var(--blue);
-        font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 0.08em;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
     }
 
-    .journey_detail_title {
-        margin: 0 0 14px;
-        color: #111827;
-        font-size: 30px;
-        font-weight: 700;
-        line-height: 1.2;
+    .hj-stage-title {
+        margin: 14px 0 0;
+        color: $hj-ink;
+        font-size: clamp(28px, 2.6vw, 38px);
+        font-weight: 600;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+        animation-delay: 0.04s;
     }
 
-    .journey_detail_text {
-        margin: 0 0 28px;
-        max-width: 420px;
-        color: #6b7280;
-        font-size: 15px;
-        line-height: 1.7;
+    .hj-stage-text {
+        max-width: 44ch;
+        margin: 14px 0 0;
+        color: $hj-ink-2;
+        font-size: 16px;
+        line-height: 1.65;
+        animation-delay: 0.08s;
     }
 
-    .journey_points {
-        margin: 0;
+    .hj-points {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 28px;
+        max-width: 520px;
+        margin: 26px 0 0;
         padding: 0;
         list-style: none;
-        row-gap: 14px;
+        animation: none;
 
         li {
-            position: relative;
-            padding-inline-start: 18px;
-            color: #4b5563;
-            font-size: 14px;
-            line-height: 1.5;
+            display: flex;
+            gap: 10px;
+            color: $hj-ink;
+            font-size: 14.5px;
+            line-height: 1.45;
+            animation: hj-in 0.6s $hj-ease both;
 
             &::before {
+                flex: none;
+                width: 12px;
+                height: 1px;
+                margin-top: 10px;
                 content: "";
-                position: absolute;
-                inset-inline-start: 0;
-                top: 0.7em;
-                width: 10px;
-                height: 1.5px;
-                background-color: #9ca3af;
+                background: $hj-ink-4;
             }
         }
     }
 
-    .journey_visual_col {
-        align-self: stretch;
-        display: flex;
+    .hj-diagram {
+        display: grid;
+        place-items: center;
+        padding: 40px;
+
+        svg {
+            display: block;
+            width: 100%;
+            max-width: 620px;
+            height: auto;
+            overflow: visible;
+        }
+
+        .jd-card {
+            fill: #fff;
+            stroke: #e3e3e3;
+            filter: drop-shadow(0 1px 1px rgba(11, 26, 51, 0.04)) drop-shadow(0 6px 14px rgba(11, 26, 51, 0.05));
+        }
+
+        .jd-hub {
+            fill: #0b1a33;
+        }
+
+        .jd-ln {
+            fill: none;
+            stroke: #d6d6d6;
+            stroke-width: 1;
+        }
+
+        .jd-bl {
+            fill: none;
+            stroke: $hj-blue;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+        }
     }
 
-    .journey_visual {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        min-height: 420px;
-        overflow: hidden;
+    [dir="rtl"] & .hj-diagram svg {
+        direction: ltr;
+        transform: scaleX(-1);
+
+        text {
+            transform: scaleX(-1);
+            transform-box: fill-box;
+            transform-origin: center;
+            letter-spacing: 0;
+        }
+
+        .jd-t {
+            font-size: 12px;
+        }
     }
 
-    .journey_visual_reveal {
-        position: relative;
-        z-index: 1;
-        width: 100%;
-    }
+    [dir="rtl"] & {
+        .hj-stage-title,
+        .hj-tab b {
+            letter-spacing: 0;
+        }
 
-    .journey_visual_img {
-        display: block;
-        width: 100%;
-        max-width: 360px;
-        height: auto;
-        margin-inline: auto;
-        object-fit: contain;
-        animation: journeyFade 0.35s ease;
-        transition: transform 0.35s ease;
+        .hj-stage-text {
+            line-height: 1.9;
+        }
 
-        &:hover {
-            transform: translateY(-4px);
+        .hj-label,
+        .hj-tab small {
+            letter-spacing: 0;
+            text-transform: none;
         }
     }
 }
 
-@keyframes journeyFade {
+@keyframes hj-in {
     from {
         opacity: 0;
-        transform: translateY(8px);
+        transform: translateY(14px);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: none;
     }
 }
 
 @media screen and (max-width: 991px) {
     .hajj_journey {
-        .journey_nav {
-            padding: 28px 0;
-            flex-direction: row;
-            overflow-x: auto;
-            gap: 4px;
+        .hj-tabs {
+            grid-template-columns: minmax(0, 1fr);
         }
 
-        .journey_nav_item {
-            min-width: 220px;
-            padding-inline-start: 16px;
-
-            &::before {
-                top: auto;
-                bottom: 0;
-                inset-inline-start: 16px;
-                inset-inline-end: 16px;
-                width: auto;
-                height: 3px;
-            }
-        }
-
-        .journey_body > [class*="col"] {
+        .hj-tab {
+            padding: 16px 20px;
             border-inline-end: 0;
-            border-bottom: 1px solid rgba(17, 24, 39, 0.08);
+            border-bottom: 1px solid $hj-hair;
 
             &:last-child {
                 border-bottom: 0;
             }
+
+            b {
+                font-size: 17px;
+            }
         }
 
-        .journey_detail {
-            padding: 28px 0;
+        .hj-body {
+            grid-template-columns: minmax(0, 1fr);
         }
 
-        .journey_visual {
-            padding: 28px 0 36px;
+        .hj-info {
+            padding: 32px 20px;
+            border-inline-end: 0;
+            border-bottom: 1px solid $hj-hair;
+        }
+
+        .hj-diagram {
+            padding: 20px 12px;
         }
     }
 }
 
 @media screen and (max-width: 575px) {
+    .hajj_journey .hj-points {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
     .hajj_journey {
-        .journey_nav_title {
-            font-size: 17px;
+        .hj-info > *,
+        .hj-points li {
+            animation: none;
         }
 
-        .journey_detail_title {
-            font-size: 1.7rem;
-        }
-
-        .journey_visual_img {
-            max-width: 100%;
+        .hj-tab-bar {
+            transition: none;
         }
     }
 }
