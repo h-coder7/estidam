@@ -18,7 +18,12 @@ const ProductDetailHero = async ({ productId }: ProductDetailHeroProps) => {
     const titleAccent = hero?.title ? "" : t("titleAccent");
     const description = hero ? hero.description : t("description");
     const secondaryLabel = hero?.secondaryLabel || t("secondaryCta");
-    const image = hero?.image || "/images/product-det/hero1.png";
+    const fallbackImages = {
+        hrh: "/images/products/product-01-hrh-seasonal-hiring.jpg",
+        mayar: "/images/products/product-02-mayar-quality.jpg",
+        maydan: "/images/products/product-03-maidan-field-ops.jpg",
+    } as const;
+    const image = hero?.image || fallbackImages[productId];
 
     return (
         <section className="productDetailHero">

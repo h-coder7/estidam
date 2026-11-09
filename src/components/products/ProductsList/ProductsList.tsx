@@ -9,18 +9,18 @@ export const productItems = [
     {
         id: "hrh",
         status: "available",
-        image: "/images/products/hrh.png",
+        image: "/images/products/product-01-hrh-seasonal-hiring.jpg",
     },
     {
         id: "mayar",
         status: "available",
-        image: "/images/products/mayar2.png",
+        image: "/images/products/product-02-mayar-quality.jpg",
         reversed: true,
     },
     {
         id: "maydan",
         status: "soon",
-        image: "/images/products/maydan.png",
+        image: "/images/products/product-03-maidan-field-ops.jpg",
         notify: true,
     },
 ] as const;
