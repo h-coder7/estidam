@@ -59,7 +59,7 @@ const SolutionsIndex = async () => {
                         <div className="col-lg-6">
                             <div className="solutions_index_hero_copy">
                                 <span className="solutions_index_badge">{t("badge")}</span>
-                                <h1 className="solutions_index_title">
+                                <h1 className="solutions_index_title fsz-50">
                                     <span>{t("titleStrong")}</span>{" "}
                                     <span className="cr-blue fw-500">{t("titleMuted")}</span>
                                 </h1>
@@ -78,8 +78,8 @@ const SolutionsIndex = async () => {
                         </div>
                         <div className="col-lg-6">
                             <div className="solutions_index_photos">
-                                <img src="/images/solution1.png" alt="" className="solutions_index_photo is_back" />
-                                <img src="/images/solution-hero.png" alt="" className="solutions_index_photo is_front" />
+                                <img src="/images/solutions.jpg" alt="" className="solutions_index_photo is_back" />
+                                {/* <img src="/images/solution-hero.png" alt="" className="solutions_index_photo is_front" /> */}
                             </div>
                         </div>
                     </div>

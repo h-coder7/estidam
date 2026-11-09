@@ -9,7 +9,7 @@ import AboutLogos from "@/components/about/AboutLogos/AboutLogos";
 import AboutDelivery from "@/components/about/AboutDelivery/AboutDelivery";
 import CallToAction from "@/components/solutions/CallToAction/CallToAction";
 
-export const revalidate = 0;
+export const revalidate = 300;
 
 export default function AboutPage() {
     return (

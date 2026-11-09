@@ -160,13 +160,56 @@ function titleParts(data: Record<string, unknown>) {
     };
 }
 
-const loadAboutPage = cache(async (locale: string) => {
+const ABOUT_PAGE_REVALIDATE_MS = 300_000;
+
+type AboutCacheEntry = {
+    payload: AboutPagePayload | null;
+    freshUntil: number;
+    refreshing?: Promise<void>;
+};
+
+const aboutPageCache = new Map<string, AboutCacheEntry>();
+
+async function fetchAboutPage(locale: string) {
     try {
         const payload = (await api.getAbout(locale)) as AboutPagePayload;
         return payload?.success ? payload : null;
     } catch {
         return null;
     }
+}
+
+function storeAboutPage(locale: string, payload: AboutPagePayload | null, previous?: AboutPagePayload | null) {
+    aboutPageCache.set(locale, {
+        payload: payload ?? previous ?? null,
+        freshUntil: Date.now() + ABOUT_PAGE_REVALIDATE_MS,
+    });
+}
+
+const loadAboutPage = cache(async (locale: string) => {
+    const hit = aboutPageCache.get(locale);
+    const now = Date.now();
+
+    if (hit && now < hit.freshUntil) return hit.payload;
+
+    if (hit) {
+        if (!hit.refreshing) {
+            hit.refreshing = fetchAboutPage(locale)
+                .then((payload) => {
+                    storeAboutPage(locale, payload, hit.payload);
+                })
+                .finally(() => {
+                    const current = aboutPageCache.get(locale);
+                    if (current) delete current.refreshing;
+                });
+        }
+
+        return hit.payload;
+    }
+
+    const payload = await fetchAboutPage(locale);
+    storeAboutPage(locale, payload);
+    return payload;
 });
 
 export async function getAboutHeroContent(locale: string): Promise<AboutHeroContent | null> {
