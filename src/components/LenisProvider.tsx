@@ -5,6 +5,7 @@ import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePathname } from "@/i18n/routing";
+import { PAGE_FADE_MS } from "@/components/layout/pageFade";
 
 let lenisInstance: Lenis | null = null;
 
@@ -37,17 +38,28 @@ export default function LenisProvider({
     if (!instance) return;
 
     const hash = window.location.hash;
-    if (hash.length > 1) {
-      const target = document.getElementById(decodeURIComponent(hash.slice(1)));
-      if (target) {
-        instance.scrollTo(target, { immediate: true, force: true });
-        ScrollTrigger.refresh();
-        return;
+    const scroll = () => {
+      if (hash.length > 1) {
+        const target = document.getElementById(decodeURIComponent(hash.slice(1)));
+        if (target) {
+          instance.scrollTo(target, { immediate: true, force: true });
+          ScrollTrigger.refresh();
+          return;
+        }
       }
+
+      instance.scrollTo(0, { immediate: true, force: true });
+      ScrollTrigger.refresh();
+    };
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      scroll();
+      return;
     }
 
-    instance.scrollTo(0, { immediate: true, force: true });
-    ScrollTrigger.refresh();
+    const timer = window.setTimeout(scroll, PAGE_FADE_MS);
+    return () => window.clearTimeout(timer);
   }, [pathname, lenis]);
 
   useEffect(() => {
