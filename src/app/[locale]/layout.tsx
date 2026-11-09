@@ -4,6 +4,7 @@ import "@/app/styles/lib/all.min.css";
 import "@/app/styles/scss/style.scss";
 import BootstrapClient from "@/components/BootstrapClient";
 import LenisProvider from "@/components/LenisProvider";
+import PageTransition from "@/components/layout/PageTransition";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { getMessages, setRequestLocale } from "next-intl/server";
@@ -49,7 +50,9 @@ export default async function RootLayout({
             <body suppressHydrationWarning>
                 <NextIntlClientProvider messages={messages}>
                     <MotionProvider>
-                        <LenisProvider>{children}</LenisProvider>
+                        <LenisProvider>
+                            <PageTransition>{children}</PageTransition>
+                        </LenisProvider>
                     </MotionProvider>
                 </NextIntlClientProvider>
                 <BootstrapClient />

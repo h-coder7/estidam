@@ -1,0 +1,38 @@
+.page_transition {
+    min-height: 100%;
+
+    &.is-out {
+        animation: page-fade-out 0.42s ease forwards;
+    }
+
+    &.is-in {
+        animation: page-fade-in 0.42s ease both;
+    }
+}
+
+@keyframes page-fade-out {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes page-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page_transition.is-out,
+    .page_transition.is-in {
+        animation: none;
+    }
+}
