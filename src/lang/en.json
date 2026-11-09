@@ -1141,6 +1141,16 @@
     }
   },
 
+  "clientsPartners": {
+    "eyebrow": "Trusted connections",
+    "titleStrong": "Built on Trust.",
+    "titleMuted": "Connected by Purpose.",
+    "description": "Discover the clients and partners who are part of Estidam's professional network.",
+    "clients": "Our Clients",
+    "partners": "Our Partners",
+    "pause": "Pause",
+    "play": "Play"
+  },
   "getInTouch": {
     "badge": "Get In Touch",
     "titleStrong": "Start with the Challenge",
