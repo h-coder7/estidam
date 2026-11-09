@@ -68,6 +68,7 @@ export type AboutPartnerLogo = {
     name: string;
     url: string;
     src: string;
+    type: string;
 };
 
 export type AboutLogosContent = {
@@ -479,6 +480,7 @@ export async function getAboutPartnerLogos(locale: string): Promise<AboutPartner
                     name,
                     url: text(item.url ?? item.href ?? item.link) || "#",
                     src,
+                    type: text(item.type ?? item.category ?? item.kind),
                 },
             ];
         });
