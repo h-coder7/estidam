@@ -31,7 +31,7 @@ export const PRODUCTS_CASCADE_CONFIG = {
     cards: [
         {
             id: "mayar",
-            img: "/images/products/product-02-mayar-quality.jpg",
+            img: "/images/product1.jpg",
             statusKey: "card1Status",
             statusTone: "available" as const,
             titleKey: "card1Title",
