@@ -459,16 +459,18 @@ export async function getProductsContent(locale: string): Promise<ProductsSectio
 }
 
 const productImages = [
-    "/images/product1.jpg",
-    "/images/products/product-2.png",
-    "/images/products/product-3.png",
+    "/images/products/product-01-hrh-seasonal-hiring.jpg",
+    "/images/products/product-02-mayar-quality.jpg",
+    "/images/products/product-03-maidan-field-ops.jpg",
     "/images/products/product-4.png",
 ];
 
 const productImageBySlug: Record<string, string> = {
-    hrh: "/images/product1.jpg",
-    miyar: "/images/products/product-2.png",
-    maydan: "/images/products/product-3.png",
+    hrh: "/images/products/product-01-hrh-seasonal-hiring.jpg",
+    miyar: "/images/products/product-02-mayar-quality.jpg",
+    mayar: "/images/products/product-02-mayar-quality.jpg",
+    maydan: "/images/products/product-03-maidan-field-ops.jpg",
+    maidan: "/images/products/product-03-maidan-field-ops.jpg",
 };
 
 export type CatalogProduct = {

@@ -232,9 +232,11 @@ export type ProductsListCard = {
 };
 
 const listImages: Record<string, string> = {
-    hrh: "/images/products/hrh.png",
-    miyar: "/images/products/mayar2.png",
-    maydan: "/images/products/maydan.png",
+    hrh: "/images/products/product-01-hrh-seasonal-hiring.jpg",
+    miyar: "/images/products/product-02-mayar-quality.jpg",
+    mayar: "/images/products/product-02-mayar-quality.jpg",
+    maydan: "/images/products/product-03-maidan-field-ops.jpg",
+    maidan: "/images/products/product-03-maidan-field-ops.jpg",
 };
 
 const pageSlugs: Record<string, string> = {
@@ -366,7 +368,7 @@ export async function getProductHeroContent(locale: string, pageSlug: string): P
         badge: name.kicker || name.name,
         title: text(product.tagline),
         description: text(product.overview),
-        image: mediaUrl(product.image),
+        image: mediaUrl(product.image) || listImages[pageSlug] || listImages[apiSlugs[pageSlug]] || "",
         secondaryLabel: soon ? text(product.notify_label ?? product.notifyLabel) : "",
     };
 }
