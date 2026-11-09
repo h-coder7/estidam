@@ -18,16 +18,17 @@ export type WhyEstidamCard = {
 type Props = {
     cards: WhyEstidamCard[];
     conceptLabel?: string;
+    locale?: string;
 };
 
 /** Layout slot per approved capability position: 01 & 04 wide, 02 & 03 narrow. */
-function sceneAt(index: number): ComponentType | null {
+function sceneAt(index: number): ComponentType<{ locale?: string }> | null {
     return index < WHY_SCENES.length ? WHY_SCENES[index] : null;
 }
 
 const SLOT = ["is-wide", "is-narrow", "is-narrow", "is-wide"] as const;
 
-export default function WhyEstidamBento({ cards, conceptLabel = "Concept workflow" }: Props) {
+export default function WhyEstidamBento({ cards, conceptLabel = "Concept workflow", locale = "en" }: Props) {
     const rootRef = useRef<HTMLDivElement>(null);
 
     useIsoLayoutEffect(() => {
@@ -76,7 +77,7 @@ export default function WhyEstidamBento({ cards, conceptLabel = "Concept workflo
 
                             {Scene ? (
                                 <div className="we-scene" data-we-scene="">
-                                    <Scene />
+                                    <Scene locale={locale} />
                                 </div>
                             ) : null}
 

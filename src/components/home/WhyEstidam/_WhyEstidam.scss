@@ -218,6 +218,14 @@ $we-hair-2: #e2e2e2;
             letter-spacing: 0.06em;
         }
 
+        &.is-ar {
+            .we-m7,
+            .we-m8,
+            .we-m9 {
+                letter-spacing: 0;
+            }
+        }
+
         .we-m8 {
             font-size: 8.5px;
             letter-spacing: 0.06em;
