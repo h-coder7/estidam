@@ -1,10 +1,24 @@
 import { getLocale, getTranslations } from "next-intl/server";
 
-import { getFooterSection } from "@/lib/api/home";
+import { getFooterSection, type FooterSocialKey } from "@/lib/api/home";
 import { Link } from "@/i18n/routing";
 import Reveal from "@/components/animations/Reveal";
 
 import "./_Footer.scss";
+
+const socialLabels: Record<FooterSocialKey, "facebook" | "twitter" | "instagram" | "linkedin" | "whatsapp"> = {
+    facebook: "facebook",
+    x: "twitter",
+    instagram: "instagram",
+    linkedin: "linkedin",
+    whatsapp: "whatsapp",
+};
+
+function phoneHref(phone: string) {
+    const compact = phone.replace(/[^\d+]/g, "");
+    if (!compact) return "";
+    return compact.startsWith("+") ? `tel:${compact}` : `tel:+${compact}`;
+}
 
 const Footer = async () => {
     const locale = await getLocale();
@@ -15,6 +29,16 @@ const Footer = async () => {
     const address = footer.address || t("address");
     const email = footer.email || t("email");
     const phone = footer.phone || t("phone");
+    const brand = footer.name || t("copyrightBrand");
+    const socials = footer.socials.length
+        ? footer.socials
+        : (
+              [
+                  ["facebook", "#"],
+                  ["x", "#"],
+                  ["instagram", "#"],
+              ] as const
+          ).map(([key, url]) => ({ key, url }));
 
     return (
         <footer className="footer">
@@ -27,8 +51,8 @@ const Footer = async () => {
                                     <Reveal animation="fade-up" trigger="load">
                                         <Link href="/" className="footer_logo">
                                             <img
-                                                src="/images/logo-wh.svg"
-                                                alt="Estidam"
+                                                src={footer.logo || "/images/logo-wh.svg"}
+                                                alt={brand}
                                             />
                                         </Link>
                                     </Reveal>
@@ -90,12 +114,14 @@ const Footer = async () => {
                                             <a
                                                 href={`mailto:${email}`}
                                                 className="footer_contact_text"
+                                                dir="ltr"
                                             >
                                                 {email}
                                             </a>
                                             <a
-                                                href={`tel:${phone.replace(/\s/g, "")}`}
+                                                href={phoneHref(phone)}
                                                 className="footer_contact_text"
+                                                dir="ltr"
                                             >
                                                 {phone}
                                             </a>
@@ -110,57 +136,21 @@ const Footer = async () => {
                         <div className="row gx-0 align-items-center justify-content-between">
                             <div className="col-lg-8">
                                 <div className="footer_socials">
-                                    <a
-                                        href="#"
-                                        className="footer_social_link"
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >
-                                        <span>{t("facebook")}</span>
-                                        <i
-                                            className="fat fa-arrow-up-right fsz-16 ms-2"
-                                            aria-hidden="true"
-                                        ></i>
-                                    </a>
-
-                                    <a
-                                        href="#"
-                                        className="footer_social_link"
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >
-                                        <span>{t("twitter")}</span>
-                                        <i
-                                            className="fat fa-arrow-up-right fsz-16 ms-2"
-                                            aria-hidden="true"
-                                        ></i>
-                                    </a>
-
-                                    <a
-                                        href="#"
-                                        className="footer_social_link"
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >
-                                        <span>{t("instagram")}</span>
-                                        <i
-                                            className="fat fa-arrow-up-right fsz-16 ms-2"
-                                            aria-hidden="true"
-                                        ></i>
-                                    </a>
-
-                                    <a
-                                        href="#"
-                                        className="footer_social_link"
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >
-                                        <span>{t("dribbble")}</span>
-                                        <i
-                                            className="fat fa-arrow-up-right fsz-16 ms-2"
-                                            aria-hidden="true"
-                                        ></i>
-                                    </a>
+                                    {socials.map((social) => (
+                                        <a
+                                            key={social.key}
+                                            href={social.url}
+                                            className="footer_social_link"
+                                            target={social.url.startsWith("http") ? "_blank" : undefined}
+                                            rel={social.url.startsWith("http") ? "noreferrer" : undefined}
+                                        >
+                                            <span>{t(socialLabels[social.key])}</span>
+                                            <i
+                                                className="fat fa-arrow-up-right fsz-16 ms-2"
+                                                aria-hidden="true"
+                                            ></i>
+                                        </a>
+                                    ))}
                                 </div>
                             </div>
 
@@ -168,7 +158,7 @@ const Footer = async () => {
                                 <p className="footer_copyright mb-0">
                                     © {currentYear} {t("copyrightPrefix")}{" "}
                                     <Link href="/" className="footer_copyright_brand">
-                                        {t("copyrightBrand")}
+                                        {brand}
                                     </Link>
                                 </p>
                             </div>

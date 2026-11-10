@@ -1,10 +1,11 @@
 import { cache } from "react";
 import { api } from "@/lib/api";
 import { createSwrCache } from "@/lib/api/swrCache";
+import { getSiteSettings, type SiteSocialKey } from "@/lib/api/settings";
 import homeAr from "@/mock-api/home.ar.json";
 import homeEn from "@/mock-api/home.en.json";
 
-export type FooterSocialKey = "facebook" | "instagram" | "x" | "whatsapp" | "linkedin";
+export type FooterSocialKey = SiteSocialKey;
 
 export type FooterSocialLink = {
     key: FooterSocialKey;
@@ -13,9 +14,11 @@ export type FooterSocialLink = {
 
 export type FooterSectionData = {
     description: string;
+    name: string;
     email: string;
     phone: string;
     address: string;
+    logo: string;
     socials: FooterSocialLink[];
 };
 
@@ -25,16 +28,27 @@ function getLocaleHome(locale: string): HomeMock {
     return locale === "ar" ? homeAr : homeEn;
 }
 
+const footerSocialKeys: FooterSocialKey[] = ["facebook", "x", "instagram", "linkedin", "whatsapp"];
+
+const adminLogo = "/assets/admin/images/logo.svg";
+
 export async function getFooterSection(locale: string): Promise<FooterSectionData> {
     const home = getLocaleHome(locale);
     const footer = home.footer;
+    const settings = await getSiteSettings(locale);
+    const logo = settings?.logo && !settings.logo.includes(adminLogo) ? settings.logo : "";
 
     return {
         description: footer?.description || "",
-        email: footer?.email || "",
-        phone: footer?.phone || "",
-        address: footer?.location || "",
-        socials: [],
+        name: settings?.name || "",
+        email: settings?.email || footer?.email || "",
+        phone: settings?.phone || footer?.phone || "",
+        address: settings?.address || footer?.location || "",
+        logo,
+        socials: footerSocialKeys.flatMap((key) => {
+            const url = settings?.social[key];
+            return url ? [{ key, url }] : [];
+        }),
     };
 }
 

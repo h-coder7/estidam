@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { api } from "@/lib/api";
 import { createSwrCache } from "@/lib/api/swrCache";
+import { getSiteSettings } from "@/lib/api/settings";
 
 export type ContactHeroContent = {
     eyebrow: string;
@@ -118,26 +119,6 @@ export type ContactDirectContent = {
     socials: { id: ContactDirectSocialId; href: string }[];
 };
 
-type SettingsPayload = {
-    success?: boolean;
-    data?: {
-        site_address?: unknown;
-        contact?: Record<string, unknown>;
-        social?: Record<string, unknown>;
-    };
-};
-
-const readSettings = createSwrCache<SettingsPayload["data"] | null>(null);
-
-async function fetchSettings(locale: string) {
-    try {
-        const response = (await api.getSettings(locale)) as SettingsPayload;
-        return response?.success ? response.data ?? null : null;
-    } catch {
-        return null;
-    }
-}
-
 function shown(value: unknown) {
     return !(value === false || value === 0 || value === "0" || value === "false");
 }
@@ -153,19 +134,11 @@ export async function getContactDirectContent(locale: string): Promise<ContactDi
     const section = payload?.data?.sections?.find((item) => item.key === "infoCard")?.data ?? null;
     if (!section) return null;
 
-    let settings: SettingsPayload["data"] | null = null;
-    try {
-        settings = await readSettings(locale, () => fetchSettings(locale));
-    } catch {
-        settings = null;
-    }
-
-    const contact = settings?.contact ?? {};
-    const social = settings?.social ?? {};
-    const email = text(section.email) || text(contact.email);
-    const phone = text(section.phone) || text(contact.phone);
-    const whatsapp = text(section.whatsapp) || text(contact.whatsapp);
-    const address = text(section.address) || text(settings?.site_address);
+    const settings = await getSiteSettings(locale);
+    const email = text(section.email) || settings?.email || "";
+    const phone = text(section.phone) || settings?.phone || "";
+    const whatsapp = text(section.whatsapp) || settings?.social.whatsapp || "";
+    const address = text(section.address) || settings?.address || "";
 
     const channels = [
         email ? { id: "email" as const, value: email, ltr: true } : null,
@@ -176,7 +149,7 @@ export async function getContactDirectContent(locale: string): Promise<ContactDi
 
     const socials = shown(section.showSocial)
         ? directSocials.flatMap((id) => {
-              const href = link(section[id] ?? social[id]);
+              const href = link(section[id] ?? settings?.social[id]);
               return href ? [{ id, href }] : [];
           })
         : [];
