@@ -11,15 +11,17 @@ import "./_ClientsPartners.scss";
 const ClientsPartners = async () => {
     const locale = await getLocale();
     const t = await getTranslations("clientsPartners");
-    const logos = (await getAboutPartnerLogos(locale)).flatMap((logo) =>
-        logo.src ? [{ id: logo.id, name: logo.name, src: logo.src, type: logo.type.toLowerCase() }] : [],
-    );
+    const logos = (await getAboutPartnerLogos(locale)).flatMap((logo) => {
+        if (!logo.src) return [];
+        const url = logo.url && logo.url !== "#" ? logo.url : undefined;
+        return [{ id: logo.id, name: logo.name, src: logo.src, url, type: logo.type.toLowerCase() }];
+    });
     const clients: BrandLogo[] = logos
         .filter((logo) => logo.type === "client")
-        .map(({ id, name, src }) => ({ id, name, src }));
+        .map(({ id, name, src, url }) => ({ id, name, src, url }));
     const partners: BrandLogo[] = logos
         .filter((logo) => logo.type !== "client")
-        .map(({ id, name, src }) => ({ id, name, src }));
+        .map(({ id, name, src, url }) => ({ id, name, src, url }));
     const clientLogos = clients.length ? clients : CLIENT_LOGOS;
     const partnerLogos = partners.length ? partners : PARTNER_LOGOS;
 

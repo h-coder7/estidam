@@ -42,7 +42,7 @@ const GrowthEcosystem = async () => {
                   title: card.title || (fallback ? t(fallback.title) : ""),
                   text: card.text || (fallback ? t(fallback.text) : ""),
                   cta: card.cta || (fallback ? t(fallback.cta) : ""),
-                  ctaUrl: card.ctaUrl || "#",
+                  ctaUrl: "/contact",
                   icon: card.icon || fallback?.icon || cardFallbacks[0].icon,
               };
           })
@@ -50,7 +50,7 @@ const GrowthEcosystem = async () => {
               title: t(card.title),
               text: t(card.text),
               cta: t(card.cta),
-              ctaUrl: "#",
+              ctaUrl: "/contact",
               icon: card.icon,
           }));
 

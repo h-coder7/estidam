@@ -1,5 +1,6 @@
 .page_transition {
     min-height: 100%;
+    // overflow: hidden;
 
     &.is-out {
         animation: page-fade-out 0.42s ease forwards;
@@ -34,5 +35,11 @@
     .page_transition.is-out,
     .page_transition.is-in {
         animation: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .page_transition {
+        overflow: hidden;
     }
 }

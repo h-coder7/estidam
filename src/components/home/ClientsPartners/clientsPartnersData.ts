@@ -6,7 +6,7 @@
  */
 type StaticLogo = { name: string; src: string; width: number; height: number };
 
-export type BrandLogo = { id: string; name: string; src: string; width?: number; height?: number };
+export type BrandLogo = { id: string; name: string; src: string; url?: string; width?: number; height?: number };
 
 const withId = (logos: StaticLogo[]): BrandLogo[] =>
     logos.map((logo) => ({ id: logo.src, name: logo.name, src: logo.src, width: logo.width, height: logo.height }));

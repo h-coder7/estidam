@@ -219,6 +219,9 @@ const iconAliases: Record<string, string> = {
     fileCheck2: "file-check",
     "file-check2": "file-check",
     brainCircuit: "brain-circuit",
+    target: "bullseye",
+    layers: "layer-group",
+    "line-chart": "chart-line",
 };
 
 function fontAwesomeIcon(value: unknown, index: number, fallbacks: string[]) {
@@ -550,7 +553,7 @@ async function fetchCatalogProducts(
                     statusTone: availability === "available" ? "available" : "soon",
                     title: text(item.name ?? detail.name),
                     tagline: text(item.tagline ?? detail.tagline),
-                    logo: "/images/logo1.png",
+                    logo: mediaUrl(text(item.logo ?? detail.logo)) || "/images/logo1.png",
                     problemLabel: labels.problem,
                     problem: text(detail.problem),
                     usersLabel: labels.users,
@@ -574,8 +577,41 @@ export async function getCatalogProducts(
     return readCatalogProducts(key, () => fetchCatalogProducts(locale, labels, onlyAvailable));
 }
 
+export type DeliveryStep = {
+    title: string;
+    icon: string;
+};
+
+const deliveryIcons = [
+    "fa-regular fa-bullseye",
+    "fa-regular fa-magnifying-glass",
+    "fa-regular fa-lightbulb",
+    "fa-regular fa-code",
+    "fa-regular fa-rocket",
+    "fa-regular fa-chart-simple",
+    "fa-regular fa-arrows-rotate",
+];
+
+function deliverySteps(value: unknown): DeliveryStep[] {
+    if (!Array.isArray(value)) return [];
+
+    return value.flatMap((item, index) => {
+        if (typeof item === "string") {
+            const title = text(item);
+            return title ? [{ title, icon: fontAwesomeIcon(null, index, deliveryIcons) }] : [];
+        }
+
+        if (!item || typeof item !== "object") return [];
+        const step = item as Record<string, unknown>;
+        const title = text(step.title ?? step.label);
+        if (!title) return [];
+
+        return [{ title, icon: fontAwesomeIcon(step.icon, index, deliveryIcons) }];
+    });
+}
+
 export type DeliveryContent = HomeSectionContent & {
-    steps: string[];
+    steps: DeliveryStep[];
 };
 
 export async function getDeliveryContent(locale: string): Promise<DeliveryContent | null> {
@@ -584,7 +620,7 @@ export async function getDeliveryContent(locale: string): Promise<DeliveryConten
 
     return {
         ...sectionHeading(data),
-        steps: labels(data.steps),
+        steps: deliverySteps(data.steps),
     };
 }
 
@@ -648,6 +684,7 @@ export async function getProofCases(locale: string): Promise<ProofCaseCard[]> {
                 const capability = firstRecord(detail.capabilities);
                 const useCase = firstRecord(detail.use_cases);
                 const logo =
+                    mediaUrl(text(item.logo ?? detail.logo)) ||
                     journeyImage(item.image ?? detail.image) ||
                     proofLogos[index % proofLogos.length];
 
