@@ -42,11 +42,11 @@ const HowWeDeliver = async () => {
     const cta = content?.cta || t("cta");
     const ctaUrl = content?.ctaUrl || "#";
     const steps = content?.steps.length
-        ? content.steps.map((label, index) => {
+        ? content.steps.map((step, index) => {
               const fallback = stepFallbacks[index];
               return {
-                  label: label || (fallback ? t(fallback.key) : ""),
-                  icon: fallback?.icon ?? stepFallbacks[stepFallbacks.length - 1].icon,
+                  label: step.title || (fallback ? t(fallback.key) : ""),
+                  icon: step.icon || fallback?.icon || stepFallbacks[stepFallbacks.length - 1].icon,
               };
           })
         : stepFallbacks.map((step) => ({ label: t(step.key), icon: step.icon }));

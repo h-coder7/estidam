@@ -126,7 +126,15 @@ export default function PartnersMarquee({ logos, label, pauseLabel, playLabel }:
             {/* Accessible list (visually hidden) — every partner exactly once. */}
             <ul className="cp-sr">
                 {logos.map((logo) => (
-                    <li key={logo.src}>{logo.name}</li>
+                    <li key={logo.id}>
+                        {logo.url ? (
+                            <a href={logo.url} target={/^https?:\/\//i.test(logo.url) ? "_blank" : undefined} rel={/^https?:\/\//i.test(logo.url) ? "noreferrer" : undefined}>
+                                {logo.name}
+                            </a>
+                        ) : (
+                            logo.name
+                        )}
+                    </li>
                 ))}
             </ul>
 
@@ -135,13 +143,31 @@ export default function PartnersMarquee({ logos, label, pauseLabel, playLabel }:
                     <div className="cp-row" key={r}>
                         {Array.from({ length: COPIES }).map((_, c) => (
                             <div className="cp-set" key={c}>
-                                {row.map((logo) => (
-                                    <span className="cp-plate" key={logo.src}>
+                                {row.map((logo) => {
+                                    const external = !!logo.url && /^https?:\/\//i.test(logo.url);
+                                    const image = (
                                         <span className="cp-box">
                                             <img src={logo.src} alt="" width={logo.width} height={logo.height} loading="lazy" decoding="async" draggable={false} />
                                         </span>
-                                    </span>
-                                ))}
+                                    );
+
+                                    return logo.url ? (
+                                        <a
+                                            className="cp-plate"
+                                            key={`${c}-${logo.id}`}
+                                            href={logo.url}
+                                            tabIndex={-1}
+                                            target={external ? "_blank" : undefined}
+                                            rel={external ? "noreferrer" : undefined}
+                                        >
+                                            {image}
+                                        </a>
+                                    ) : (
+                                        <span className="cp-plate" key={`${c}-${logo.id}`}>
+                                            {image}
+                                        </span>
+                                    );
+                                })}
                             </div>
                         ))}
                     </div>

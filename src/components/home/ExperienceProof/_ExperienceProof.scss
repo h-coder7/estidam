@@ -178,10 +178,12 @@
 
     .proof_stat_logo {
         display: block;
-        height: 70px;
-        width: max-content;
+        height: 64px;
+        width: auto;
+        max-width: 140px;
         margin-bottom: 40px;
         object-fit: contain;
+        object-position: center;
         filter: brightness(0) invert(1);
     }
 
