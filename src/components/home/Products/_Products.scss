@@ -162,6 +162,8 @@
         width: 100%;
         height: auto;
         object-fit: contain;
+        // CMS marks are white on transparent, so they disappear on the white card.
+        // filter: brightness(0);
     }
 }
 
