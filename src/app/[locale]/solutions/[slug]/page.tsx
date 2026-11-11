@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { getLocale } from "next-intl/server";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar/Navbar";
 import SolutionsHero from "@/components/solutions/SolutionsHero/SolutionsHero";
@@ -10,12 +11,24 @@ import SystemsIntegrations from "@/components/solutions/SystemsIntegrations/Syst
 import OutcomesIndicators from "@/components/solutions/OutcomesIndicators/OutcomesIndicators";
 import RelatedSolutions from "@/components/solutions/RelatedSolutions/RelatedSolutions";
 import CallToAction from "@/components/solutions/CallToAction/CallToAction";
-import { SOLUTION_DETAIL_SLUG } from "@/components/solutions/solutionRoutes";
+import { api } from "@/lib/api";
+import { getSolutionDetail } from "@/lib/api/solutionDetail";
 
 export const revalidate = 300;
 
-export function generateStaticParams() {
-    return [{ slug: SOLUTION_DETAIL_SLUG }];
+export async function generateStaticParams() {
+    try {
+        const payload = await api.getSolutions("en");
+        const data = (payload as { data?: unknown })?.data;
+        const items = Array.isArray(data) ? data : [];
+
+        return items.flatMap((item) => {
+            const slug = item && typeof item === "object" ? String((item as { slug?: unknown }).slug || "").trim() : "";
+            return slug ? [{ slug }] : [];
+        });
+    } catch {
+        return [];
+    }
 }
 
 export default async function SolutionDetailPage({
@@ -24,8 +37,10 @@ export default async function SolutionDetailPage({
     params: Promise<{ slug: string }>;
 }) {
     const { slug } = await params;
+    const locale = await getLocale();
+    const solution = await getSolutionDetail(locale, slug);
 
-    if (slug !== SOLUTION_DETAIL_SLUG) {
+    if (!solution) {
         notFound();
     }
 
@@ -34,15 +49,15 @@ export default async function SolutionDetailPage({
             <Navbar className="inner-nav" />
 
             <main>
-                <SolutionsHero />
-                <Challenges />
-                <HowHelps />
-                <UseCases />
-                <DeliveryApproach />
-                <SystemsIntegrations />
-                <OutcomesIndicators />
-                <RelatedSolutions />
-                <CallToAction />
+                <SolutionsHero hero={solution.hero} />
+                <Challenges items={solution.challenges} />
+                <HowHelps items={solution.helps} />
+                <UseCases items={solution.useCases} />
+                <DeliveryApproach delivery={solution.delivery} />
+                <SystemsIntegrations systems={solution.systems} />
+                <OutcomesIndicators items={solution.outcomes} />
+                <RelatedSolutions items={solution.related} />
+                <CallToAction source="about" />
             </main>
 
             <Footer />

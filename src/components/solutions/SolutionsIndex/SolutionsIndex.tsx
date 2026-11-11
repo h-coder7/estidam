@@ -1,8 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
 import { Link } from "@/i18n/routing";
-import { getSolutionCubeSlides } from "@/lib/api/home";
-import { SOLUTION_DETAIL_SLUG } from "@/components/solutions/solutionRoutes";
+import { getSolutionCatalog } from "@/lib/api/home";
 
 import "./_SolutionsIndex.scss";
 
@@ -30,7 +29,7 @@ const SolutionsIndex = async () => {
     const locale = await getLocale();
     const t = await getTranslations("solutions");
     const index = await getTranslations("solutionsIndex");
-    const slides = await getSolutionCubeSlides(locale);
+    const slides = await getSolutionCatalog(locale);
 
     const cards: CatalogCard[] = slides.map((item, position) => {
         const featured = position === 0;
@@ -43,8 +42,8 @@ const SolutionsIndex = async () => {
             titleMuted: item.titleMuted || "",
             text: item.text,
             highlight: item.highlight,
-            href: featured ? `/solutions/${SOLUTION_DETAIL_SLUG}` : "/contact",
-            label: featured ? index("explore") : index("discuss"),
+            href: item.slug ? `/solutions/${item.slug}` : "/contact",
+            label: item.slug ? index("explore") : index("discuss"),
             image,
             photo: Boolean(image) && !image.includes("/icons/"),
             featured,

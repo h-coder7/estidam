@@ -1,10 +1,21 @@
 import { getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import type { SolutionChallenge } from "@/lib/api/solutionDetail";
 
 import "./_Challenges.scss";
 
-const Challenges = async () => {
+const icons = [
+    "/images/icons/ch1.svg",
+    "/images/icons/ch2.svg",
+    "/images/icons/ch3.svg",
+    "/images/icons/ch4.svg",
+    "/images/icons/ch5.svg",
+    "/images/icons/ch6.svg",
+] as const;
+
+const Challenges = async ({ items }: { items: SolutionChallenge[] }) => {
     const t = await getTranslations("solutionsPage.challenges");
+    if (!items.length) return null;
 
     return (
         <section className="solutions_challenges border-top mb-5 border-bottom" id="challenges">
@@ -18,21 +29,15 @@ const Challenges = async () => {
                         <div className="col-lg-6">
                             <Reveal animation="fade-up" trigger="load">
                                 <h2 className="challenges_title fsz-40 fw-600 lh-2">
-                                    <span className="challenges_title_strong">
-                                        {t("titleStrong")}
-                                    </span>{" "}
-                                    <span className="challenges_title_muted cr-blue fw-500">
-                                        {t("titleMuted")}
-                                    </span>
+                                    <span className="challenges_title_strong">{t("titleStrong")}</span>{" "}
+                                    <span className="challenges_title_muted cr-blue fw-500">{t("titleMuted")}</span>
                                 </h2>
                             </Reveal>
                         </div>
 
                         <div className="col-lg-5">
                             <Reveal animation="fade-up" trigger="load">
-                                <p className="challenges_description mb-0 text-lg-end">
-                                    {t("description")}
-                                </p>
+                                <p className="challenges_description mb-0 text-lg-end">{t("description")}</p>
                             </Reveal>
                         </div>
                     </div>
@@ -42,205 +47,34 @@ const Challenges = async () => {
                 <div className="container">
                     <div className="challenges_grid">
                         <div className="row gx-0">
-
-                            <div className="col-lg-4 col-md-6">
-                                <Reveal animation="fade-up" trigger="load">
-                                    <article className="challenge_card">
-                                        <div className="challenge_card_top">
-                                            <div className="challenge_card_icon">
-                                                <img
-                                                    src="/images/icons/ch1.svg"
-                                                    alt=""
-                                                    aria-hidden="true"
-                                                />
+                            {items.map((item, index) => (
+                                <div className="col-lg-4 col-md-6" key={`${item.text}-${index}`}>
+                                    <Reveal animation="fade-up" trigger="load">
+                                        <article className="challenge_card">
+                                            <div className="challenge_card_top">
+                                                <div className="challenge_card_icon">
+                                                    <img src={icons[index % icons.length]} alt="" aria-hidden="true" />
+                                                </div>
+                                                <span className="challenge_card_arrow" aria-hidden="true">
+                                                    <i className="fa-regular fa-arrow-right"></i>
+                                                </span>
                                             </div>
-                                            <a
-                                                href="#"
-                                                className="challenge_card_arrow"
-                                                aria-label={t("card1Title")}
-                                            >
-                                                <i
-                                                    className="fa-regular fa-arrow-right"
-                                                    aria-hidden="true"
-                                                ></i>
-                                            </a>
-                                        </div>
 
-                                        <h3 className="challenge_card_title">{t("card1Title")}</h3>
+                                            <h3 className="challenge_card_title">{item.text}</h3>
 
-                                        <div className="challenge_card_footer">
-                                            <span>{t("impact")}</span>
-                                        </div>
-                                    </article>
-                                </Reveal>
-                            </div>
-
-                            <div className="col-lg-4 col-md-6">
-                                <Reveal animation="fade-up" trigger="load">
-                                    <article className="challenge_card">
-                                        <div className="challenge_card_top">
-                                            <div className="challenge_card_icon">
-                                                <img
-                                                    src="/images/icons/ch2.svg"
-                                                    alt=""
-                                                    aria-hidden="true"
-                                                />
-                                            </div>
-                                            <a
-                                                href="#"
-                                                className="challenge_card_arrow"
-                                                aria-label={t("card2Title")}
-                                            >
-                                                <i
-                                                    className="fa-regular fa-arrow-right"
-                                                    aria-hidden="true"
-                                                ></i>
-                                            </a>
-                                        </div>
-
-                                        <h3 className="challenge_card_title">{t("card2Title")}</h3>
-
-                                        <div className="challenge_card_footer">
-                                            <span>{t("impact")}</span>
-                                        </div>
-                                    </article>
-                                </Reveal>
-                            </div>
-
-                            <div className="col-lg-4 col-md-6">
-                                <Reveal animation="fade-up" trigger="load">
-                                    <article className="challenge_card">
-                                        <div className="challenge_card_top">
-                                            <div className="challenge_card_icon">
-                                                <img
-                                                    src="/images/icons/ch3.svg"
-                                                    alt=""
-                                                    aria-hidden="true"
-                                                />
-                                            </div>
-                                            <a
-                                                href="#"
-                                                className="challenge_card_arrow"
-                                                aria-label={t("card3Title")}
-                                            >
-                                                <i
-                                                    className="fa-regular fa-arrow-right"
-                                                    aria-hidden="true"
-                                                ></i>
-                                            </a>
-                                        </div>
-
-                                        <h3 className="challenge_card_title">{t("card3Title")}</h3>
-
-                                        <div className="challenge_card_footer">
-                                            <span>{t("impact")}</span>
-                                        </div>
-                                    </article>
-                                </Reveal>
-                            </div>
-
-                            <div className="col-lg-4 col-md-6">
-                                <Reveal animation="fade-up" trigger="load">
-                                    <article className="challenge_card">
-                                        <div className="challenge_card_top">
-                                            <div className="challenge_card_icon">
-                                                <img
-                                                    src="/images/icons/ch4.svg"
-                                                    alt=""
-                                                    aria-hidden="true"
-                                                />
-                                            </div>
-                                            <a
-                                                href="#"
-                                                className="challenge_card_arrow"
-                                                aria-label={t("card4Title")}
-                                            >
-                                                <i
-                                                    className="fa-regular fa-arrow-right"
-                                                    aria-hidden="true"
-                                                ></i>
-                                            </a>
-                                        </div>
-
-                                        <h3 className="challenge_card_title">{t("card4Title")}</h3>
-
-                                        <div className="challenge_card_footer">
-                                            <span>{t("impact")}</span>
-                                        </div>
-                                    </article>
-                                </Reveal>
-                            </div>
-
-                            <div className="col-lg-4 col-md-6">
-                                <Reveal animation="fade-up" trigger="load">
-                                    <article className="challenge_card">
-                                        <div className="challenge_card_top">
-                                            <div className="challenge_card_icon">
-                                                <img
-                                                    src="/images/icons/ch5.svg"
-                                                    alt=""
-                                                    aria-hidden="true"
-                                                />
-                                            </div>
-                                            <a
-                                                href="#"
-                                                className="challenge_card_arrow"
-                                                aria-label={t("card5Title")}
-                                            >
-                                                <i
-                                                    className="fa-regular fa-arrow-right"
-                                                    aria-hidden="true"
-                                                ></i>
-                                            </a>
-                                        </div>
-
-                                        <h3 className="challenge_card_title">{t("card5Title")}</h3>
-
-                                        <div className="challenge_card_footer">
-                                            <span>{t("impact")}</span>
-                                        </div>
-                                    </article>
-                                </Reveal>
-                            </div>
-
-                            <div className="col-lg-4 col-md-6">
-                                <Reveal animation="fade-up" trigger="load">
-                                    <article className="challenge_card">
-                                        <div className="challenge_card_top">
-                                            <div className="challenge_card_icon">
-                                                <img
-                                                    src="/images/icons/ch6.svg"
-                                                    alt=""
-                                                    aria-hidden="true"
-                                                />
-                                            </div>
-                                            <a
-                                                href="#"
-                                                className="challenge_card_arrow"
-                                                aria-label={t("card6Title")}
-                                            >
-                                                <i
-                                                    className="fa-regular fa-arrow-right"
-                                                    aria-hidden="true"
-                                                ></i>
-                                            </a>
-                                        </div>
-
-                                        <h3 className="challenge_card_title">{t("card6Title")}</h3>
-
-                                        <div className="challenge_card_footer">
-                                            <span>{t("impact")}</span>
-                                        </div>
-                                    </article>
-                                </Reveal>
-                            </div>
-
+                                            {item.tag ? (
+                                                <div className="challenge_card_footer">
+                                                    <span>{item.tag}</span>
+                                                </div>
+                                            ) : null}
+                                        </article>
+                                    </Reveal>
+                                </div>
+                            ))}
                         </div>
-
                     </div>
                 </div>
             </div>
-
         </section>
     );
 };

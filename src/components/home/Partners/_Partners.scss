@@ -163,32 +163,6 @@
         font-size: 13px;
         font-weight: 600;
     }
-
-    .ps-ctrl {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 10px;
-        border: 1px solid #e3e7ee;
-        border-radius: 8px;
-        background: #fff;
-        color: #5d6878;
-        font-size: 12px;
-        cursor: pointer;
-        transition:
-            color 0.25s,
-            border-color 0.25s;
-
-        &:hover {
-            border-color: var(--blue);
-            color: #0b1a33;
-        }
-
-        &:focus-visible {
-            outline: 2px solid var(--blue);
-            outline-offset: 2px;
-        }
-    }
 }
 
 @media screen and (max-width: 991px) {

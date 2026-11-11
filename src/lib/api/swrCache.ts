@@ -1,4 +1,5 @@
-const REVALIDATE_MS = 300_000;
+export const REVALIDATE_MS = 300_000;
+// export const REVALIDATE_MS = 10_000;
 
 type Entry<T> = {
     value: T;

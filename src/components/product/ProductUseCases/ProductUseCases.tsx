@@ -4,64 +4,52 @@ import { getProductUseCases } from "@/lib/api/productsPage";
 
 import "./_ProductUseCases.scss";
 
-const icons = [
-    "/images/product-det/use-case-icon-users.svg",
-    "/images/product-det/use-case-icon-calendar.svg",
-    "/images/product-det/use-case-icon-file.svg",
-] as const;
+const tabIcons: Record<string, string> = {
+    users: "/images/product-det/use-case-icon-users.svg",
+    calendar: "/images/product-det/use-case-icon-calendar.svg",
+    file: "/images/product-det/use-case-icon-file.svg",
+    filetext: "/images/product-det/use-case-icon-file.svg",
+    filecheck: "/images/product-det/use-case-icon-file.svg",
+};
 
-const bars = [
-    { tone: "applied", width: 100, short: false },
-    { tone: "screened", width: 100, short: false },
-    { tone: "high", width: 45.65, short: false },
-    { tone: "team", width: 18.48, short: true },
+const metricIcons: Record<string, string> = {
+    clock: "/images/product-det/use-case-icon-time.svg",
+    time: "/images/product-det/use-case-icon-time.svg",
+    timer: "/images/product-det/use-case-icon-time.svg",
+    percent: "/images/product-det/use-case-icon-percent.svg",
+    percentage: "/images/product-det/use-case-icon-percent.svg",
+};
+
+const metricFallbacks = [
+    "/images/product-det/use-case-icon-time.svg",
+    "/images/product-det/use-case-icon-percent.svg",
 ] as const;
 
 const steps = [
-    { tone: "challenge", dot: "/images/product-det/use-case-dot-challenge.svg" },
-    { tone: "helps", dot: "/images/product-det/use-case-dot-helps.svg" },
-    { tone: "value", dot: "/images/product-det/use-case-dot-value.svg" },
+    { key: "challenge", tone: "challenge", dot: "/images/product-det/use-case-dot-challenge.svg" },
+    { key: "solution", tone: "helps", dot: "/images/product-det/use-case-dot-helps.svg" },
+    { key: "value", tone: "value", dot: "/images/product-det/use-case-dot-value.svg" },
 ] as const;
 
-const measures = [
-    { icon: "/images/product-det/use-case-icon-time.svg" },
-    { icon: "/images/product-det/use-case-icon-percent.svg" },
-] as const;
-
-const staticTabs = [
-    { id: "shifts", icon: icons[1], titleIndex: 1 },
-    { id: "documents", icon: icons[2], titleIndex: 2 },
-] as const;
-
-type LabeledValue = { label: string; value: string };
-type StepCopy = { title: string; text: string };
-type TabCopy = { title: string };
+const iconFor = (map: Record<string, string>, name: string, fallback: string) =>
+    map[name.toLowerCase().replace(/[\s_-]/g, "")] || fallback;
 
 const ProductUseCases = async ({ productId }: { productId: "hrh" | "mayar" | "maydan" }) => {
     const locale = await getLocale();
     const t = await getTranslations("productsPage.detail.cases");
-    const cases = await getProductUseCases(locale, productId);
-    const tabCopy = t.raw("tabs") as TabCopy[];
-    const barCopy = t.raw("bars") as LabeledValue[];
-    const stepCopy = t.raw("steps") as StepCopy[];
-    const measureCopy = t.raw("measures") as string[];
+    const section = await getProductUseCases(locale, productId);
+    if (!section || !section.scenarios.length) return null;
 
-    const viewTabs = [
-        ...cases.map((item, index) => ({
-            id: `case-${index + 1}`,
-            icon: icons[index % icons.length],
-            title: item.title,
-            text: item.text,
-            staticPanel: false,
-        })),
-        ...staticTabs.map((tab) => ({
-            id: tab.id,
-            icon: tab.icon,
-            title: tabCopy[tab.titleIndex].title,
-            text: "",
-            staticPanel: true,
-        })),
-    ];
+    const stepLabels = {
+        challenge: t("steps.0.title"),
+        solution: t("steps.1.title"),
+        value: t("steps.2.title"),
+    };
+    const measureLabel = section.measureLabel || t("measureLabel");
+    const eyebrow = section.eyebrow || t("badge");
+    const titleStrong = section.titleStrong || t("titleStrong");
+    const titleMuted = section.titleMuted || t("titleMuted");
+    const description = section.description || t("description");
 
     return (
         <section className="products_cases" id="product-cases">
@@ -70,18 +58,24 @@ const ProductUseCases = async ({ productId }: { productId: "hrh" | "mayar" | "ma
                     <div className="row align-items-center justify-content-between gy-4 px-lg-4">
                         <div className="col-lg-6">
                             <Reveal animation="fade-up">
-                                <span className="products_cases_badge">{t("badge")}</span>
-                                <h2 className="products_cases_title fw-500">
-                                    <span className="d-block">{t("titleStrong")}</span>
-                                    <span className="d-block products_cases_title_muted cr-blue">{t("titleMuted")}</span>
-                                </h2>
+                                {eyebrow ? <span className="products_cases_badge">{eyebrow}</span> : null}
+                                {titleStrong || titleMuted ? (
+                                    <h2 className="products_cases_title fw-500">
+                                        {titleStrong ? <span className="d-block">{titleStrong}</span> : null}
+                                        {titleMuted ? (
+                                            <span className="d-block products_cases_title_muted cr-blue">{titleMuted}</span>
+                                        ) : null}
+                                    </h2>
+                                ) : null}
                             </Reveal>
                         </div>
-                        <div className="col-lg-5">
-                            <Reveal animation="fade-up">
-                                <p className="products_cases_description mb-0">{t("description")}</p>
-                            </Reveal>
-                        </div>
+                        {description ? (
+                            <div className="col-lg-5">
+                                <Reveal animation="fade-up">
+                                    <p className="products_cases_description mb-0">{description}</p>
+                                </Reveal>
+                            </div>
+                        ) : null}
                     </div>
                 </div>
             </div>
@@ -89,100 +83,100 @@ const ProductUseCases = async ({ productId }: { productId: "hrh" | "mayar" | "ma
             <div className="container">
                 <div className="content">
                     <Reveal animation="fade-up">
-                        <ul className="nav nav-tabs products_cases_tabs" id="productCasesTabs" role="tablist">
-                            {viewTabs.map((tab, index) => (
-                                <li className="nav-item" role="presentation" key={tab.id}>
+                        <ul
+                            className="nav nav-tabs products_cases_tabs"
+                            id="productCasesTabs"
+                            role="tablist"
+                            style={{ gridTemplateColumns: `repeat(${Math.min(section.scenarios.length, 3)}, minmax(0, 1fr))` }}
+                        >
+                            {section.scenarios.map((item, index) => (
+                                <li className="nav-item" role="presentation" key={`${item.title}-${index}`}>
                                     <button
                                         className={`nav-link${index === 0 ? " active" : ""}`}
-                                        id={`product_cases_tab_${tab.id}`}
+                                        id={`product_cases_tab_${index}`}
                                         data-bs-toggle="tab"
-                                        data-bs-target={`#product_cases_panel_${tab.id}`}
+                                        data-bs-target={`#product_cases_panel_${index}`}
                                         type="button"
                                         role="tab"
-                                        aria-controls={`product_cases_panel_${tab.id}`}
+                                        aria-controls={`product_cases_panel_${index}`}
                                         aria-selected={index === 0}
                                     >
                                         <span className="products_cases_tab_icon">
-                                            <img src={tab.icon} alt="" width={18} height={18} />
+                                            <img
+                                                src={iconFor(tabIcons, item.icon, tabIcons.users)}
+                                                alt=""
+                                                width={18}
+                                                height={18}
+                                            />
                                         </span>
-                                        <span>{tab.title}</span>
+                                        <span>{item.title}</span>
                                     </button>
                                 </li>
                             ))}
                         </ul>
 
                         <div className="tab-content" id="productCasesContent">
-                            {viewTabs.map((tab, index) => (
-                                <div
-                                    className={`tab-pane fade${index === 0 ? " show active" : ""}`}
-                                    id={`product_cases_panel_${tab.id}`}
-                                    role="tabpanel"
-                                    aria-labelledby={`product_cases_tab_${tab.id}`}
-                                    tabIndex={0}
-                                    key={tab.id}
-                                >
-                                    {tab.staticPanel ? (
+                            {section.scenarios.map((item, index) => {
+                                const story = steps.flatMap((step) => {
+                                    const text = item[step.key];
+                                    return text ? [{ ...step, text, label: stepLabels[step.key] }] : [];
+                                });
+
+                                return (
+                                    <div
+                                        className={`tab-pane fade${index === 0 ? " show active" : ""}`}
+                                        id={`product_cases_panel_${index}`}
+                                        role="tabpanel"
+                                        aria-labelledby={`product_cases_tab_${index}`}
+                                        tabIndex={0}
+                                        key={`${item.title}-${index}`}
+                                    >
                                         <div className="row g-0 products_cases_body">
-                                            <div className="col-lg-5 products_cases_chart">
-                                                <div>
-                                                    <h3 className="products_cases_chart_title fw-500">
-                                                        {t("chartBefore")}
-                                                        <span>{t("chartCount")}</span>
-                                                        {t("chartAfter")}
-                                                    </h3>
-                                                    {bars.map((bar, barIndex) => (
-                                                        <div className="products_cases_bar" key={bar.tone}>
-                                                            <div className="products_cases_bar_meta">
-                                                                <span>{barCopy[barIndex].label}</span>
-                                                                <span className="products_cases_bar_value">{barCopy[barIndex].value}</span>
-                                                            </div>
-                                                            <div
-                                                                className={`progress products_cases_progress is-${bar.tone}${bar.short ? " is-short" : ""}`}
-                                                                role="progressbar"
-                                                                aria-valuenow={bar.width}
-                                                                aria-valuemin={0}
-                                                                aria-valuemax={100}
-                                                                aria-label={barCopy[barIndex].label}
-                                                            >
-                                                                <div className="progress-bar" style={{ width: bar.short ? "100%" : `${bar.width}%` }} />
-                                                            </div>
-                                                        </div>
-                                                    ))}
+                                            {item.image ? (
+                                                <div className="col-lg-5 products_cases_chart products_cases_visual">
+                                                    <img src={item.image} alt={item.title} />
                                                 </div>
-                                                <p className="products_cases_snapshot mb-0">{t("snapshot")}</p>
-                                            </div>
-                                            <div className="col-lg-7 products_cases_detail">
+                                            ) : null}
+                                            <div className={item.image ? "col-lg-7 products_cases_detail" : "col-12 products_cases_detail"}>
                                                 <div>
-                                                    <h3 className="products_cases_detail_title fw-500">{tab.title}</h3>
-                                                    <ol className="products_cases_steps">
-                                                        {steps.map((step, stepIndex) => (
-                                                            <li className={`products_cases_step is-${step.tone}`} key={step.tone}>
-                                                                <img className="products_cases_dot" src={step.dot} alt="" width={12} height={12} />
-                                                                <h4 className="products_cases_step_title fw-500">{stepCopy[stepIndex].title}</h4>
-                                                                <p className="products_cases_step_text mb-0">{stepCopy[stepIndex].text}</p>
-                                                            </li>
+                                                    {item.title ? <h3 className="products_cases_detail_title fw-500">{item.title}</h3> : null}
+                                                    {story.length ? (
+                                                        <ol className="products_cases_steps">
+                                                            {story.map((step) => (
+                                                                <li className={`products_cases_step is-${step.tone}`} key={step.key}>
+                                                                    <img className="products_cases_dot" src={step.dot} alt="" width={12} height={12} />
+                                                                    <h4 className="products_cases_step_title fw-500">{step.label}</h4>
+                                                                    <p className="products_cases_step_text mb-0">{step.text}</p>
+                                                                </li>
+                                                            ))}
+                                                        </ol>
+                                                    ) : null}
+                                                </div>
+                                                {item.metrics.length ? (
+                                                    <div className="products_cases_measure">
+                                                        <span className="products_cases_measure_label fw-500">{measureLabel}</span>
+                                                        {item.metrics.map((metric, metricIndex) => (
+                                                            <span className="products_cases_chip" key={`${metric.label}-${metricIndex}`}>
+                                                                <img
+                                                                    src={iconFor(
+                                                                        metricIcons,
+                                                                        metric.icon,
+                                                                        metricFallbacks[metricIndex % metricFallbacks.length],
+                                                                    )}
+                                                                    alt=""
+                                                                    width={16}
+                                                                    height={16}
+                                                                />
+                                                                {metric.label}
+                                                            </span>
                                                         ))}
-                                                    </ol>
-                                                </div>
-                                                <div className="products_cases_measure">
-                                                    <span className="products_cases_measure_label fw-500">{t("measureLabel")}</span>
-                                                    {measures.map((measure, measureIndex) => (
-                                                        <span className="products_cases_chip" key={measure.icon}>
-                                                            <img src={measure.icon} alt="" width={16} height={16} />
-                                                            {measureCopy[measureIndex]}
-                                                        </span>
-                                                    ))}
-                                                </div>
+                                                    </div>
+                                                ) : null}
                                             </div>
                                         </div>
-                                    ) : (
-                                        <div className="products_cases_detail">
-                                            <h3 className="products_cases_detail_title fw-500">{tab.title}</h3>
-                                            {tab.text ? <p className="products_cases_copy mb-0">{tab.text}</p> : null}
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
+                                    </div>
+                                );
+                            })}
                         </div>
                     </Reveal>
                     <div className="sec-lines"><span></span><span></span></div>

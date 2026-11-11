@@ -1148,9 +1148,7 @@
   "partners": {
     "titleStrong": "شركاء",
     "titleMuted": "يوسّعون نطاق وصولنا",
-    "choose": "اختر شريكًا",
-    "pause": "إيقاف",
-    "play": "تشغيل"
+    "choose": "اختر شريكًا"
   },
   "getInTouch": {
     "badge": "تواصل معنا",

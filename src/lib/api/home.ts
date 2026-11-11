@@ -398,13 +398,26 @@ export async function getSolutionsContent(locale: string): Promise<HomeSectionCo
 
 export type SolutionCubeSlide = {
     id: string;
+    slug: string;
     title: string;
     titleStrong: string;
     titleMuted: string;
     text: string;
     highlight: string;
     image: string;
+    showOnHome: boolean;
+    showOnPage: boolean;
 };
+
+function sortRank(item: Record<string, unknown>) {
+    const rank = Number(item.sort ?? item.sort_order ?? item.order ?? item.position);
+    return Number.isFinite(rank) ? rank : Number.MAX_SAFE_INTEGER;
+}
+
+function shown(value: unknown) {
+    if (value === undefined || value === null || value === "") return true;
+    return value === true || value === 1 || value === "1" || value === "true";
+}
 
 function solutionTitleParts(title: string) {
     const ampersand = title.indexOf("&");
@@ -421,15 +434,13 @@ function solutionTitleParts(title: string) {
 const readSolutionSlides = createSwrCache<SolutionCubeSlide[]>([]);
 
 async function fetchSolutionSlides(locale: string): Promise<SolutionCubeSlide[] | null> {
-    const section = sectionData(await loadHomePage(locale), "solutions");
-    const limitRaw = Number(section?.limit);
-    const limit = Number.isFinite(limitRaw) && limitRaw > 0 ? Math.floor(limitRaw) : 6;
-
     try {
         const payload = await api.getSolutions(locale);
-        const items = records((payload as { data?: unknown })?.data ?? payload);
+        const items = records((payload as { data?: unknown })?.data ?? payload).sort(
+            (a, b) => sortRank(a) - sortRank(b),
+        );
 
-        return items.slice(0, limit).flatMap((item, index) => {
+        return items.flatMap((item, index) => {
             const title = text(item.title);
             const textBody = text(item.summary ?? item.description ?? item.text);
             const highlight = text(item.outcome ?? item.highlight);
@@ -440,12 +451,15 @@ async function fetchSolutionSlides(locale: string): Promise<SolutionCubeSlide[] 
             return [
                 {
                     id: text(item.id) || `solution-${index + 1}`,
+                    slug: text(item.slug),
                     title,
                     titleStrong: parts.titleStrong || title,
                     titleMuted: parts.titleMuted,
                     text: textBody,
                     highlight,
                     image: journeyImage(item.image ?? item.cover ?? item.photo ?? item.media),
+                    showOnHome: shown(item.show_on_home ?? item.showOnHome),
+                    showOnPage: shown(item.show_on_page ?? item.showOnPage),
                 },
             ];
         });
@@ -455,7 +469,17 @@ async function fetchSolutionSlides(locale: string): Promise<SolutionCubeSlide[] 
 }
 
 export async function getSolutionCubeSlides(locale: string): Promise<SolutionCubeSlide[]> {
-    return readSolutionSlides(locale, () => fetchSolutionSlides(locale));
+    const section = sectionData(await loadHomePage(locale), "solutions");
+    const limitRaw = Number(section?.limit);
+    const limit = Number.isFinite(limitRaw) && limitRaw > 0 ? Math.floor(limitRaw) : 6;
+    const slides = await readSolutionSlides(locale, () => fetchSolutionSlides(locale));
+
+    return slides.filter((item) => item.showOnHome).slice(0, limit);
+}
+
+export async function getSolutionCatalog(locale: string): Promise<SolutionCubeSlide[]> {
+    const slides = await readSolutionSlides(locale, () => fetchSolutionSlides(locale));
+    return slides.filter((item) => item.showOnPage);
 }
 
 export type OperationsContent = HomeSectionContent & {

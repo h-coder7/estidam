@@ -1,17 +1,15 @@
 import { getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
 import { Link } from "@/i18n/routing";
+import type { SolutionRelated } from "@/lib/api/solutionDetail";
 
 import "./_RelatedSolutions.scss";
 
-const RelatedSolutions = async () => {
-    const t = await getTranslations("solutionsPage.relatedSolutions");
+const fallbacks = ["/images/icons/rs1.png", "/images/icons/rs2.png", "/images/icons/rs3.png"] as const;
 
-    const cards = [
-        { key: "card1", image: "/images/icons/rs1.png" },
-        { key: "card2", image: "/images/icons/rs2.png" },
-        { key: "card3", image: "/images/icons/rs3.png" },
-    ] as const;
+const RelatedSolutions = async ({ items }: { items: SolutionRelated[] }) => {
+    const t = await getTranslations("solutionsPage.relatedSolutions");
+    if (!items.length) return null;
 
     return (
         <section className="solutions_related_solutions" id="related-solutions">
@@ -23,12 +21,8 @@ const RelatedSolutions = async () => {
 
                     <Reveal animation="fade-up" trigger="load">
                         <h2 className="related_solutions_title fsz-40 fw-600 lh-2">
-                            <span className="related_solutions_title_strong">
-                                {t("titleStrong")}
-                            </span>{" "}
-                            <span className="related_solutions_title_muted cr-blue fw-500">
-                                {t("titleMuted")}
-                            </span>
+                            <span className="related_solutions_title_strong">{t("titleStrong")}</span>{" "}
+                            <span className="related_solutions_title_muted cr-blue fw-500">{t("titleMuted")}</span>
                         </h2>
                     </Reveal>
                 </div>
@@ -37,39 +31,29 @@ const RelatedSolutions = async () => {
             <div className="container">
                 <div className="related_solutions_body px-lg-5">
                     <div className="row g-4">
-                        {cards.map((card) => (
-                            <div key={card.key} className="col-lg-4 col-md-6">
-                                <Reveal animation="fade-up" trigger="load">
-                                    <article className="related_card">
-                                        <div className="related_card_visual">
-                                            <img
-                                                src={card.image}
-                                                alt=""
-                                                aria-hidden="true"
-                                            />
-                                        </div>
+                        {items.map((item, index) => {
+                            const href = item.slug ? `/solutions/${item.slug}` : "/solutions";
+                            return (
+                                <div key={`${item.slug || item.title}-${index}`} className="col-lg-4 col-md-6">
+                                    <Reveal animation="fade-up" trigger="load">
+                                        <article className="related_card">
+                                            <div className="related_card_visual">
+                                                <img src={item.image || fallbacks[index % fallbacks.length]} alt="" aria-hidden="true" />
+                                            </div>
 
-                                        <h3 className="related_card_title">
-                                            {t(`${card.key}Title`)}
-                                        </h3>
+                                            {item.title ? <h3 className="related_card_title">{item.title}</h3> : null}
 
-                                        <p className="related_card_text mb-0">
-                                            {t(`${card.key}Text`)}
-                                        </p>
+                                            {item.text ? <p className="related_card_text mb-0">{item.text}</p> : null}
 
-                                        <Link href="/solutions" className="related_card_link">
-                                            <span>{t("cta")}</span>
-                                            <img
-                                                src="/images/icons/arrow-bl.svg"
-                                                alt=""
-                                                className="related_card_arrow"
-                                                aria-hidden="true"
-                                            />
-                                        </Link>
-                                    </article>
-                                </Reveal>
-                            </div>
-                        ))}
+                                            <Link href={href} className="related_card_link">
+                                                <span>{t("cta")}</span>
+                                                <img src="/images/icons/arrow-bl.svg" alt="" className="related_card_arrow" aria-hidden="true" />
+                                            </Link>
+                                        </article>
+                                    </Reveal>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
