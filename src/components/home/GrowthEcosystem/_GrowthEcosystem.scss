@@ -90,46 +90,8 @@
         padding-bottom: 36px;
     }
 
-    .ecosystem_card_link {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
+    .ecosystem_card .butn {
         margin-top: auto;
-        width: fit-content;
-        color: #111827;
-        font-size: 13px;
-        font-weight: 500;
-        line-height: 1.3;
-        text-decoration: none;
-        transition: color 0.25s ease;
-
-        &:hover {
-            color: var(--blue);
-
-            .ecosystem_card_arrow {
-                transform: translateX(3px);
-            }
-        }
-    }
-
-    .ecosystem_card_arrow {
-        display: block;
-        width: 35px;
-        height: 35px;
-        flex-shrink: 0;
-        transition: transform 0.25s ease;
-    }
-}
-
-html[dir="rtl"] {
-    .growth_ecosystem {
-        .ecosystem_card_arrow {
-            transform: scaleX(-1);
-        }
-
-        .ecosystem_card_link:hover .ecosystem_card_arrow {
-            transform: scaleX(-1) translateX(-3px);
-        }
     }
 }
 

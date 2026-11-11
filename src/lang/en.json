@@ -1141,13 +1141,16 @@
     }
   },
 
-  "clientsPartners": {
-    "eyebrow": "Trusted connections",
-    "titleStrong": "Built on Trust.",
-    "titleMuted": "Connected by Purpose.",
-    "description": "Discover the clients and partners who are part of Estidam's professional network.",
-    "clients": "Our Clients",
-    "partners": "Our Partners",
+  "clients": {
+    "badge": "CLIENTS",
+    "titleStrong": "Organisations that",
+    "titleMuted": "trust Estidam",
+    "listLabel": "Estidam clients"
+  },
+  "partners": {
+    "titleStrong": "Partners who",
+    "titleMuted": "extend our reach",
+    "choose": "Choose a partner",
     "pause": "Pause",
     "play": "Play"
   },
@@ -1170,6 +1173,14 @@
     "card4TitleMuted": "a workspace",
     "card4Cta": "Find a workspace"
   },
+  "news": {
+    "badge": "NEWS",
+    "titleStrong": "Latest from",
+    "titleMuted": "Estidam",
+    "featured": "Featured",
+    "readStory": "Read the story",
+    "readMore": "Read more"
+  },
   "footer": {
     "resource": "Resource",
     "topLinks": "Top Links",
@@ -1187,6 +1198,7 @@
     "dribbble": "Dribble",
     "linkedin": "LinkedIn",
     "whatsapp": "WhatsApp",
+    "whatsappChat": "Chat on WhatsApp",
     "address": "152 Thatcher Road St, Manhattan, NY 10463, US",
     "email": "hello@Estidam.agency",
     "phone": "+0685689696",

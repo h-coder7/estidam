@@ -1139,13 +1139,16 @@
       }
     }
   },
-  "clientsPartners": {
-    "eyebrow": "علاقات موثوقة",
-    "titleStrong": "مبنية على الثقة.",
-    "titleMuted": "ومتصلة بالهدف.",
-    "description": "تعرّف على العملاء والشركاء الذين يشكّلون جزءًا من شبكة استدام المهنية.",
-    "clients": "عملاؤنا",
-    "partners": "شركاؤنا",
+  "clients": {
+    "badge": "عملاؤنا",
+    "titleStrong": "جهات",
+    "titleMuted": "تثق في استدام",
+    "listLabel": "عملاء استدام"
+  },
+  "partners": {
+    "titleStrong": "شركاء",
+    "titleMuted": "يوسّعون نطاق وصولنا",
+    "choose": "اختر شريكًا",
     "pause": "إيقاف",
     "play": "تشغيل"
   },
@@ -1168,6 +1171,14 @@
     "card4TitleMuted": "مساحة عمل",
     "card4Cta": "ابحث عن مساحة عمل"
   },
+  "news": {
+    "badge": "الأخبار",
+    "titleStrong": "آخر أخبار",
+    "titleMuted": "استدام",
+    "featured": "خبر مميز",
+    "readStory": "اقرأ الخبر",
+    "readMore": "اقرأ المزيد"
+  },
   "footer": {
     "resource": "موارد",
     "topLinks": "روابط هامة",
@@ -1185,6 +1196,7 @@
     "dribbble": "دريبل",
     "linkedin": "لينكدإن",
     "whatsapp": "واتساب",
+    "whatsappChat": "تواصل عبر واتساب",
     "address": "جدة - السعودية",
     "email": "hello@Estidam.agency",
     "phone": "+0685689696",

@@ -1,217 +1,304 @@
-.solutions {
+// Home — Solutions journey (navy band, pinned horizontal travel on desktop)
+// Every rule is scoped under .solutions_journey.
+
+.solutions_journey {
+    --sj-navy: #0b1a33;
+    --sj-accent: #7fa4f0;
+    --sj-muted: #5d6878;
+    --sj-lead: calc(var(--bs-gutter-x, 1.5rem) * 0.5);
+
     position: relative;
-    background-color: #f7f8fa;
+    background: var(--sj-navy);
+    color: #fff;
 
-    // Intro → first solution: one intentional gap (head 48 + body 48) instead of a
-    // viewport-tall centred box. The pin centres the block, so no min-height is needed.
-    .section-head {
-        padding-bottom: 48px;
+    .sj-pin {
+        position: relative;
+        height: calc(var(--sj-track-top, 380px) + 424px + 56px);
+        overflow: hidden;
     }
 
-    .solutions_body {
+    .sj-head {
+        position: relative;
+        z-index: 2;
         display: flex;
-        align-items: center;
-        padding: 48px 0;
-
-        > .row,
-        .solutions_body_row {
-            width: 100%;
-        }
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 40px;
+        padding-top: var(--sj-nav-offset, 124px);
     }
 
-    .solutions_content {
-        padding: 12px 36px 12px 0;
-        max-width: 480px;
-    }
-
-    .solutions_label {
-        margin: 0 0 14px;
-        color: var(--blue);
-        font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 0.08em;
+    .sj-badge {
+        display: inline-block;
+        margin-bottom: 22px;
+        padding: 8px 18px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #9fbaf3;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
     }
 
-    .solutions_copy_viewport {
-        position: relative;
-        overflow: hidden;
-        min-height: 220px;
+    .sj-title {
+        max-width: 16ch;
+        margin: 0;
+        color: #fff;
+        font-size: clamp(32px, 3.8vw, 52px);
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+
+        span {
+            color: var(--sj-accent);
+        }
     }
 
-    .solutions_copy {
+    .sj-steps {
+        display: flex;
+        gap: 26px;
+        margin: 12px 0 0;
+        padding: 0;
+        list-style: none;
+
+        button {
+            position: relative;
+            padding: 14px 0 0;
+            border: 0;
+            background: none;
+            color: #98a6bd;
+            font-size: 13.5px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: color 0.3s ease;
+
+            &::before {
+                content: "";
+                position: absolute;
+                inset-inline: 0;
+                top: 0;
+                height: 2px;
+                background: rgba(255, 255, 255, 0.14);
+            }
+
+            &[aria-current="step"] {
+                color: #fff;
+            }
+
+            &:focus-visible {
+                outline: 2px solid var(--sj-accent);
+                outline-offset: 4px;
+                border-radius: 4px;
+            }
+        }
+    }
+
+    .sj-step-bar {
         position: absolute;
         inset-inline: 0;
         top: 0;
-        width: 100%;
-        will-change: transform, opacity;
-        pointer-events: none;
-        // Fade the whole copy block (title + text) in and out as slides change.
-        // GSAP only moves it; opacity is owned by this transition.
-        opacity: 0;
-        transform: translate3d(0, var(--copy-shift, 16px), 0);
-        transition:
-            opacity 0.5s ease,
-            transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-
-        &.is_active {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-            pointer-events: auto;
-        }
+        height: 2px;
+        background: var(--sj-accent);
+        transform: scaleX(0);
+        transform-origin: left center;
     }
 
-    .solutions_title {
-        margin: 0 0 18px;
-        font-size: clamp(1.85rem, 2.6vw, 2.5rem);
-        font-weight: 600;
-        line-height: 1.2;
+    [dir="rtl"] & .sj-step-bar {
+        transform-origin: right center;
     }
 
-    .solutions_title_strong {
-        color: #111827;
-        font-weight: 700;
-    }
-
-    .solutions_title_muted {
-        font-weight: 500;
-    }
-
-    .solutions_text {
-        margin: 0 0 28px;
-        color: #6b7280;
-        font-size: 15px;
-        font-weight: 400;
-        line-height: 1.7;
-    }
-
-    .solutions_highlight {
-        margin: 0;
-        padding-inline-start: 18px;
-        border-inline-start: 3px solid var(--blue);
-        color: var(--blue);
-        font-size: 13px;
-        line-height: 1.6;
-    }
-
-    .solutions_visual {
+    .sj-track {
+        position: absolute;
+        left: 0;
+        top: var(--sj-track-top, 380px);
+        bottom: auto;
+        height: 424px;
         display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        padding-inline-start: 24px;
+        align-items: flex-end;
+        gap: 32px;
+        padding-left: var(--sj-lead);
+        will-change: transform;
     }
 
-    // One frame; every image sits in it and only the active one is visible.
-    .solutions_stack {
-        position: relative;
-        width: 100%;
-        max-width: 580px;
-        aspect-ratio: 4 / 3;
-        max-height: calc(100vh - 220px);
-        margin-inline-start: auto;
-        border-radius: 16px;
-        isolation: isolate;
-        outline: none;
-        box-shadow: 0 26px 50px rgba(17, 24, 39, 0.14);
-        background: #dbe3ef;
-
-        &:focus-visible {
-            outline: 2px solid var(--blue);
-            outline-offset: 4px;
-        }
+    [dir="rtl"] & .sj-track {
+        right: 0;
+        left: auto;
+        padding-right: var(--sj-lead);
+        padding-left: 0;
     }
 
-    .solutions_stack_card {
-        position: absolute;
-        inset: 0;
-        clip-path: inset(100% 0% 0% 0% round 16px);
-        visibility: hidden;
-        pointer-events: none;
-
-        &:first-child {
-            clip-path: inset(0% 0% 0% 0% round 16px);
-            visibility: visible;
-        }
-
-        &.is_active {
-            pointer-events: auto;
-        }
-    }
-
-    .solutions_stack_card_media {
-        position: absolute;
-        inset: 0;
+    .sj-card {
+        display: grid;
+        flex: none;
+        grid-template-columns: 0.9fr 1.1fr;
+        width: min(72vw, 880px);
+        height: 424px;
         overflow: hidden;
-        border-radius: 16px;
-        cursor: pointer;
+        border-radius: 28px;
+        background: #fff;
+        color: #0b1a33;
+    }
 
-        // 8% taller than the frame so the parallax never exposes an edge
+    .sj-copy {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 44px 40px;
+
+        h3 {
+            margin: 0 0 14px;
+            font-size: clamp(24px, 2.4vw, 34px);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.015em;
+        }
+
+        p {
+            max-width: 40ch;
+            margin: 0 0 18px;
+            color: var(--sj-muted);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+    }
+
+    .sj-label {
+        margin-bottom: auto;
+        color: var(--blue);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    .sj-copy .sj-outcome {
+        display: flex;
+        gap: 14px;
+        margin-bottom: 0;
+        color: var(--blue);
+        font-weight: 600;
+
+        &::before {
+            content: "";
+            flex: none;
+            width: 3px;
+            border-radius: 3px;
+            background: currentColor;
+        }
+    }
+
+    .sj-media {
+        overflow: hidden;
+        background: #dfe7f3;
+
         img {
-            position: absolute;
-            top: -4%;
-            left: 0;
             display: block;
-            width: 100%;
+            width: 115%;
             max-width: none;
-            height: 108%;
-            max-height: none;
+            height: 100%;
             object-fit: cover;
             user-select: none;
-            pointer-events: none;
             will-change: transform;
         }
     }
-}
 
-@media screen and (max-width: 767px) {
-    .solutions {
-        .section-head {
-            padding-bottom: 32px;
+    .sj-pin.is_static {
+        --sj-nav-offset: 72px;
+        height: auto;
+        min-height: 0;
+        padding-bottom: 64px;
+
+        .sj-track {
+            position: relative;
+            top: auto;
+            left: auto;
+            bottom: auto;
+            height: auto;
+            width: 100%;
+            margin-top: 40px;
+            padding-right: 40px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            will-change: auto;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
         }
 
-        .solutions_body {
-            padding: 32px 0 40px;
+        .sj-card {
+            height: min(45.6vh, 424px);
+            scroll-snap-align: start;
         }
 
-        .solutions_content {
-            max-width: none;
-            padding: 0 0 20px;
+        .sj-media img {
+            width: 100%;
+            will-change: auto;
         }
+    }
 
-        .solutions_visual {
-            padding: 0;
-        }
-
-        .solutions_stack {
-            max-width: 520px;
-            max-height: none;
-            margin-inline: auto;
-        }
+    [dir="rtl"] & .sj-pin.is_static .sj-track {
+        right: auto;
+        padding-right: var(--sj-lead);
+        padding-left: 40px;
     }
 }
 
-@media screen and (max-width: 575px) {
-    .solutions {
-        .solutions_title {
-            font-size: 1.7rem;
+@media screen and (max-width: 991px) {
+    .solutions_journey {
+        .sj-head {
+            flex-direction: column;
+            gap: 18px;
+            padding-top: 56px;
         }
 
-        .solutions_highlight {
-            font-size: 14px;
+        .sj-pin.is_static .sj-head {
+            padding-top: 56px;
         }
+
+        .sj-steps {
+            gap: 20px;
+            max-width: 100%;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .sj-card {
+            grid-template-columns: 1fr;
+            width: 82vw;
+            height: auto;
+        }
+
+        .sj-media {
+            order: -1;
+            aspect-ratio: 16 / 10;
+        }
+
+        .sj-copy {
+            padding: 26px 24px 28px;
+
+            p {
+                font-size: 15px;
+            }
+        }
+
+        .sj-pin.is_static .sj-track {
+            gap: 16px;
+            padding-right: 24px;
+            padding-left: 24px;
+        }
+    }
+
+    [dir="rtl"] .solutions_journey .sj-pin.is_static .sj-track {
+        padding-right: 24px;
+        padding-left: 24px;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .solutions {
-        .solutions_copy {
-            will-change: auto;
-            transition: none;
-            transform: none;
-        }
-
-        .solutions_stack_card_media img {
-            will-change: auto;
-        }
+    .solutions_journey .sj-steps button {
+        transition: none;
     }
 }
