@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { api } from "@/lib/api";
-import { createSwrCache } from "@/lib/api/swrCache";
+import { createSwrCache, REVALIDATE_MS } from "@/lib/api/swrCache";
 
 export type AboutHeroContent = {
     eyebrow: string;
@@ -161,8 +161,6 @@ function titleParts(data: Record<string, unknown>) {
     };
 }
 
-const ABOUT_PAGE_REVALIDATE_MS = 300_000;
-
 type AboutCacheEntry = {
     payload: AboutPagePayload | null;
     freshUntil: number;
@@ -183,7 +181,7 @@ async function fetchAboutPage(locale: string) {
 function storeAboutPage(locale: string, payload: AboutPagePayload | null, previous?: AboutPagePayload | null) {
     aboutPageCache.set(locale, {
         payload: payload ?? previous ?? null,
-        freshUntil: Date.now() + ABOUT_PAGE_REVALIDATE_MS,
+        freshUntil: Date.now() + REVALIDATE_MS,
     });
 }
 

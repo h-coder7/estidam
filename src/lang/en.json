@@ -1150,9 +1150,7 @@
   "partners": {
     "titleStrong": "Partners who",
     "titleMuted": "extend our reach",
-    "choose": "Choose a partner",
-    "pause": "Pause",
-    "play": "Play"
+    "choose": "Choose a partner"
   },
   "getInTouch": {
     "badge": "Get In Touch",

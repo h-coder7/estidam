@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { api } from "@/lib/api";
-import { createSwrCache } from "@/lib/api/swrCache";
+import { createSwrCache, REVALIDATE_MS } from "@/lib/api/swrCache";
 
 export type ProductsHeroContent = {
     eyebrow: string;
@@ -47,6 +47,16 @@ function mediaUrl(value: unknown) {
     return `${origin}${raw.startsWith("/") ? raw : `/${raw}`}`;
 }
 
+/** Admin preview (EST-009 `preview_image_url`), then the product image field. */
+function productPreview(record: Record<string, unknown>) {
+    return (
+        mediaUrl(record.preview_image_url) ||
+        mediaUrl(record.previewImageUrl) ||
+        mediaUrl(record.preview_image) ||
+        mediaUrl(record.image)
+    );
+}
+
 function markedTitle(data: Record<string, unknown>) {
     const titleStrong = text(data.titleStrong ?? data.title_strong);
     const titleMuted = text(data.titleMuted ?? data.title_muted);
@@ -63,8 +73,6 @@ function markedTitle(data: Record<string, unknown>) {
         titleMuted: after ? `${match[2].trim()} ${after}` : match[2].trim(),
     };
 }
-
-const PRODUCTS_PAGE_REVALIDATE_MS = 300_000;
 
 type ProductsPageCacheEntry = {
     payload: ProductsPagePayload | null;
@@ -86,7 +94,7 @@ async function fetchProductsPage(locale: string) {
 function storeProductsPage(locale: string, payload: ProductsPagePayload | null, previous?: ProductsPagePayload | null) {
     productsPageCache.set(locale, {
         payload: payload ?? previous ?? null,
-        freshUntil: Date.now() + PRODUCTS_PAGE_REVALIDATE_MS,
+        freshUntil: Date.now() + REVALIDATE_MS,
     });
 }
 
@@ -362,7 +370,7 @@ async function fetchProductsListCards(locale: string): Promise<ProductsListCard[
 
                 const availability = text(item.availability ?? detail.availability);
                 const name = splitName(text(item.name ?? detail.name));
-                const image = mediaUrl(item.image ?? detail.image) || listImages[slug] || "";
+                const image = productPreview(item) || productPreview(detail) || listImages[slug] || "";
 
                 return {
                     id: slug || String(item.id ?? name.name),
@@ -389,7 +397,7 @@ async function fetchProductsListCards(locale: string): Promise<ProductsListCard[
 function storeProductsCards(locale: string, cards: ProductsListCard[] | null, previous?: ProductsListCard[]) {
     productsCardsCache.set(locale, {
         cards: cards ?? previous ?? [],
-        freshUntil: Date.now() + PRODUCTS_PAGE_REVALIDATE_MS,
+        freshUntil: Date.now() + REVALIDATE_MS,
     });
 }
 
@@ -463,7 +471,7 @@ export async function getProductHeroContent(locale: string, pageSlug: string): P
         badge: name.kicker || name.name,
         title: text(product.tagline),
         description: text(product.overview),
-        image: mediaUrl(product.image) || listImages[pageSlug] || listImages[apiSlugs[pageSlug]] || "",
+        image: productPreview(product) || listImages[pageSlug] || listImages[apiSlugs[pageSlug]] || "",
         secondaryLabel: soon ? text(product.notify_label ?? product.notifyLabel) : "",
     };
 }
@@ -514,38 +522,207 @@ export async function getProductWorks(locale: string, pageSlug: string): Promise
     });
 }
 
-export async function getProductUseCases(locale: string, pageSlug: string): Promise<ProductChallenge[]> {
-    const product = await loadProduct(locale, pageSlug);
-    if (!product) return [];
+export type ProductUseCaseMetric = {
+    label: string;
+    icon: string;
+};
 
-    return records(product.use_cases).flatMap((item) => {
-        const title = text(item.title);
-        const caseText = text(item.description ?? item.text);
-        if (!title && !caseText) return [];
-        return [{ title, text: caseText }];
+export type ProductUseCase = {
+    icon: string;
+    title: string;
+    image: string;
+    challenge: string;
+    solution: string;
+    value: string;
+    metrics: ProductUseCaseMetric[];
+};
+
+export type ProductUseCasesSection = {
+    eyebrow: string;
+    titleStrong: string;
+    titleMuted: string;
+    description: string;
+    measureLabel: string;
+    scenarios: ProductUseCase[];
+};
+
+function fieldText(value: unknown) {
+    if (typeof value === "string") return value.trim();
+    if (!value || typeof value !== "object") return "";
+
+    const record = value as Record<string, unknown>;
+    return text(record.text ?? record.description ?? record.body ?? record.title);
+}
+
+function metricItems(value: unknown): ProductUseCaseMetric[] {
+    if (!Array.isArray(value)) return [];
+
+    return value.flatMap((item) => {
+        if (typeof item === "string") {
+            const label = item.trim();
+            return label ? [{ label, icon: "" }] : [];
+        }
+
+        if (!item || typeof item !== "object") return [];
+
+        const record = item as Record<string, unknown>;
+        const label = text(record.label ?? record.title ?? record.text ?? record.name ?? record.value);
+        if (!label) return [];
+
+        return [{ label, icon: text(record.icon) }];
     });
 }
 
-export async function getProductAi(locale: string, pageSlug: string): Promise<ProductChallenge[]> {
+export async function getProductUseCases(locale: string, pageSlug: string): Promise<ProductUseCasesSection | null> {
     const product = await loadProduct(locale, pageSlug);
-    if (!product) return [];
+    const raw = product?.use_cases_section;
+    if (!raw || typeof raw !== "object") return null;
 
-    return records(product.ai).flatMap((item) => {
-        const title = text(item.title);
-        const aiText = text(item.description ?? item.text);
-        if (!title && !aiText) return [];
-        return [{ title, text: aiText }];
+    const section = raw as Record<string, unknown>;
+    const title = markedTitle(section);
+    const scenarios = records(section.scenarios ?? section.items ?? section.tabs).flatMap((item) => {
+        const scenario: ProductUseCase = {
+            icon: text(item.icon),
+            title: text(item.title ?? item.tab ?? item.name),
+            image: mediaUrl(item.image_url ?? item.imageUrl ?? item.image),
+            challenge: fieldText(item.challenge),
+            solution: fieldText(item.solution ?? item.helps ?? item.response),
+            value: fieldText(item.value ?? item.expected_value ?? item.expectedValue),
+            metrics: metricItems(item.metrics ?? item.measures ?? item.what_we_measure),
+        };
+
+        const hasContent =
+            scenario.title ||
+            scenario.image ||
+            scenario.challenge ||
+            scenario.solution ||
+            scenario.value ||
+            scenario.metrics.length;
+
+        return hasContent ? [scenario] : [];
+    });
+
+    const content: ProductUseCasesSection = {
+        eyebrow: text(section.eyebrow ?? section.badge),
+        titleStrong: title.titleStrong,
+        titleMuted: title.titleMuted,
+        description: text(section.description),
+        measureLabel: text(section.measure_label ?? section.metrics_label ?? section.measureLabel),
+        scenarios,
+    };
+
+    const hasContent =
+        content.eyebrow ||
+        content.titleStrong ||
+        content.titleMuted ||
+        content.description ||
+        content.scenarios.length;
+
+    return hasContent ? content : null;
+}
+
+export type ProductAiCard = {
+    icon: string;
+    title: string;
+    text: string;
+};
+
+export type ProductAiSection = {
+    eyebrow: string;
+    titleStrong: string;
+    titleMuted: string;
+    description: string;
+    cards: ProductAiCard[];
+    badgeTitle: string;
+    badgeText: string;
+    governanceTitle: string;
+    governanceText: string;
+    image: string;
+};
+
+export async function getProductAi(locale: string, pageSlug: string): Promise<ProductAiSection | null> {
+    const product = await loadProduct(locale, pageSlug);
+    const raw = product?.ai_section;
+    if (!raw || typeof raw !== "object") return null;
+
+    const section = raw as Record<string, unknown>;
+    const title = markedTitle(section);
+    const badge =
+        section.badge && typeof section.badge === "object" ? (section.badge as Record<string, unknown>) : {};
+    const governance =
+        section.governance && typeof section.governance === "object"
+            ? (section.governance as Record<string, unknown>)
+            : {};
+    const cards = records(section.cards).flatMap((item) => {
+        const cardTitle = text(item.title);
+        const cardText = text(item.description ?? item.text);
+        if (!cardTitle && !cardText) return [];
+
+        return [{ icon: text(item.icon), title: cardTitle, text: cardText }];
+    });
+
+    const content: ProductAiSection = {
+        eyebrow: text(section.eyebrow),
+        titleStrong: title.titleStrong,
+        titleMuted: title.titleMuted,
+        description: text(section.description),
+        cards,
+        badgeTitle: text(badge.title),
+        badgeText: text(badge.subtitle ?? badge.text),
+        governanceTitle: text(governance.title),
+        governanceText: text(governance.text ?? governance.description),
+        image: mediaUrl(section.image_url ?? section.imageUrl ?? section.image),
+    };
+
+    const hasContent =
+        content.eyebrow ||
+        content.titleStrong ||
+        content.titleMuted ||
+        content.description ||
+        content.cards.length ||
+        content.badgeTitle ||
+        content.badgeText ||
+        content.governanceTitle ||
+        content.governanceText ||
+        content.image;
+
+    return hasContent ? content : null;
+}
+
+export type ProductCapability = {
+    title: string;
+    text: string;
+    points: string[];
+    image: string;
+};
+
+function capabilityPoints(value: unknown) {
+    if (!Array.isArray(value)) return [];
+
+    return value.flatMap((item) => {
+        if (typeof item === "string") {
+            const line = item.trim();
+            return line ? [line] : [];
+        }
+
+        if (!item || typeof item !== "object") return [];
+        const record = item as Record<string, unknown>;
+        const line = text(record.title ?? record.text ?? record.description ?? record.label);
+        return line ? [line] : [];
     });
 }
 
-export async function getProductCapabilities(locale: string, pageSlug: string): Promise<ProductChallenge[]> {
+export async function getProductCapabilities(locale: string, pageSlug: string): Promise<ProductCapability[]> {
     const product = await loadProduct(locale, pageSlug);
     if (!product) return [];
 
     return records(product.capabilities).flatMap((item) => {
         const title = text(item.title);
         const capabilityText = text(item.description ?? item.text);
-        if (!title && !capabilityText) return [];
-        return [{ title, text: capabilityText }];
+        const points = capabilityPoints(item.points);
+        const image = mediaUrl(item.image_url ?? item.imageUrl ?? item.image);
+        if (!title && !capabilityText && !points.length && !image) return [];
+
+        return [{ title, text: capabilityText, points, image }];
     });
 }

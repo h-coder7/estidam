@@ -1,10 +1,25 @@
 import { getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import type { SolutionHelp } from "@/lib/api/solutionDetail";
 
 import "./_HowHelps.scss";
 
-const HowHelps = async () => {
+const icons = [
+    "/images/icons/sh1.svg",
+    "/images/icons/sh2.svg",
+    "/images/icons/sh3.svg",
+    "/images/icons/sh4.svg",
+    "/images/icons/sh5.svg",
+    "/images/icons/sh6.svg",
+    "/images/icons/sh7.svg",
+] as const;
+
+const HowHelps = async ({ items }: { items: SolutionHelp[] }) => {
     const t = await getTranslations("solutionsPage.howHelps");
+    if (!items.length) return null;
+
+    const split = Math.ceil(items.length / 2);
+    const columns = [items.slice(0, split), items.slice(split)];
 
     return (
         <section className="solutions_how_helps border-top" id="how-helps">
@@ -18,21 +33,15 @@ const HowHelps = async () => {
                         <div className="col-lg-6">
                             <Reveal animation="fade-up" trigger="load">
                                 <h2 className="how_helps_title fsz-40 fw-600 lh-2">
-                                    <span className="how_helps_title_strong">
-                                        {t("titleStrong")}
-                                    </span>{" "}
-                                    <span className="how_helps_title_muted cr-blue fw-500">
-                                        {t("titleMuted")}
-                                    </span>
+                                    <span className="how_helps_title_strong">{t("titleStrong")}</span>{" "}
+                                    <span className="how_helps_title_muted cr-blue fw-500">{t("titleMuted")}</span>
                                 </h2>
                             </Reveal>
                         </div>
 
                         <div className="col-lg-5">
                             <Reveal animation="fade-up" trigger="load">
-                                <p className="how_helps_description mb-0 text-lg-end">
-                                    {t("description")}
-                                </p>
+                                <p className="how_helps_description mb-0 text-lg-end">{t("description")}</p>
                             </Reveal>
                         </div>
                     </div>
@@ -43,146 +52,31 @@ const HowHelps = async () => {
                 <div className="container">
                     <div className="how_helps_body px-lg-5">
                         <div className="row gx-4 gy-4">
-                            <div className="col-lg-6">
-                                <div className="how_helps_col">
-                                    <Reveal animation="fade-up" trigger="load">
-                                        <article className="help_card">
-                                            <div className="help_card_icon">
-                                                <img
-                                                    src="/images/icons/sh1.svg"
-                                                    alt=""
-                                                    aria-hidden="true"
-                                                />
-                                            </div>
-
-                                            <div className="help_card_content">
-                                                <h3 className="help_card_title">{t("card1Title")}</h3>
-                                                <p className="help_card_text mb-0">{t("card1Text")}</p>
-                                            </div>
-
-                                            <span className="help_card_badge">{t("card1Badge")}</span>
-                                        </article>
-                                    </Reveal>
-
-                                    <Reveal animation="fade-up" trigger="load">
-                                        <article className="help_card">
-                                            <div className="help_card_icon">
-                                                <img
-                                                    src="/images/icons/sh2.svg"
-                                                    alt=""
-                                                    aria-hidden="true"
-                                                />
-                                            </div>
-
-                                            <div className="help_card_content">
-                                                <h3 className="help_card_title">{t("card2Title")}</h3>
-                                                <p className="help_card_text mb-0">{t("card2Text")}</p>
-                                            </div>
-
-                                            <span className="help_card_badge">{t("card2Badge")}</span>
-                                        </article>
-                                    </Reveal>
-
-                                    <Reveal animation="fade-up" trigger="load">
-                                        <article className="help_card">
-                                            <div className="help_card_icon">
-                                                <img
-                                                    src="/images/icons/sh3.svg"
-                                                    alt=""
-                                                    aria-hidden="true"
-                                                />
-                                            </div>
-
-                                            <div className="help_card_content">
-                                                <h3 className="help_card_title">{t("card3Title")}</h3>
-                                                <p className="help_card_text mb-0">{t("card3Text")}</p>
-                                            </div>
-
-                                            <span className="help_card_badge">{t("card3Badge")}</span>
-                                        </article>
-                                    </Reveal>
-
-                                    <Reveal animation="fade-up" trigger="load">
-                                        <article className="help_card">
-                                            <div className="help_card_icon">
-                                                <img
-                                                    src="/images/icons/sh4.svg"
-                                                    alt=""
-                                                    aria-hidden="true"
-                                                />
-                                            </div>
-
-                                            <div className="help_card_content">
-                                                <h3 className="help_card_title">{t("card4Title")}</h3>
-                                                <p className="help_card_text mb-0">{t("card4Text")}</p>
-                                            </div>
-
-                                            <span className="help_card_badge">{t("card4Badge")}</span>
-                                        </article>
-                                    </Reveal>
-                                </div>
-                            </div>
-
-                            <div className="col-lg-6">
-                                <div className="how_helps_col">
-                                    <Reveal animation="fade-up" trigger="load">
-                                        <article className="help_card">
-                                            <div className="help_card_icon">
-                                                <img
-                                                    src="/images/icons/sh5.svg"
-                                                    alt=""
-                                                    aria-hidden="true"
-                                                />
-                                            </div>
-
-                                            <div className="help_card_content">
-                                                <h3 className="help_card_title">{t("card5Title")}</h3>
-                                                <p className="help_card_text mb-0">{t("card5Text")}</p>
-                                            </div>
-
-                                            <span className="help_card_badge">{t("card5Badge")}</span>
-                                        </article>
-                                    </Reveal>
-
-                                    <Reveal animation="fade-up" trigger="load">
-                                        <article className="help_card">
-                                            <div className="help_card_icon">
-                                                <img
-                                                    src="/images/icons/sh6.svg"
-                                                    alt=""
-                                                    aria-hidden="true"
-                                                />
-                                            </div>
-
-                                            <div className="help_card_content">
-                                                <h3 className="help_card_title">{t("card6Title")}</h3>
-                                                <p className="help_card_text mb-0">{t("card6Text")}</p>
-                                            </div>
-
-                                            <span className="help_card_badge">{t("card6Badge")}</span>
-                                        </article>
-                                    </Reveal>
-
-                                    <Reveal animation="fade-up" trigger="load">
-                                        <article className="help_card">
-                                            <div className="help_card_icon">
-                                                <img
-                                                    src="/images/icons/sh7.svg"
-                                                    alt=""
-                                                    aria-hidden="true"
-                                                />
-                                            </div>
-
-                                            <div className="help_card_content">
-                                                <h3 className="help_card_title">{t("card7Title")}</h3>
-                                                <p className="help_card_text mb-0">{t("card7Text")}</p>
-                                            </div>
-
-                                            <span className="help_card_badge">{t("card7Badge")}</span>
-                                        </article>
-                                    </Reveal>
-                                </div>
-                            </div>
+                            {columns.map((column, columnIndex) =>
+                                column.length ? (
+                                    <div className="col-lg-6" key={columnIndex}>
+                                        <div className="how_helps_col">
+                                            {column.map((item, index) => {
+                                                const position = columnIndex === 0 ? index : split + index;
+                                                return (
+                                                    <Reveal animation="fade-up" trigger="load" key={`${item.title}-${position}`}>
+                                                        <article className="help_card">
+                                                            <div className="help_card_icon">
+                                                                <img src={icons[position % icons.length]} alt="" aria-hidden="true" />
+                                                            </div>
+                                                            <div className="help_card_content">
+                                                                {item.title ? <h3 className="help_card_title">{item.title}</h3> : null}
+                                                                {item.text ? <p className="help_card_text mb-0">{item.text}</p> : null}
+                                                            </div>
+                                                            {item.badge ? <span className="help_card_badge">{item.badge}</span> : null}
+                                                        </article>
+                                                    </Reveal>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                ) : null,
+                            )}
                         </div>
                     </div>
                 </div>

@@ -8,8 +8,6 @@ type Props = {
     logos: PartnerLogo[];
     title: ReactNode;
     chooseLabel: string;
-    pauseLabel: string;
-    playLabel: string;
 };
 
 /** Time each partner stays on stage (ms). */
@@ -18,18 +16,16 @@ const DURATION = 3200;
 /**
  * One partner on a large stage, advancing on a single rAF loop.
  * Auto-advance stops while the pointer or focus is on the stage, the section
- * is off screen, the tab is hidden, the user pressed Pause, or motion is reduced.
+ * is off screen, the tab is hidden, or motion is reduced.
  */
-export default function PartnersSpotlight({ logos, title, chooseLabel, pauseLabel, playLabel }: Props) {
+export default function PartnersSpotlight({ logos, title, chooseLabel }: Props) {
     const [index, setIndex] = useState(0);
-    const [paused, setPaused] = useState(false);
     const [reduced, setReduced] = useState(false);
 
     const rootRef = useRef<HTMLDivElement>(null);
     const barRef = useRef<HTMLSpanElement>(null);
     const elapsed = useRef(0);
     const hold = useRef(false);
-    const pausedRef = useRef(false);
     const count = logos.length;
 
     const go = useCallback(
@@ -39,10 +35,6 @@ export default function PartnersSpotlight({ logos, title, chooseLabel, pauseLabe
         },
         [count],
     );
-
-    useEffect(() => {
-        pausedRef.current = paused;
-    }, [paused]);
 
     useEffect(() => {
         const root = rootRef.current;
@@ -59,7 +51,7 @@ export default function PartnersSpotlight({ logos, title, chooseLabel, pauseLabe
         const frame = (now: number) => {
             const dt = now - last;
             last = now;
-            if (!pausedRef.current && !hold.current && !document.hidden) {
+            if (!hold.current && !document.hidden) {
                 elapsed.current += dt;
                 if (elapsed.current >= DURATION) {
                     elapsed.current = 0;
@@ -145,11 +137,6 @@ export default function PartnersSpotlight({ logos, title, chooseLabel, pauseLabe
 
                 <div className="ps-foot">
                     <span className="ps-name">{active?.name}</span>
-                    {!reduced ? (
-                        <button type="button" className="ps-ctrl" aria-pressed={paused} onClick={() => setPaused((p) => !p)}>
-                            <span aria-hidden="true">{paused ? "▶" : "❚❚"}</span> {paused ? playLabel : pauseLabel}
-                        </button>
-                    ) : null}
                 </div>
             </div>
         </div>

@@ -8,9 +8,9 @@
     width: 58px;
     height: 58px;
     border-radius: 50%;
-    background: var(--dark, #0b1a33);
+    background: linear-gradient(145deg, #25d366 0%, #128c7e 100%);
     color: #fff;
-    box-shadow: 0 16px 32px -16px rgba(11, 26, 51, 0.7);
+    box-shadow: 0 16px 32px -16px rgba(18, 140, 126, 0.85);
     text-decoration: none;
     animation: wa-float 2.8s ease-in-out infinite;
 
@@ -25,20 +25,20 @@
         position: absolute;
         inset: 0;
         border-radius: inherit;
-        border: 1px solid rgba(41, 92, 199, 0.45);
+        border: 1px solid rgba(37, 211, 102, 0.55);
         animation: wa-pulse 2.8s ease-out infinite;
     }
 
     &:hover {
         color: #fff !important;
-        background: var(--blue, #295cc7);
+        background: linear-gradient(145deg, #1ebe5d 0%, #075e54 100%);
         text-decoration: none;
         animation-play-state: paused;
         transform: translateY(-3px);
     }
 
     &:focus-visible {
-        outline: 2px solid var(--blue, #295cc7);
+        outline: 2px solid #128c7e;
         outline-offset: 4px;
     }
 }

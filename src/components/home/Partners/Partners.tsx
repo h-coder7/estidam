@@ -14,8 +14,6 @@ const Partners = async () => {
                 <PartnersSpotlight
                     logos={PARTNER_LOGOS}
                     chooseLabel={t("choose")}
-                    pauseLabel={t("pause")}
-                    playLabel={t("play")}
                     title={
                         <Reveal animation="fade-up" trigger="load">
                             <h2 id="partners-home-title" className="partners_title">

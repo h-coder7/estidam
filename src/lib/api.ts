@@ -95,6 +95,9 @@ export const api = {
             .get(endpoints.solutions, { ...withLang(locale), params: { per_page: 50 } })
             .then((res) => res.data),
 
+    getSolution: (slug: string, locale?: string) =>
+        apiClient.get(`${endpoints.solutions}/${slug}`, withLang(locale)).then((res) => res.data),
+
     getPartners: (locale?: string) =>
         apiClient
             .get(endpoints.partners, { ...withLang(locale), params: { per_page: 50 } })

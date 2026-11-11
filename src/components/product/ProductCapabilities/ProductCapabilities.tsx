@@ -19,6 +19,7 @@ type CapabilityView = {
     id: string;
     title: string;
     does: string;
+    points: string[];
     value: string;
     note: string;
     image: string;
@@ -34,15 +35,17 @@ const ProductCapabilities = async ({ productId }: { productId: "hrh" | "mayar" |
               id: `cap-${index + 1}`,
               title: item.title,
               does: item.text,
-              value: t("items.contracts.value"),
-              note: t("items.contracts.interface"),
-              image: panelImage,
-              imageAlt: t("items.contracts.imageAlt"),
+              points: item.points,
+              value: "",
+              note: "",
+              image: item.image,
+              imageAlt: item.title,
           }))
         : itemIds.map((id) => ({
               id,
               title: t(`items.${id}.title`),
               does: id === "contracts" ? t("items.contracts.does") : "",
+              points: [],
               value: id === "contracts" ? t("items.contracts.value") : "",
               note: id === "contracts" ? t("items.contracts.interface") : "",
               image: id === "contracts" ? panelImage : "",
@@ -138,6 +141,13 @@ const ProductCapabilities = async ({ productId }: { productId: "hrh" | "mayar" |
                                                     <p className="products_capabilities_label fw-600">{t("doesLabel")}</p>
                                                     <p className="products_capabilities_text">{item.does}</p>
                                                 </>
+                                            ) : null}
+                                            {item.points.length ? (
+                                                <ul className="products_capabilities_points">
+                                                    {item.points.map((point) => (
+                                                        <li key={point}>{point}</li>
+                                                    ))}
+                                                </ul>
                                             ) : null}
                                             {item.value ? (
                                                 <>
