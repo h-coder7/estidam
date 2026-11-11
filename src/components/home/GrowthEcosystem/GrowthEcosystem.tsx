@@ -108,12 +108,12 @@ const GrowthEcosystem = async () => {
 
                                     <p className="ecosystem_card_text">{card.text}</p>
 
-                                    <CmsLink href={card.ctaUrl} className="ecosystem_card_link">
+                                    <CmsLink href={card.ctaUrl} className="butn butn-outline">
                                         <span>{card.cta}</span>
                                         <img
                                             src="/images/icons/arrow-bl.svg"
                                             alt=""
-                                            className="ecosystem_card_arrow"
+                                            className="butn-icon"
                                             aria-hidden="true"
                                         />
                                     </CmsLink>
