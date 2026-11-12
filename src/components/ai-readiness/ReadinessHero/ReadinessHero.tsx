@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import Reveal from "@/components/animations/Reveal";
+import { Link } from "@/i18n/routing";
 import HeroOrb from "./HeroOrb";
 
 import "./_ReadinessHero.scss";
@@ -75,7 +76,7 @@ const ReadinessHero = async () => {
 
                                 <div className="hero_readiness_actions">
                                     <Reveal animation="fade-up" trigger="load">
-                                        <a href="#" className="butn butn-blue">
+                                        <Link href="/ai-readiness/assessment" className="butn butn-blue">
                                             <span>{t("primaryCta")}</span>
                                             <img
                                                 src="/images/icons/arrow-wh.svg"
@@ -83,7 +84,7 @@ const ReadinessHero = async () => {
                                                 className="butn-icon"
                                                 aria-hidden="true"
                                             />
-                                        </a>
+                                        </Link>
                                     </Reveal>
                                 </div>
 

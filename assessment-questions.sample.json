@@ -1,0 +1,171 @@
+{
+  "header": "X-Assessment-Token = data.resumeToken from POST /api/v1/assessments",
+  "calls": {
+    "start": "POST /api/v1/assessments",
+    "save": "PUT /api/v1/assessments/{id}/answers",
+    "complete": "POST /api/v1/assessments/{id}/complete",
+    "result": "GET /api/v1/assessments/{id}/result"
+  },
+  "stageQuestions": {
+    "1": [
+      1,
+      2,
+      3
+    ],
+    "2": [
+      4,
+      5,
+      6
+    ],
+    "3": [
+      7,
+      8
+    ],
+    "4": [
+      9,
+      10
+    ],
+    "5": [
+      11,
+      12
+    ],
+    "6": [
+      13,
+      14
+    ]
+  },
+  "saveResponseExample": {
+    "success": true,
+    "message": null,
+    "data": {
+      "status": "in_progress",
+      "currentStage": 2,
+      "answeredCount": 6
+    },
+    "meta": null
+  },
+  "result": {
+    "success": true,
+    "message": null,
+    "data": {
+      "code": "EST-AI-00013",
+      "lang": "en",
+      "totalScore": 10,
+      "maxScore": 40,
+      "percentage": 25,
+      "tier": {
+        "key": "foundation",
+        "name": "Foundation Phase",
+        "summary": "Your organization is at the start of its digital journey. The priority now is a solid digital foundation that prepares the way for AI.",
+        "diagnosis": "The organization depends heavily on manual and paper processes, and data is scattered in isolated spreadsheets.",
+        "direction": "Focus on digitizing core processes and leaving paper and scattered Excel files before moving to advanced AI."
+      },
+      "categoryScores": {
+        "operations": 25,
+        "workforce": 25,
+        "data": 25,
+        "infrastructure": 25
+      },
+      "categoryCoverage": {
+        "passed": 0,
+        "total": 4
+      },
+      "strengths": [],
+      "strengthsMessage": "No standout strengths appeared in the measured areas. That is normal at the start of a digital journey. The recommendations and 90-day plan below are designed to build those foundations step by step.",
+      "gaps": [
+        {
+          "questionNo": 4,
+          "category": "operations",
+          "text": "Weak field documentation and reliance on informal communication (WhatsApp)."
+        },
+        {
+          "questionNo": 5,
+          "category": "operations",
+          "text": "A high share of manual entry and moving data between screens, which consumes time."
+        },
+        {
+          "questionNo": 7,
+          "category": "workforce",
+          "text": "Manual sorting and assignment of seasonal labor, which creates operating bottlenecks."
+        },
+        {
+          "questionNo": 8,
+          "category": "workforce",
+          "text": "No live geographic tracking (GPS) for how teams are spread in the field."
+        },
+        {
+          "questionNo": 9,
+          "category": "data",
+          "text": "Data scattered in personal Excel files, which blocks building AI models."
+        }
+      ],
+      "gapsMessage": null,
+      "recommendations": [
+        {
+          "key": "mayar",
+          "rank": 1,
+          "priority": "high",
+          "productName": "Hajj Ma'yar",
+          "title": "Quality automation and service-level (SLA) compliance.",
+          "description": "Automatic routing of reports, escalation before a service standard is broken, and a live record.",
+          "expectedROI": "Cut field-report response time by 50% and keep full compliance."
+        },
+        {
+          "key": "data_transformation",
+          "rank": 2,
+          "priority": "high",
+          "productName": "Operations transformation and data intelligence",
+          "title": "Establish a cloud data warehouse and connect APIs.",
+          "description": "Unify scattered sources into one secure database that is ready for AI.",
+          "expectedROI": "Save 80% of the weekly effort spent preparing manual reports."
+        },
+        {
+          "key": "maydan",
+          "rank": 3,
+          "priority": "medium",
+          "productName": "Hajj Maydan",
+          "title": "Live management and tracking of field operations and deployment.",
+          "description": "Heat maps and live tracking of geographic coverage and field teams through GPS.",
+          "expectedROI": "Remove field blind spots and raise team coverage efficiency by 35%."
+        },
+        {
+          "key": "hajj_hr",
+          "rank": 4,
+          "priority": "medium",
+          "productName": "Hajj HR",
+          "title": "Smart hiring, sorting, and matching for seasonal staff.",
+          "description": "Automatic matching of labor skills to field needs, and automatic geographic placement.",
+          "expectedROI": "Cut seasonal sorting and placement from weeks to a few hours."
+        }
+      ],
+      "roadmap": [
+        {
+          "order": 1,
+          "duration": "Days 1–20",
+          "title": "Definition and path design",
+          "action": "Document field procedures, define SLA indicators, and prepare the digital structure"
+        },
+        {
+          "order": 2,
+          "duration": "Days 21–45",
+          "title": "Prepare Hajj Ma'yar and integrate data",
+          "action": "Prepare Hajj Ma'yar, connect APIs to current systems, and load the central data"
+        },
+        {
+          "order": 3,
+          "duration": "Days 46–70",
+          "title": "Pilot Hajj Ma'yar",
+          "action": "Launch Hajj Ma'yar on a pilot scope (one camp or one sector) and train the teams"
+        },
+        {
+          "order": 4,
+          "duration": "Days 71–90",
+          "title": "Full launch",
+          "action": "Run every facility, and turn on the command room and live monitoring screens"
+        }
+      ],
+      "reportRequested": false
+    },
+    "meta": null
+  }
+}
