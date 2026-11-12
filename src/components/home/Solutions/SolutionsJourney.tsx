@@ -43,12 +43,15 @@ export default function SolutionsJourney({ slides, badge, titleStrong, titleMute
         if (!Array.isArray(items)) return [];
         return items.map((item, index) => ({
             id: `fallback-${index + 1}`,
+            slug: "",
             title: `${item.titleStrong || ""} ${item.titleMuted || ""}`.trim(),
             titleStrong: item.titleStrong || "",
             titleMuted: item.titleMuted || "",
             text: item.text || "",
             highlight: item.highlight || "",
             image: "",
+            showOnHome: true,
+            showOnPage: true,
         }));
     })();
     const view = slides?.length ? slides : fallback;

@@ -159,7 +159,9 @@ function mapDelivery(raw: unknown): SolutionDelivery | null {
 function mapSystems(raw: unknown): SolutionSystems | null {
     const section = sectionRecord(raw);
     const items = records(section ? (section.items ?? section.tags ?? section.systems) : raw);
-    const stringTags = Array.isArray(raw) ? raw.filter((item): item is string => typeof item === "string" && item.trim()) : [];
+    const stringTags = Array.isArray(raw)
+        ? raw.filter((item): item is string => typeof item === "string" && item.trim().length > 0)
+        : [];
     const tags = items.length
         ? items.flatMap((item) => {
               const label = text(item.label ?? item.title ?? item.name ?? item.text);
